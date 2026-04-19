@@ -1,1 +1,3 @@
 BackendConfig/.env
+Frontend/node_modules
+BackendConfig/node_modules
