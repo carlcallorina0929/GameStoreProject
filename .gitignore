@@ -1,3 +1,24 @@
-BackendConfig/.env
-Frontend/node_modules
-BackendConfig/node_modules
+# Dependencies
+node_modules/
+
+# Environment files
+.env
+**/.env
+
+# Build outputs
+dist/
+build/
+
+# Angular
+.angular/
+coverage/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS / editor junk
+.DS_Store
+.vscode/
+.idea/
