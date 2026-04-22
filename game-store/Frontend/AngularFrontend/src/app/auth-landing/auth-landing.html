@@ -1,0 +1,129 @@
+<main class="auth-landing">
+  <div class="scene-glow scene-glow-left"></div>
+  <div class="scene-glow scene-glow-right"></div>
+  <div class="scene-grid" aria-hidden="true"></div>
+
+  <section class="auth-hero">
+    <div class="auth-copy">
+      <span class="eyebrow">Welcome to Game Vault</span>
+      <h1>Press Start On Your Next Game.</h1>
+      <p>
+       Sign in to load and add more games to your library, or create a new profile if it's your first time here.
+      </p>
+
+      <div class="feature-row">
+        <article class="feature-card">
+          <span class="feature-label">Daily Quest</span>
+          <strong>Discover New Deals</strong>
+          <p>Browse and find new games or special offers</p>
+        </article>
+
+        <article class="feature-card">
+          <span class="feature-label">Sync</span>
+          <strong>Stay Synced</strong>
+          <p>Access your favorites anytime.</p>
+        </article>
+      </div>
+    </div>
+
+    <section class="auth-shell" [class.register-active]="authMode === 'register'">
+      <div class="auth-mobile-toggle" aria-label="Choose authentication mode">
+        <button
+          class="auth-mobile-option"
+          type="button"
+          [class.is-active]="authMode === 'login'"
+          (click)="setAuthMode('login')">
+          Login
+        </button>
+        <button
+          class="auth-mobile-option"
+          type="button"
+          [class.is-active]="authMode === 'register'"
+          (click)="setAuthMode('register')">
+          Register
+        </button>
+      </div>
+
+      <div class="auth-forms">
+        <form class="auth-pane auth-pane-login" (submit)="handleLogin($event)">
+          <span class="auth-kicker">Welcome Back</span>
+          <h2>Log In</h2>
+          <p>Let's get back to gaming.</p>
+
+          <label>
+            <span>Username</span>
+            <input type="text" name="loginUsername" placeholder="Username" />
+          </label>
+
+          <label>
+            <span>Password</span>
+            <input type="password" name="loginPassword" placeholder="Enter your password" />
+          </label>
+
+          <div class="auth-meta">
+            <label class="checkbox-row">
+              <input type="checkbox" name="rememberMe" />
+              <span>Remember me</span>
+            </label>
+            <button class="auth-text-link" type="button">Forgot password?</button>
+          </div>
+
+          <button class="auth-submit" type="submit">Log In</button>
+        </form>
+
+        <form class="auth-pane auth-pane-register" (submit)="handleRegister($event)">
+          <span class="auth-kicker">New Challenger</span>
+          <h2>Create Account</h2>
+          <p>Build your player profile to save favorites, manage your cart, and collect rewards.</p>
+
+          <label>
+            <span>Username</span>
+            <input type="text" name="registerUsername" placeholder="GameDenHero" />
+          </label>
+
+          <label>
+            <span>Age</span>
+            <input type="text" name="registerAge" placeholder="Your Age" />
+          </label>
+
+          <label>
+            <span>Email</span>
+            <input type="email" name="registerEmail" placeholder="player@example.com" />
+          </label>
+
+          <label>
+            <span>Password</span>
+            <input type="password" name="registerPassword" placeholder="Create a password" />
+          </label>
+
+          <label>
+            <span>Confirm Password</span>
+            <input type="password" name="registerConfirmPassword" placeholder="Re-enter your password" />
+          </label>
+
+          <button class="auth-submit" type="submit">Register</button>
+        </form>
+      </div>
+
+      <aside class="auth-overlay">
+        <div class="auth-overlay-panel auth-overlay-login">
+          <span class="auth-kicker">Existing Member</span>
+          <h3>Ready to jump back in?</h3>
+          <p>Use your account to sync your cart, library, and saved releases.</p>
+          <button class="auth-switch" type="button" (click)="setAuthMode('login')">
+            Go to Login
+          </button>
+        </div>
+
+        <div class="auth-overlay-panel auth-overlay-register">
+          <span class="auth-kicker">First Time Here</span>
+          <h3>Build your player profile</h3>
+          <p>Create an account to collect favorites, claim promos, and check out faster.</p>
+          <button class="auth-switch" type="button" (click)="setAuthMode('register')">
+            Go to Register
+          </button>
+        </div>
+      </aside>
+    </section>
+  </section>
+</main>

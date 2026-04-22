@@ -14,10 +14,11 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should render title', async () => {
+  it('should render the auth landing headline', async () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
+    fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, AngularFrontend');
+    expect(compiled.querySelector('.auth-copy h1')?.textContent).toContain('Press Start');
   });
 });

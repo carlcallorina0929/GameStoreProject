@@ -1,1 +1,87 @@
-/* You can add global styles to this file, and also import other style files */
+/* =============================================
+   GAME DEN — Global Styles
+   Premium Dark Theme
+   ============================================= */
+
+:root {
+  --color-bg:          #0a0a0f;
+  --color-surface:     #12121a;
+  --color-surface-2:   #1c1c28;
+  --color-border:      rgba(255, 255, 255, 0.07);
+  --color-gold:        #c9a84c;
+  --color-gold-light:  #e8c97a;
+  --color-gold-dim:    rgba(201, 168, 76, 0.15);
+  --color-text:        #e8e8f0;
+  --color-text-muted:  #8888a8;
+  --color-accent:      #7c5cbf;
+  --font-body:         'Inter', sans-serif;
+  --font-display:      'Rajdhani', sans-serif;
+  --radius:            8px;
+  --transition:        0.25s ease;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-surface);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-gold);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gold-light);
+}
+
+/* ── Typography ── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--color-text);
+}
+
+a {
+  color: var(--color-gold);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+a:hover {
+  color: var(--color-gold-light);
+}
+
+/* ── Utility ── */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.page-content {
+  padding: 2.5rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
