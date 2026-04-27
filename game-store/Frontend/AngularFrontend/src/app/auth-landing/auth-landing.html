@@ -1,3 +1,18 @@
+<div class="auth-modal-backdrop" *ngIf="showRegistrationSuccessModal">
+  <div class="auth-modal" role="dialog" aria-modal="true">
+    <span class="auth-kicker">Profile Created</span>
+    <h3>Registration Successful</h3>
+    <p>Your account is ready. Log in to start building your library.</p>
+
+    <button class="auth-switch auth-modal-action"
+            type="button"
+            (click)="goToLoginFromSuccessModal()">
+      Go to Login
+    </button>
+  </div>
+</div>
+
+<main class="auth-landing">
 <main class="auth-landing">
   <div class="scene-glow scene-glow-left"></div>
   <div class="scene-glow scene-glow-right"></div>
@@ -45,63 +60,153 @@
       </div>
 
       <div class="auth-forms">
-        <form class="auth-pane auth-pane-login" (submit)="handleLogin($event)">
+        <form class="auth-pane auth-pane-login" (submit)="handleLogin($event)" novalidate>
           <span class="auth-kicker">Welcome Back</span>
           <h2>Log In</h2>
           <p>Let's get back to gaming.</p>
 
           <label>
             <span>Username</span>
-            <input type="text" name="loginUsername" placeholder="Username" />
+            <input
+              type="text"
+              name="loginUsername"
+              placeholder="Enter your username"
+              [value]="login.username"
+              (input)="onLoginInput('username', $any($event.target).value)"
+              (blur)="markLoginTouched('username')"
+              [class.is-invalid]="shouldShowLoginError('username') && !!getLoginFieldError('username')" />
+            <span class="field-error" *ngIf="shouldShowLoginError('username') && getLoginFieldError('username')">
+              {{ getLoginFieldError('username') }}
+            </span>
           </label>
 
           <label>
             <span>Password</span>
-            <input type="password" name="loginPassword" placeholder="Enter your password" />
+            <input
+              type="password"
+              name="loginPassword"
+              placeholder="Enter your password"
+              [value]="login.password"
+              (input)="onLoginInput('password', $any($event.target).value)"
+              (blur)="markLoginTouched('password')"
+              [class.is-invalid]="shouldShowLoginError('password') && !!getLoginFieldError('password')" />
+            <span class="field-error" *ngIf="shouldShowLoginError('password') && getLoginFieldError('password')">
+              {{ getLoginFieldError('password') }}
+            </span>
           </label>
 
-          <div class="auth-meta">
-            <label class="checkbox-row">
-              <input type="checkbox" name="rememberMe" />
-              <span>Remember me</span>
-            </label>
-            <button class="auth-text-link" type="button">Forgot password?</button>
-          </div>
-
-          <button class="auth-submit" type="submit">Log In</button>
+          <button class="auth-submit" type="submit" [disabled]="isLoginSubmitting">
+            {{ isLoginSubmitting ? 'Logging In...' : 'Log In' }}
+          </button>
         </form>
 
-        <form class="auth-pane auth-pane-register" (submit)="handleRegister($event)">
+        <form class="auth-pane auth-pane-register" (submit)="handleRegister($event)" novalidate>
           <span class="auth-kicker">New Challenger</span>
           <h2>Create Account</h2>
           <p>Build your player profile to save favorites, manage your cart, and collect rewards.</p>
 
           <label>
             <span>Username</span>
-            <input type="text" name="registerUsername" placeholder="GameDenHero" />
+            <input
+              type="text"
+              name="registerUsername"
+              placeholder="Enter your username"
+              [value]="register.username"
+              (input)="onRegisterInput('username', $any($event.target).value)"
+              (blur)="markRegisterTouched('username')"
+              [class.is-invalid]="shouldShowRegisterError('username') && !!getRegisterFieldError('username')" />
+            <span class="field-error" *ngIf="shouldShowRegisterError('username') && getRegisterFieldError('username')">
+              {{ getRegisterFieldError('username') }}
+            </span>
+            <span *ngIf="usernameAvailability === 'checking'">Checking username...</span>
+<span *ngIf="usernameAvailability === 'taken'" style="color:red;">Username already exists</span>
+<span *ngIf="usernameAvailability === 'available'" style="color:lime;">Username available</span>
+          </label>
+
+          <label>
+            <span>First Name</span>
+            <input
+              type="text"
+              name="registerFirstName"
+              placeholder="Enter your first name"
+              [value]="register.first_name"
+              (input)="onRegisterInput('first_name', $any($event.target).value)"
+              (blur)="markRegisterTouched('first_name')"
+              [class.is-invalid]="shouldShowRegisterError('first_name') && !!getRegisterFieldError('first_name')" />
+            <span class="field-error" *ngIf="shouldShowRegisterError('first_name') && getRegisterFieldError('first_name')">
+              {{ getRegisterFieldError('first_name') }}
+            </span>
+          </label>
+
+          <label>
+            <span>Last Name</span>
+            <input
+              type="text"
+              name="registerLastName"
+              placeholder="Enter your last name"
+              [value]="register.last_name"
+              (input)="onRegisterInput('last_name', $any($event.target).value)"
+              (blur)="markRegisterTouched('last_name')"
+              [class.is-invalid]="shouldShowRegisterError('last_name') && !!getRegisterFieldError('last_name')" />
+            <span class="field-error" *ngIf="shouldShowRegisterError('last_name') && getRegisterFieldError('last_name')">
+              {{ getRegisterFieldError('last_name') }}
+            </span>
           </label>
 
           <label>
             <span>Age</span>
-            <input type="text" name="registerAge" placeholder="Your Age" />
+            <input
+              type="number"
+              inputmode="numeric"
+              name="registerAge"
+              placeholder="Enter your age"
+              [value]="register.age"
+              (input)="onRegisterInput('age', $any($event.target).value)"
+              (blur)="markRegisterTouched('age')"
+              [class.is-invalid]="shouldShowRegisterError('age') && !!getRegisterFieldError('age')" />
+            <span class="field-error" *ngIf="shouldShowRegisterError('age') && getRegisterFieldError('age')">
+              {{ getRegisterFieldError('age') }}
+            </span>
           </label>
 
           <label>
             <span>Email</span>
-            <input type="email" name="registerEmail" placeholder="player@example.com" />
+            <input
+              type="email"
+              name="registerEmail"
+              placeholder="Enter your email"
+              [value]="register.email"
+              (input)="onRegisterInput('email', $any($event.target).value)"
+              (blur)="markRegisterTouched('email')"
+              [class.is-invalid]="shouldShowRegisterError('email') && !!getRegisterFieldError('email')" />
+            <span class="field-error" *ngIf="shouldShowRegisterError('email') && getRegisterFieldError('email')">
+              {{ getRegisterFieldError('email') }}
+            </span>
+            <span
+              class="field-hint"
+              *ngIf="!getRegisterFieldError('email') && emailAvailability === 'checking'">
+              Checking email...
+            </span>
           </label>
 
           <label>
             <span>Password</span>
-            <input type="password" name="registerPassword" placeholder="Create a password" />
+            <input
+              type="password"
+              name="registerPassword"
+              placeholder="Enter your password"
+              [value]="register.password"
+              (input)="onRegisterInput('password', $any($event.target).value)"
+              (blur)="markRegisterTouched('password')"
+              [class.is-invalid]="shouldShowRegisterError('password') && !!getRegisterFieldError('password')" />
+            <span class="field-error" *ngIf="shouldShowRegisterError('password') && getRegisterFieldError('password')">
+              {{ getRegisterFieldError('password') }}
+            </span>
           </label>
 
-          <label>
-            <span>Confirm Password</span>
-            <input type="password" name="registerConfirmPassword" placeholder="Re-enter your password" />
-          </label>
-
-          <button class="auth-submit" type="submit">Register</button>
+          <button class="auth-submit" type="submit" [disabled]="!isRegisterFormValid || isRegisterSubmitting">
+            {{ isRegisterSubmitting ? 'Registering...' : 'Register' }}
+          </button>
         </form>
       </div>
 
@@ -127,3 +232,14 @@
     </section>
   </section>
 </main>
+
+<div class="auth-modal-backdrop" *ngIf="showRegistrationSuccessModal">
+  <div class="auth-modal" role="dialog" aria-modal="true">
+    <span class="auth-kicker">Profile Created</span>
+    <h3>Registration Successful</h3>
+    <p>Your account is ready. Log in to start building your library.</p>
+    <button class="auth-switch auth-modal-action" type="button" (click)="goToLoginFromSuccessModal()">
+      Go to Login
+    </button>
+  </div>
+</div>

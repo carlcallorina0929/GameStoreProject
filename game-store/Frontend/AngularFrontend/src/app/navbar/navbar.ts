@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+﻿import { Component, HostListener } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
@@ -17,32 +17,23 @@ export class Navbar {
     this.menuOpen = !this.menuOpen;
   }
 
-  openAuthModal(mode: 'login' | 'register' = 'login') {
-    this.authMode = mode;
-    this.isModalOpen = true;
-    this.menuOpen = false;
-  }
+ accountMenuOpen = false;
 
-  closeAuthModal() {
-    this.isModalOpen = false;
-  }
+ toggleAccountMenu() {
+  this.accountMenuOpen = !this.accountMenuOpen;
+}
 
-  setAuthMode(mode: 'login' | 'register') {
-    this.authMode = mode;
-  }
+logout() {
+  localStorage.removeItem('token'); // remove login
+  this.accountMenuOpen = false;
+}
 
-  handleLogin(event: Event) {
-    event.preventDefault();
-  }
+ @HostListener('document:click', ['$event'])
+onClickOutside(event: Event) {
+  const target = event.target as HTMLElement;
 
-  handleRegister(event: Event) {
-    event.preventDefault();
+  if (!target.closest('.account-menu')) {
+    this.accountMenuOpen = false;
   }
-
-  @HostListener('document:keydown.escape')
-  onEscapeKey() {
-    if (this.isModalOpen) {
-      this.closeAuthModal();
-    }
-  }
+}
 }
