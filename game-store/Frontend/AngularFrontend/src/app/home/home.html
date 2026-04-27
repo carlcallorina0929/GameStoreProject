@@ -1,4 +1,10 @@
-<app-navbar />
+<app-loader 
+  [isLoading]="isPageLoading" 
+  [message]="'SYNCING STORE'" 
+  [subtext]="'Loading digital catalog...'"
+  (isVisible)="onLoaderComplete()">
+</app-loader>
+<app-navbar *ngIf="!isPageLoading" />
 
 <main class="home">
   <section class="home-shell">

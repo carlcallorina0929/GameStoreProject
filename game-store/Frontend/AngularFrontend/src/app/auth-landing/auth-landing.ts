@@ -1,17 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef, inject, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { ChangeDetectorRef } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 
-type AvailabilityState =
-  | 'unknown'
-  | 'checking'
-  | 'available'
-  | 'taken'
-  | 'error';
+type AvailabilityState = 'unknown' | 'checking' | 'available' | 'taken' | 'error';
 
 @Component({
   selector: 'app-auth-landing',
@@ -21,132 +16,117 @@ type AvailabilityState =
   imports: [CommonModule, HttpClientModule, FormsModule]
 })
 export class AuthLandingComponent {
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private cd = inject(ChangeDetectorRef);
 
-  authMode: 'login' | 'register' = 'login';
-
-constructor(
-  private authService: AuthService,
-  private router: Router,
-  private cd: ChangeDetectorRef
-) {}
-
-  // =========================
-  // STATE
-  // =========================
-
-  login = {
-    username: '',
-    password: ''
-  };
-
-  register = {
+  // --- SIGNALS FOR REACTIVE STATE ---
+  authMode = signal<'login' | 'register'>('login');
+  
+  loginData = signal({ username: '', password: '' });
+  registerData = signal({
     username: '',
     first_name: '',
     last_name: '',
     age: '',
     email: '',
     password: ''
-  };
-
-  loginTouched = {
-    username: false,
-    password: false
-  };
-
-  registerTouched = {
+  });
+loginErrorMessage = signal<string | null>(null);
+  loginTouched = signal({ username: false, password: false });
+  registerTouched = signal({
     username: false,
     first_name: false,
     last_name: false,
     age: false,
     email: false,
     password: false
-  };
+  });
 
-  loginSubmitted = false;
-  registerSubmitted = false;
+  loginSubmitted = signal(false);
+  registerSubmitted = signal(false);
+  
+  isLoginSubmitting = signal(false);
+  isRegisterSubmitting = signal(false);
+  showRegistrationSuccessModal = signal(false);
 
-  isLoginSubmitting = false;
-  isRegisterSubmitting = false;
-
-  showRegistrationSuccessModal = false;
-
-  usernameAvailability: AvailabilityState = 'unknown';
-  emailAvailability: AvailabilityState = 'unknown';
+  usernameAvailability = signal<AvailabilityState>('unknown');
+  emailAvailability = signal<AvailabilityState>('unknown');
 
   private usernameTimer: any;
   private emailTimer: any;
 
-  // =========================
-  // MODE
-  // =========================
+  // --- ACTIONS ---
 
   setAuthMode(mode: 'login' | 'register') {
-    this.authMode = mode;
+    this.authMode.set(mode);
   }
 
-  // =========================
-  // INPUT HANDLERS
-  // =========================
-
-  onLoginInput(field: keyof typeof this.login, value: string) {
-    this.login[field] = value;
+  onLoginInput(field: 'username' | 'password', value: string) {
+    this.loginData.update(prev => ({ ...prev, [field]: value }));
   }
 
-  onRegisterInput(field: keyof typeof this.register, value: string) {
+  onRegisterInput(field: keyof ReturnType<typeof this.registerData>, value: string) {
     let val = value;
-
+    
+    // Auto-strip non-letters for name fields
     if (field === 'first_name' || field === 'last_name') {
-      val = value.replace(/[^A-Za-z]/g, '');
+      
     }
 
-    this.register[field] = val;
+    this.registerData.update(prev => ({ ...prev, [field]: val }));
 
     if (field === 'username') {
-      this.usernameAvailability = 'unknown';
-
+      this.usernameAvailability.set('unknown');
       clearTimeout(this.usernameTimer);
-      this.usernameTimer = setTimeout(() => {
-        this.checkUsernameAvailability();
-      }, 500);
+      this.usernameTimer = setTimeout(() => this.checkUsernameAvailability(), 500);
     }
 
     if (field === 'email') {
-      this.emailAvailability = 'unknown';
-
+      this.emailAvailability.set('unknown');
       clearTimeout(this.emailTimer);
-      this.emailTimer = setTimeout(() => {
-        this.checkEmailAvailability();
-      }, 500);
+      this.emailTimer = setTimeout(() => this.checkEmailAvailability(), 500);
     }
   }
 
-  markLoginTouched(field: keyof typeof this.loginTouched) {
-    this.loginTouched[field] = true;
+  markLoginTouched(field: 'username' | 'password') {
+    this.loginTouched.update(prev => ({ ...prev, [field]: true }));
   }
 
-  markRegisterTouched(field: keyof typeof this.registerTouched) {
-    this.registerTouched[field] = true;
+  markRegisterTouched(field: keyof ReturnType<typeof this.registerTouched>) {
+    this.registerTouched.update(prev => ({ ...prev, [field]: true }));
   }
 
-  // =========================
-  // VALIDATION
-  // =========================
+  // --- VALIDATION LOGIC ---
 
-  private usernameError(v: string) {
+  usernameError(v: string) {
     const t = v.trim();
     if (!t) return 'Username is required.';
-    if (!/^[A-Za-z0-9_]{6,30}$/.test(t)) return 'Invalid username.';
+    if (!/^[A-Za-z0-9_]{6,30}$/.test(t)) return 'Invalid username format.';
     return null;
   }
 
-  private emailError(v: string) {
+  nameError(v: string, fieldName: string) {
+    const trimmed = v.trim();
+    if (!trimmed) return `${fieldName} is required.`;
+    if (!/^[A-Za-z\s]+$/.test(trimmed)) return `${fieldName} must only contain letters.`;
+    return null;
+  }
+
+  ageError(v: string) {
+    if (!v || v.trim().length === 0) return 'Age is required.';
+    if (Number(v) < 13) return 'Must be at least 13.';
+    return null;
+  }
+
+  emailError(v: string) {
     const t = v.trim();
     if (!t) return 'Email is required.';
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(t)) return 'Invalid email.';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(t)) return 'Invalid email address.';
     return null;
   }
 
-  private passwordError(v: string) {
+  passwordError(v: string) {
     if (!v) return 'Password is required.';
     if (!/^(?=.*[A-Z])(?=.*\d).{8,64}$/.test(v)) {
       return 'Min 8 chars, 1 uppercase, 1 number.';
@@ -154,212 +134,126 @@ constructor(
     return null;
   }
 
-  // =========================
-  // ERROR HELPERS
-  // =========================
-
-  shouldShowLoginError(field: keyof typeof this.login): boolean {
-    return this.loginSubmitted || this.loginTouched[field];
-  }
-
-  shouldShowRegisterError(field: keyof typeof this.register): boolean {
-    return this.registerSubmitted || this.registerTouched[field];
-  }
-
-  getLoginFieldError(field: keyof typeof this.login): string | null {
-    if (field === 'username') return this.usernameError(this.login.username);
-    if (field === 'password') return this.passwordError(this.login.password);
-    return null;
-  }
-
-  getRegisterFieldError(field: keyof typeof this.register) {
-    switch (field) {
-      case 'username':
-        return this.usernameError(this.register.username);
-      case 'email':
-        return this.emailError(this.register.email);
-      case 'password':
-        return this.passwordError(this.register.password);
-      default:
-        return null;
-    }
-  }
-
-  // =========================
-  // FIXED REGISTER VALIDATION
-  // =========================
-
-  get isRegisterFormValid(): boolean {
-
-    const usernameValid =
-      !this.getRegisterFieldError('username') &&
-      this.usernameAvailability === 'available';
-
-    const emailValid =
-      !this.getRegisterFieldError('email') &&
-      this.emailAvailability === 'available';
-
-    const passwordValid =
-      !this.getRegisterFieldError('password');
-
-    const requiredFieldsFilled =
-      this.register.username.trim().length > 0 &&
-      this.register.first_name.trim().length > 0 &&
-      this.register.last_name.trim().length > 0 &&
-      this.register.age !== '' &&
-      this.register.email.trim().length > 0 &&
-      this.register.password.length > 0;
-
-    return (
-      usernameValid &&
-      emailValid &&
-      passwordValid &&
-      requiredFieldsFilled
-    );
-  }
-
-  // =========================
-  // AVAILABILITY CHECKERS
-  // =========================
+  // --- AVAILABILITY ---
 
   checkUsernameAvailability() {
-    const username = this.register.username.trim();
-    if (!username) return;
-
-    this.usernameAvailability = 'checking';
-
+    const username = this.registerData().username.trim();
+    if (!username || this.usernameError(username)) return;
+    this.usernameAvailability.set('checking');
     this.authService.checkUsernameAvailability(username).subscribe({
-      next: (res) => {
-        this.usernameAvailability = res.available ? 'available' : 'taken';
-      },
-      error: () => {
-        this.usernameAvailability = 'error';
-      }
+      next: (res) => this.usernameAvailability.set(res.available ? 'available' : 'taken'),
+      error: () => this.usernameAvailability.set('error')
     });
   }
 
   checkEmailAvailability() {
-    const email = this.register.email.trim();
-    if (!email) return;
-
-    this.emailAvailability = 'checking';
-
+    const email = this.registerData().email.trim();
+    if (!email || this.emailError(email)) return;
+    this.emailAvailability.set('checking');
     this.authService.checkEmailAvailability(email).subscribe({
-      next: (res) => {
-        this.emailAvailability = res.available ? 'available' : 'taken';
-      },
-      error: () => {
-        this.emailAvailability = 'error';
-      }
+      next: (res) => this.emailAvailability.set(res.available ? 'available' : 'taken'),
+      error: () => this.emailAvailability.set('error')
     });
   }
 
-  // =========================
-  // LOGIN
-  // =========================
+  // --- SUBMISSION ---
 
   handleLogin(event: Event) {
     event.preventDefault();
+    this.loginSubmitted.set(true);
+    const data = this.loginData();
+    if (this.usernameError(data.username) || this.passwordError(data.password)) return;
 
-    this.loginSubmitted = true;
+    this.isLoginSubmitting.set(true);
+    this.authService.login(this.loginData()).subscribe({
+  next: (res) => {
+    this.isLoginSubmitting.set(false);
+        console.log('Login successful', res);
+        
+        // 1. Clear any old errors
+        this.loginErrorMessage.set(null);
 
+        this.router.navigateByUrl('/home');
+        localStorage.setItem('token', res.token);
+
+
+  },
+  error: (err: HttpErrorResponse) => {
+    this.isLoginSubmitting.set(false);
+    
+    // Check if the backend returned a 401 (Unauthorized)
+    if (err.status === 401) {
+      // Maps your backend's { error: "Invalid..." } to the signal
+      this.loginErrorMessage.set(err.error?.error || 'Invalid Username or Password');
+    } else {
+      this.loginErrorMessage.set('An unexpected error occurred.');
+    }
+  }
+});
+  }
+
+  handleRegister(event: Event) {
+    event.preventDefault();
+    this.registerSubmitted.set(true);
+    
+    // Mark all fields as touched to show errors
+    this.registerTouched.update(prev => {
+      const next = { ...prev };
+      Object.keys(next).forEach(k => (next as any)[k] = true);
+      return next;
+    });
+
+    const data = this.registerData();
     if (
-      this.usernameError(this.login.username) ||
-      this.passwordError(this.login.password)
+      this.usernameError(data.username) || 
+      this.nameError(data.first_name, 'First Name') ||
+      this.nameError(data.last_name, 'Last Name') ||
+      this.ageError(data.age) ||
+      this.emailError(data.email) || 
+      this.passwordError(data.password)
     ) return;
 
-    if (this.isLoginSubmitting) return;
+    if (this.usernameAvailability() !== 'available' || this.emailAvailability() !== 'available') return;
 
-    this.isLoginSubmitting = true;
+    this.isRegisterSubmitting.set(true);
+    const payload = { ...data, age: Number(data.age) };
 
-    this.authService.login({
-      username: this.login.username.trim(),
-      password: this.login.password
-    }).subscribe({
-      next: (res) => {
-        if (res?.token) {
-          localStorage.setItem('token', res.token);
-        }
-
-        this.isLoginSubmitting = false;
-        this.router.navigateByUrl('/home');
+    this.authService.register(payload).subscribe({
+      next: () => {
+        this.isRegisterSubmitting.set(false);
+        this.showRegistrationSuccessModal.set(true);
+        this.cd.detectChanges();
       },
-      error: () => {
-        this.isLoginSubmitting = false;
-      }
+      error: () => this.isRegisterSubmitting.set(false)
     });
   }
 
-  // =========================
-  // REGISTER
-  // =========================
-
- handleRegister(event: Event) {
-  event.preventDefault();
-
-  this.registerSubmitted = true;
-
-  for (const k of Object.keys(this.registerTouched) as Array<keyof typeof this.registerTouched>) {
-    this.registerTouched[k] = true;
-  }
-
-  const usernameErr = this.usernameError(this.register.username);
-  const emailErr = this.emailError(this.register.email);
-  const passwordErr = this.passwordError(this.register.password);
-
-  if (usernameErr || emailErr || passwordErr) return;
-
-  if (this.usernameAvailability !== 'available') return;
-  if (this.emailAvailability !== 'available') return;
-
-  if (this.isRegisterSubmitting) return;
-
-  this.isRegisterSubmitting = true;
-
-  const payload = {
-    username: this.register.username.trim(),
-    first_name: this.register.first_name.trim(),
-    last_name: this.register.last_name.trim(),
-    age: this.register.age ? Number(this.register.age) : 0,
-    email: this.register.email.trim(),
-    password: this.register.password
-  };
-
-  this.authService.register(payload).subscribe({
-    next: (res) => {
-      this.isRegisterSubmitting = false;
-
-      // 🔥 FORCE UI UPDATE IMMEDIATELY
-      this.showRegistrationSuccessModal = true;
-this.cd.detectChanges();
-    },
-
-    error: (err) => {
-      console.log('REGISTER ERROR:', err);
-      this.isRegisterSubmitting = false;
-      this.showRegistrationSuccessModal = false;
-    }
-  });
-}
-  // =========================
-  // MODAL
-  // =========================
-
   goToLoginFromSuccessModal() {
-    this.showRegistrationSuccessModal = false;
-
-    this.register = {
-      username: '',
-      first_name: '',
-      last_name: '',
-      age: '',
-      email: '',
-      password: ''
-    };
-
-    this.usernameAvailability = 'unknown';
-    this.emailAvailability = 'unknown';
-
-    this.authMode = 'login';
+    this.showRegistrationSuccessModal.set(false);
+    this.registerData.set({ username: '', first_name: '', last_name: '', age: '', email: '', password: '' });
+    this.usernameAvailability.set('unknown');
+    this.emailAvailability.set('unknown');
+    this.authMode.set('login');
   }
+
+  // --- REACTIVE FORM STATUS ---
+ isFormValid = computed(() => {
+    const data = this.registerData();
+    
+    // Check all fields for "null" errors and "empty" status
+    const hasUsernameError = this.usernameError(data.username) !== null || this.usernameAvailability() !== 'available';
+    const hasEmailError = this.emailError(data.email) !== null || this.emailAvailability() !== 'available';
+    const hasPasswordError = this.passwordError(data.password) !== null;
+    const hasFirstNameError = this.nameError(data.first_name, 'First Name') !== null;
+    const hasLastNameError = this.nameError(data.last_name, 'Last Name') !== null;
+    const hasAgeError = this.ageError(data.age) !== null;
+
+    // The button only enables if ALL of these are false
+    return !hasUsernameError && 
+           !hasEmailError && 
+           !hasPasswordError && 
+           !hasFirstNameError && 
+           !hasLastNameError && 
+           !hasAgeError;
+  });
 }

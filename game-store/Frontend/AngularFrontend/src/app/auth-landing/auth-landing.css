@@ -42,6 +42,43 @@
     transform: translate3d(0, 0, 0);
   }
 }
+/* Base style for the button to allow smooth transition */
+.auth-submit {
+  transition: all 0.3s ease;
+  filter: blur(0);
+  opacity: 1;
+}
+
+/* Style when the form is invalid */
+.auth-submit.is-locked {
+  filter: blur(1px) grayscale(0.5); /* Adjust blur px to your liking */
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none; /* Prevents hover effects while blurred */
+  transform: scale(0.98); /* Slightly shrinks to show it's inactive */
+}
+.field-error {
+  color: #ff4d4d; /* Bright red */
+  font-size: 0.75rem;
+  margin-top: 4px;
+  font-weight: bold;
+  display: block;
+}
+
+.field-success {
+  color: #00ff88; /* Neon green */
+  font-size: 0.75rem;
+  margin-top: 4px;
+}
+
+.field-hint {
+  color: #aaa;
+  font-size: 0.75rem;
+}
+
+input.is-invalid {
+  border: 1px solid #ff4d4d !important;
+}
 
 .auth-landing {
   position: relative;
@@ -255,7 +292,12 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
-
+.login-alert {
+  font-size: 1rem;
+  color: red;
+  display: flex;
+  align-items: center;
+}
 .auth-pane {
   display: flex;
   flex-direction: column;
