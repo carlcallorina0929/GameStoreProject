@@ -8,7 +8,7 @@ const {
 } = require("../controllers/userController");
 
 router.post("/register", registerUser);
-router.post("/login", loginUser); // Changed from GET to POST for login
+router.post("/login", loginUser); 
 router.get("/check-username", checkUsernameAvailability);
 router.get("/check-email", checkEmailAvailability);
 

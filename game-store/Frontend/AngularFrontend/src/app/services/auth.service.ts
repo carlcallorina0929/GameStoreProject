@@ -39,4 +39,8 @@ checkEmailAvailability(email: string): Observable<{ available: boolean }> {
     { params: { email } }
   );
 }
+
+storeUserId(userId: string): void {
+    localStorage.setItem('userId', userId);
+  }
 }

@@ -178,7 +178,7 @@ const loginUser = async (req, res) => {
       { expiresIn: "1h" }
     );
 
-    return res.json({ message: "Login successful", token });
+    return res.json({ message: "Login successful", token , id: user.id });
   } catch (error) {
     return res.status(500).json({ error: "Internal server error" });
   }

@@ -1,8 +1,11 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, inject, signal, OnInit, input, effect } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-loader',
   standalone: true,
+  imports: [CommonModule],
   templateUrl: './loader.html',
   styleUrl: './loader.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -13,8 +16,7 @@ export class LoaderComponent implements OnInit {
    * Matches HTML: @if (isLoading())
    */
   isLoading = input<boolean>(true);
-  message = input<string>('Initializing...');
-  subtext = input<string>('Loading Digital Assets...');
+ 
 
   /**
    * Internal state to ensure the loader disappears.

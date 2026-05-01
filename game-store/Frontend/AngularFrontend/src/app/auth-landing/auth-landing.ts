@@ -159,6 +159,7 @@ loginErrorMessage = signal<string | null>(null);
   // --- SUBMISSION ---
 
   handleLogin(event: Event) {
+    console.log('handleLogin triggered');
     event.preventDefault();
     this.loginSubmitted.set(true);
     const data = this.loginData();
@@ -166,30 +167,33 @@ loginErrorMessage = signal<string | null>(null);
 
     this.isLoginSubmitting.set(true);
     this.authService.login(this.loginData()).subscribe({
-  next: (res) => {
-    this.isLoginSubmitting.set(false);
+      next: (res) => {
+        this.isLoginSubmitting.set(false);
         console.log('Login successful', res);
-        
+
         // 1. Clear any old errors
         this.loginErrorMessage.set(null);
 
+        // Store user ID in localStorage
+        if (res.id) {
+          localStorage.setItem('userId', res.id.toString());
+        }
+
         this.router.navigateByUrl('/home');
         localStorage.setItem('token', res.token);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.isLoginSubmitting.set(false);
 
-
-  },
-  error: (err: HttpErrorResponse) => {
-    this.isLoginSubmitting.set(false);
-    
-    // Check if the backend returned a 401 (Unauthorized)
-    if (err.status === 401) {
-      // Maps your backend's { error: "Invalid..." } to the signal
-      this.loginErrorMessage.set(err.error?.error || 'Invalid Username or Password');
-    } else {
-      this.loginErrorMessage.set('An unexpected error occurred.');
-    }
-  }
-});
+        // Check if the backend returned a 401 (Unauthorized)
+        if (err.status === 401) {
+          // Maps your backend's { error: "Invalid..." } to the signal
+          this.loginErrorMessage.set(err.error?.error || 'Invalid Username or Password');
+        } else {
+          this.loginErrorMessage.set('Invalid Username or Password!');
+        }
+      }
+    });
   }
 
   handleRegister(event: Event) {

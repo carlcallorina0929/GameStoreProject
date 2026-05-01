@@ -1,4 +1,4 @@
-@if (isLoading()) {
+@if (isVisible()){
       <div class="loading-container">
         <!-- Background Scanline -->
         <div class="scanline"></div>
@@ -17,8 +17,8 @@
         </div>
 
         <div class="loading-text">
-          <h2 class="glitch-text">{{ message() }}</h2>
-          <p>{{ subtext() }}</p>
+          <h2 class="glitch-text">Loading...</h2>
+          
         </div>
       </div>
     }

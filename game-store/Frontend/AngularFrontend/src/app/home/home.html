@@ -1,14 +1,11 @@
-<app-loader 
-  [isLoading]="isPageLoading" 
-  [message]="'SYNCING STORE'" 
-  [subtext]="'Loading digital catalog...'"
-  (isVisible)="onLoaderComplete()">
-</app-loader>
-<app-navbar *ngIf="!isPageLoading" />
+<app-loader *ngIf="isPageLoading"></app-loader>
 
-<main class="home">
-  <section class="home-shell">
-    <h1>Welcome to Game Den</h1>
-  </section>
-</main>
+<div *ngIf="!isPageLoading">
+  <app-navbar></app-navbar>
 
+  <main class="home">
+    <section class="home-shell">
+      <h1>Welcome to Game Den</h1>
+    </section>
+  </main>
+</div>

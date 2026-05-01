@@ -44,9 +44,14 @@
 }
 /* Base style for the button to allow smooth transition */
 .auth-submit {
-  transition: all 0.3s ease;
-  filter: blur(0);
-  opacity: 1;
+  margin-top: 0.5rem;
+  border: 0;
+  /* Updated to a rich gold gradient */
+  color: #1a1500; /* Darker text for better contrast on gold */
+  background: linear-gradient(135deg, #FFD700, #F6D37E 50%, #B8860B);
+  box-shadow: 0 16px 32px rgba(214, 173, 8, 0.3);
+  font-weight: 800;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.3s ease;
 }
 
 /* Style when the form is invalid */
@@ -59,6 +64,13 @@
 }
 .field-error {
   color: #ff4d4d; /* Bright red */
+  font-size: 0.75rem;
+  margin-top: 4px;
+  font-weight: bold;
+  display: block;
+}
+.auth-pane label .field-error {
+  color: #ff4d4d !important;
   font-size: 0.75rem;
   margin-top: 4px;
   font-weight: bold;
@@ -96,11 +108,11 @@ input.is-invalid {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    linear-gradient(rgba(214, 173, 8, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(214, 173, 8, 0.02) 1px, transparent 1px);
   background-size: 64px 64px;
   mask-image: radial-gradient(circle at center, black 45%, transparent 100%);
-  opacity: 0.3;
+  opacity: 0.5;
   pointer-events: none;
 }
 
@@ -131,14 +143,17 @@ input.is-invalid {
 .scene-glow-left {
   top: -8rem;
   left: -10rem;
-  background: #2ce5ff;
+  /* Burnished Gold Glow */
+  background: radial-gradient(circle, #d6ad08 0%, rgba(214, 173, 8, 0) 70%);
+  opacity: 0.22;
 }
 
 .scene-glow-right {
-  right: -10rem;
-  bottom: -8rem;
-  background: #ff4f95;
-  animation-delay: -4s;
+  bottom: -10rem;
+  right: -5rem;
+  /* Alabaster/Champagne Glow for balance */
+  background: radial-gradient(circle, #f5f5f7 0%, rgba(245, 245, 247, 0) 70%);
+  opacity: 0.12;
 }
 
 .scene-grid {
@@ -176,7 +191,17 @@ input.is-invalid {
   will-change: transform, opacity;
 }
 
-.eyebrow,
+
+.eyebrow{
+  display: inline-block;
+  color: #f6d37e;
+  font-size: 1rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.name{
+  font-size: 1.5rem;
+}
 .feature-label,
 .auth-kicker {
   display: inline-block;
@@ -188,13 +213,12 @@ input.is-invalid {
 }
 
 .auth-copy h1 {
-  margin-top: 1rem;
-  font-size: clamp(3rem, 7vw, 6rem);
-  line-height: 0.92;
-  text-transform: uppercase;
-  text-shadow: 0 0 28px rgba(95, 245, 255, 0.16);
+  background: linear-gradient(to bottom, #FFFFFF 0%, #D6AD08 100%);
+  -webkit-background-clip: text;
+  font-size: 5rem;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 15px rgba(214, 173, 8, 0.2));
 }
-
 .auth-copy p {
   margin-top: 1.25rem;
   max-width: 34rem;
@@ -210,12 +234,34 @@ input.is-invalid {
 }
 
 .feature-card {
-  padding: 1.25rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 20px;
-  background: linear-gradient(180deg, rgba(10, 14, 27, 0.8), rgba(14, 9, 30, 0.55));
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+  padding: 1.5rem;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(214, 173, 8, 0.5);
+  border-radius: 12px;
+}
+
+/* This creates a moving "shimmer" effect when you hover over the features */
+.feature-card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(214, 173, 8, 0.1) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.feature-card:hover::after {
+  opacity: 1;
 }
 
 .feature-card strong {
@@ -239,10 +285,13 @@ input.is-invalid {
   animation: slideFadeInRight 760ms cubic-bezier(0.22, 1, 0.36, 1) 140ms both;
   will-change: transform, opacity;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1.5px solid rgba(214, 173, 8, 0.25); /* Thicker, more visible gold border */
+  box-shadow: 
+    0 40px 100px rgba(0, 0, 0, 0.6),
+    inset 0 0 20px rgba(214, 173, 8, 0.05);
   border-radius: 30px;
   background: linear-gradient(145deg, rgba(11, 15, 28, 0.96), rgba(16, 11, 31, 0.94));
-  box-shadow: 0 32px 90px rgba(0, 0, 0, 0.38);
+ 
 }
 
 .auth-shell::before {
@@ -280,10 +329,11 @@ input.is-invalid {
 }
 
 .auth-mobile-option.is-active {
-  border-color: rgba(114, 242, 255, 0.45);
-  background: linear-gradient(135deg, rgba(114, 242, 255, 0.22), rgba(255, 91, 177, 0.24));
-  color: #ffffff;
-  box-shadow: 0 10px 24px rgba(7, 12, 25, 0.28);
+  border-color: #FFD700;
+  /* Updated to match the gold theme */
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(184, 134, 11, 0.2));
+  color: #FFD700;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
 }
 
 .auth-forms {
@@ -337,16 +387,26 @@ input.is-invalid {
   font-size: 0.88rem;
   font-weight: 600;
 }
+.auth-pane label span {
+  color: #d6ad08; /* Gold labels for an architectural feel */
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 0.2rem;
+  font-weight: 700;
+}
 
 .auth-pane input {
   width: 100%;
   padding: 0.95rem 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.04);
+  /* Darker base with a more visible gold-tinted border */
+  border: 1px solid rgba(214, 173, 8, 0.2); 
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.3);
   color: #f5f5f7;
-  font: inherit;
-  transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+  /* This creates a subtle "rim light" on the top edge */
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .auth-pane input::placeholder {
@@ -354,10 +414,10 @@ input.is-invalid {
 }
 
 .auth-pane input:focus {
+  border-color: #d6ad08;
+  background: rgba(214, 173, 8, 0.05);
+  box-shadow: 0 0 0 4px rgba(214, 173, 8, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.05);
   outline: none;
-  border-color: rgba(95, 245, 255, 0.55);
-  background: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 0 0 4px rgba(95, 245, 255, 0.08);
 }
 
 .auth-meta {
@@ -409,14 +469,29 @@ input.is-invalid {
 .auth-submit {
   margin-top: 0.5rem;
   border: 0;
-  color: #0a0d18;
-  background: linear-gradient(135deg, #72f2ff, #f6d37e 55%, #ff5bb1);
-  box-shadow: 0 16px 32px rgba(10, 12, 23, 0.35);
+  /* Deep Gold to Champagne Metallic Gradient */
+  background: linear-gradient(
+    135deg, 
+    #b8860b 0%, 
+    #d6ad08 45%, 
+    #f6d37e 55%, 
+    #b8860b 100%
+  );
+  background-size: 200% auto; /* For a smoother shine */
+  color: #0a0d18; /* Dark obsidian text for readability */
+  font-weight: 800;
+  box-shadow: 0 12px 24px rgba(184, 134, 11, 0.25);
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.auth-submit:hover,
-.auth-switch:hover {
-  transform: translateY(-2px);
+.auth-submit:hover {
+  transform: translateY(-2px) scale(1.02);
+  background-position: right center; /* Shifts the "shine" */
+  box-shadow: 0 15px 30px rgba(184, 134, 11, 0.4);
+}
+
+.auth-submit:active {
+  transform: translateY(0) scale(0.98);
 }
 
 .auth-overlay {
@@ -427,8 +502,15 @@ input.is-invalid {
   width: 50%;
   height: 100%;
   overflow: hidden;
-  border-left: 1px solid rgba(255, 255, 255, 0.06);
-  background: linear-gradient(160deg, #17c6ff 0%, #6437ff 52%, #ff4f95 100%);
+  border-left: 1px solid rgba(255, 215, 0, 0.15); /* Subtle gold border */
+  
+  /* Updated to a Deep Obsidian to Rich Gold gradient */
+  background: linear-gradient(
+    160deg, 
+    #0a0d18 0%, 
+    #1a1500 40%, 
+    #b8860b 100%
+  );
   transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -437,9 +519,10 @@ input.is-invalid {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.22), transparent 22%),
-    radial-gradient(circle at 75% 75%, rgba(255, 209, 127, 0.24), transparent 26%),
-    linear-gradient(180deg, rgba(8, 13, 28, 0.16), rgba(8, 13, 28, 0.28));
+    radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.15), transparent 25%),
+    radial-gradient(circle at 75% 75%, rgba(246, 211, 126, 0.1), transparent 30%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4));
+  pointer-events: none;
 }
 
 .auth-shell.register-active .auth-overlay {
@@ -515,10 +598,18 @@ input.is-invalid {
     display: grid;
   }
 
-  .auth-pane {
-    min-height: unset;
-    padding: 3rem 1.4rem;
-  }
+.auth-pane {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.2rem;
+  min-height: 700px;
+  padding: 4rem 3.5rem;
+  /* Glass effect: allows background glow to show through subtly */
+  background: rgba(6, 8, 15, 0.6); 
+  backdrop-filter: blur(10px);
+  transition: all 0.4s ease;
+}
 
   .auth-pane-register {
     padding-top: 1.5rem;
@@ -531,11 +622,16 @@ input.is-invalid {
   .auth-pane {
     padding: 2rem 1.4rem;
   }
+  .auth-pane-login {
+  /* Very subtle warm amber tint on the login side */
+  background: linear-gradient(180deg, rgba(214, 173, 8, 0.04), transparent 40%);
+  border-right: 1px solid rgba(214, 173, 8, 0.05);
+}
 
-  .auth-pane-login,
   .auth-pane-register {
-    display: none;
-  }
+  /* Very subtle cool alabaster/white tint on the register side */
+  background: linear-gradient(180deg, rgba(245, 245, 247, 0.03), transparent 50%);
+}
 
   .auth-shell:not(.register-active) .auth-pane-login,
   .auth-shell.register-active .auth-pane-register {
@@ -544,10 +640,12 @@ input.is-invalid {
 }
 
 @media (max-width: 640px) {
-  .auth-copy h1 {
-    font-size: 2.8rem;
-  }
-
+.auth-copy h1 {
+  background: linear-gradient(to bottom, #FFFFFF 0%, #D6AD08 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 15px rgba(214, 173, 8, 0.2));
+}
   .auth-meta {
     flex-direction: column;
     align-items: flex-start;
@@ -594,7 +692,15 @@ input.is-invalid {
   z-index: 10000000;
 }
 .auth-landing {
-  transform-style: flat;
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  /* Shifted from blue/pink to Deep Onyx with a hint of warm amber */
+  background:
+    radial-gradient(circle at 20% 20%, rgba(214, 173, 8, 0.12), transparent 30%),
+    radial-gradient(circle at 78% 18%, rgba(255, 255, 255, 0.05), transparent 24%),
+    radial-gradient(circle at 50% 100%, rgba(184, 134, 11, 0.15), transparent 35%),
+    linear-gradient(135deg, #04060b 0%, #0a0d14 38%, #120f0a 100%);
 }
 
 .auth-modal {

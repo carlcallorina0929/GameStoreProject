@@ -74,7 +74,8 @@
   <span>{{ loginErrorMessage() }}</span>
 </div>
 
-          <button class="auth-submit" type="submit" [disabled]="isLoginSubmitting()">
+          <button class="auth-submit" type="submit" [class.is-locked]="(loginSubmitted() || loginTouched().password) && passwordError(loginData().password)" 
+          [disabled]="isLoginSubmitting()">
             {{ isLoginSubmitting() ? 'Logging In...' : 'Log In' }}
           </button>
         </form>

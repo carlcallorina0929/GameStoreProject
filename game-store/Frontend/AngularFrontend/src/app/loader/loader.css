@@ -6,6 +6,7 @@
       --color-text: #c6c8da;
       --font-display: 'Rajdhani', sans-serif;
     }
+    
 
     .loading-container {
       position: fixed;
@@ -27,7 +28,7 @@
       position: absolute;
       inset: 0;
       background:
-        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(rgba(22, 11, 11, 0.02) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
       background-size: 64px 64px;
       mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
@@ -70,7 +71,7 @@
     .ring-cyan {
       width: 110px;
       height: 110px;
-      border-top-color: var(--color-cyan);
+      border-top-color: var(--color-gold);
       border-left-color: rgba(44, 229, 255, 0.1);
       animation: spin 2s linear infinite;
     }
@@ -78,7 +79,7 @@
     .ring-pink {
       width: 85px;
       height: 85px;
-      border-bottom-color: var(--color-pink);
+      border-bottom-color: var(--color-gold);
       border-right-color: rgba(255, 79, 149, 0.1);
       animation: spinReverse 1.5s linear infinite;
     }
@@ -86,7 +87,7 @@
     .scanline {
       position: absolute;
       inset: 0;
-      background: linear-gradient(to bottom, transparent, rgba(44, 229, 255, 0.05) 50%, transparent);
+      background: linear-gradient(to bottom, transparent, rgba(238, 217, 62, 0.05) 50%, transparent);
       height: 40px;
       width: 100%;
       animation: scanlineDrift 3s linear infinite;

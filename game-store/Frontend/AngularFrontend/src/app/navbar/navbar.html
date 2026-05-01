@@ -1,30 +1,47 @@
 ﻿<nav class="navbar">
-  <div class="navbar-brand">
-    <a routerLink="/home">Game Den</a>
-  </div>
+  <div class="navbar-container">
 
-  <button class="hamburger" type="button" aria-label="Toggle navigation menu" (click)="toggleMenu()">
-    &#9776;
-  </button>
-
-  <ul class="nav-links" [class.open]="menuOpen">
-    <li><a routerLink="/home" routerLinkActive="active">Home</a></li>
-    <li><a routerLink="/games" routerLinkActive="active">Games</a></li>
-    <li><a routerLink="/cart" routerLinkActive="active">Cart</a></li>
-  <li class="account-menu">
-  <button class="nav-action" type="button" (click)="toggleAccountMenu()">
-    Account
-  </button>
-
-  @if (accountMenuOpen) {
-    <div class="dropdown">
-      <a routerLink="/cart">Cart</a>
-      <a routerLink="/settings">Settings</a>
-      <button type="button" (click)="logout()">Logout</button>
+    <!-- Brand -->
+    <div class="navbar-brand">
+      <a href="javascript:void(0)">Game <span class="accent">Den</span></a>
     </div>
-  }
-</li>
-  </ul>
 
+    <!-- Mobile Toggle -->
+    <button
+      class="hamburger"
+      (click)="toggleMenu()"
+      [class.active]="menuOpen"
+    >
+      <span></span>
+      <span></span>
+    </button>
 
+    <!-- Navigation Links -->
+    <ul class="nav-links" [class.open]="menuOpen">
+      <li><a href="javascript:void(0)" class="active">Home</a></li>
+      <li><a href="javascript:void(0)">Games</a></li>
+      <li><a href="javascript:void(0)">Library</a></li>
+      <li><a href="javascript:void(0)">Cart</a></li>
+
+      <!-- Account Dropdown -->
+      <li class="account-menu">
+        <button class="nav-action" (click)="toggleAccountMenu()">
+          Account
+          <svg [class.rotate]="accountMenuOpen" width="12" height="12"
+               viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m6 9 6 6 6-6"/>
+          </svg>
+        </button>
+
+        <div *ngIf="accountMenuOpen" class="dropdown animate-pop">
+          <a href="javascript:void(0)">Profile</a>
+          <a href="javascript:void(0)">Settings</a>
+          <div class="divider"></div>
+          <button (click)="logout()">Logout</button>
+        </div>
+      </li>
+    </ul>
+
+  </div>
 </nav>
