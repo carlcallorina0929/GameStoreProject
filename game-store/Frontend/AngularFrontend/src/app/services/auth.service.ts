@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class AuthService {
 
-  private apiUrl = 'https://game-store-project-yraf.vercel.app';
+  private apiUrl = 'http://localhost:5000/api/users';
 
   constructor(private http: HttpClient) {}
 
