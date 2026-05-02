@@ -8,11 +8,16 @@ const userRoutes = require("./routes/userRoutes");
 
 const app = express();
 
-app.use("/images", express.static(path.join(__dirname, "images")));
+// MAKE UPLOADS FOLDER PUBLIC (for images)
+app.use("/uploads", express.static("uploads"));
 
 app.use(cors());
 app.use(morgan("dev"));
 app.use(bodyParser.json());
+
+// ROUTES
+const gameRoutes = require("./routes/gameRoutes");
+app.use("/api", gameRoutes);
 
 
 

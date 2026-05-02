@@ -159,7 +159,6 @@ loginErrorMessage = signal<string | null>(null);
   // --- SUBMISSION ---
 
   handleLogin(event: Event) {
-    console.log('handleLogin triggered');
     event.preventDefault();
     this.loginSubmitted.set(true);
     const data = this.loginData();

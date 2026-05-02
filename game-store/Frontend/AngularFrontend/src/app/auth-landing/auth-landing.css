@@ -285,7 +285,7 @@ input.is-invalid {
   animation: slideFadeInRight 760ms cubic-bezier(0.22, 1, 0.36, 1) 140ms both;
   will-change: transform, opacity;
   overflow: hidden;
-  border: 1.5px solid rgba(214, 173, 8, 0.25); /* Thicker, more visible gold border */
+  border: 1.5px solid rgba(214, 173, 8, 0.25); 
   box-shadow: 
     0 40px 100px rgba(0, 0, 0, 0.6),
     inset 0 0 20px rgba(214, 173, 8, 0.05);
@@ -597,6 +597,9 @@ input.is-invalid {
   .auth-mobile-toggle {
     display: grid;
   }
+  .auth-shell .auth-pane {
+  display: none;
+}
 
 .auth-pane {
   display: flex;

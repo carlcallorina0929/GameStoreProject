@@ -25,6 +25,7 @@ export class Navbar {
 
   logout() {
     localStorage.removeItem('token'); // remove login
+    localStorage.removeItem('userId'); // remove userId
     this.accountMenuOpen = false;
 
     this.router.navigate(['']);

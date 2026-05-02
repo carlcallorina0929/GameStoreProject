@@ -11,7 +11,9 @@ const checkUsernameAvailability = async (req, res) => {
   try {
     const username = String(req.query.username ?? "").trim();
     if (!username) {
-      return res.status(400).json({ error: "username query param is required" });
+      return res
+        .status(400)
+        .json({ error: "username query param is required" });
     }
 
     if (!usernameRegex.test(username)) {
@@ -155,7 +157,9 @@ const loginUser = async (req, res) => {
     const password = String(req.body.password ?? "");
 
     if (!username || !password) {
-      return res.status(400).json({ error: "Username and password are required" });
+      return res
+        .status(400)
+        .json({ error: "Username and password are required" });
     }
 
     const user = await User.getUserByUsername(username);
@@ -169,16 +173,18 @@ const loginUser = async (req, res) => {
     }
 
     if (!process.env.JWT_SECRET) {
-      return res.status(500).json({ error: "Server misconfiguration: JWT_SECRET is not set" });
+      return res
+        .status(500)
+        .json({ error: "Server misconfiguration: JWT_SECRET is not set" });
     }
 
     const token = jwt.sign(
       { id: user.id, username: user.username, role: user.role },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "1h" },
     );
 
-    return res.json({ message: "Login successful", token , id: user.id });
+    return res.json({ message: "Login successful", token, id: user.id });
   } catch (error) {
     return res.status(500).json({ error: "Internal server error" });
   }
