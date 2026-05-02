@@ -61,13 +61,13 @@
       list-style: none;
       margin: 0;
       padding: 0;
-      font-size: 2rem; /* Increased nav links size */
+      font-size: 1rem; /* Increased nav links size */
     }
 
     .nav-links li a, .nav-action {
       padding: 0.6rem 1.25rem;
       color: rgba(247, 251, 255, 0.6);
-      font-size: 0.9rem; /* Ensure consistent font size for nav links */
+      font-size: 0.9rem; 
       font-weight: 700;
       text-transform: uppercase;
       text-decoration: none;
@@ -191,36 +191,59 @@
 
     /* Responsive */
     @media (max-width: 768px) {
-      .hamburger { display: flex; }
-      
-      .nav-links {
-        position: fixed;
-        top: 0;
-        right: -100%;
-        font-size: 2rem;
-        width: 80%;
-        height: 100vh;
-        background: rgba(11, 11, 26, 0.98);
-        flex-direction: column;
-        justify-content: center;
-        padding: 2rem;
-        transition: right 0.4s cubic-bezier(0.77, 0, 0.175, 1);
-        backdrop-filter: blur(10px);
-        border-left: 1px solid rgba(201, 168, 76, 0.2);
-      }
+  .hamburger {
+    display: flex;
+  }
 
-      .nav-links.open { right: 0; }
-      .nav-links li { width: 100%; }
-      .nav-links li a, .nav-action { 
-        width: 100%; 
-        font-size: 1.5rem; 
-        padding: 1.5rem;
-      }
+  .nav-links {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 80%;
+    height: 100vh;
+    background: rgba(11, 11, 26, 0.98);
+    flex-direction: column;
+    justify-content: center;
+    padding: 2rem;
+    transition: right 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+    backdrop-filter: blur(10px);
+    border-left: 1px solid rgba(201, 168, 76, 0.2);
+  }
 
-      .dropdown {
-        position: static;
-        background: rgba(255, 255, 255, 0.03);
-        margin-top: 1rem;
-        box-shadow: none;
-      }
-    }
+  .nav-links.open {
+    right: 0;
+  }
+
+  .nav-links li {
+    width: 100%;
+  }
+
+  /* ✅ NAV LINKS (mobile size) */
+  .nav-links li a {
+    width: 100%;
+    font-size: 0.85rem;   /* readable but smaller */
+    padding: 1rem 1.2rem;
+    letter-spacing: 0.12em;
+  }
+
+  /* ✅ ACCOUNT BUTTON (mobile size) */
+  .nav-action {
+    width: 100%;
+    font-size: 0.85rem;
+    padding: 1rem 1.2rem;
+  }
+
+  /* ✅ DROPDOWN ITEMS */
+  .dropdown a,
+  .dropdown button {
+    font-size: 0.85rem;   /* match nav links */
+    padding: 0.9rem 1rem;
+  }
+
+  .dropdown {
+    position: static;
+    background: rgba(255, 255, 255, 0.03);
+    margin-top: 1rem;
+    box-shadow: none;
+  }
+}
