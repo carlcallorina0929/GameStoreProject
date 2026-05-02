@@ -99,7 +99,7 @@ const registerUser = async (req, res) => {
     }
 
     if (normalizedAge < 1 || normalizedAge > 120) {
-      return res.status(400).json({ error: "Age must be between 1 and 120" });
+      return res.status(400).json({ error: "Enter a valid age" });
     }
 
     if (!emailRegex.test(normalizedEmail)) {

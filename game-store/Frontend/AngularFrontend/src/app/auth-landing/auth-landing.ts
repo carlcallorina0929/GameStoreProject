@@ -113,11 +113,15 @@ loginErrorMessage = signal<string | null>(null);
     return null;
   }
 
-  ageError(v: string) {
-    if (!v || v.trim().length === 0) return 'Age is required.';
-    if (Number(v) < 13) return 'Must be at least 13.';
-    return null;
-  }
+ ageError(v: string) {
+  const num = Number(v);
+
+  if (!v || v.trim().length === 0) return 'Age is required.';
+  if (isNaN(num)) return 'Age must be a number.';
+  if (num < 13 ) return 'User must be at least 13 years old.';
+  if (num > 123) return 'Age must be valid.';
+  return null;
+}
 
   emailError(v: string) {
     const t = v.trim();
@@ -216,7 +220,7 @@ loginErrorMessage = signal<string | null>(null);
       this.passwordError(data.password)
     ) return;
 
-    if (this.usernameAvailability() !== 'available' || this.emailAvailability() !== 'available') return;
+    if (!this.isFormValid()) return;
 
     this.isRegisterSubmitting.set(true);
     const payload = { ...data, age: Number(data.age) };

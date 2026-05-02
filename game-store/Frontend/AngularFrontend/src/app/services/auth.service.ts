@@ -1,18 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import {environment} from  '../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
 
-  private apiUrl = 'http://localhost:5000/api/users';
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
   login(credentials: { username: string; password: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, credentials);
+    return this.http.post(`${this.apiUrl}/users/login`, credentials);
   }
 
   register(userData: {
@@ -23,19 +24,19 @@ export class AuthService {
     email: string;
     password: string;
   }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, userData);
+    return this.http.post(`${this.apiUrl}/users/register`, userData);
   }
 
   checkUsernameAvailability(username: string): Observable<{ available: boolean }> {
   return this.http.get<{ available: boolean }>(
-    `${this.apiUrl}/check-username`,
+    `${this.apiUrl}/users/check-username`,
     { params: { username } }
   );
 }
 
 checkEmailAvailability(email: string): Observable<{ available: boolean }> {
   return this.http.get<{ available: boolean }>(
-    `${this.apiUrl}/check-email`,
+    `${this.apiUrl}/users/check-email`,
     { params: { email } }
   );
 }
