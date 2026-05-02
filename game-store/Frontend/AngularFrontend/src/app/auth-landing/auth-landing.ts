@@ -240,23 +240,36 @@ loginErrorMessage = signal<string | null>(null);
   }
 
   // --- REACTIVE FORM STATUS ---
- isFormValid = computed(() => {
-    const data = this.registerData();
-    
-    // Check all fields for "null" errors and "empty" status
-    const hasUsernameError = this.usernameError(data.username) !== null || this.usernameAvailability() !== 'available';
-    const hasEmailError = this.emailError(data.email) !== null || this.emailAvailability() !== 'available';
-    const hasPasswordError = this.passwordError(data.password) !== null;
-    const hasFirstNameError = this.nameError(data.first_name, 'First Name') !== null;
-    const hasLastNameError = this.nameError(data.last_name, 'Last Name') !== null;
-    const hasAgeError = this.ageError(data.age) !== null;
+isFormValid = computed(() => {
+  const data = this.registerData();
 
-    // The button only enables if ALL of these are false
-    return !hasUsernameError && 
-           !hasEmailError && 
-           !hasPasswordError && 
-           !hasFirstNameError && 
-           !hasLastNameError && 
-           !hasAgeError;
-  });
+  const hasUsernameError =
+    this.usernameError(data.username) !== null ||
+    this.usernameAvailability() === 'taken';
+
+  const hasEmailError =
+    this.emailError(data.email) !== null ||
+    this.emailAvailability() === 'taken';
+
+  const hasPasswordError =
+    this.passwordError(data.password) !== null;
+
+  const hasFirstNameError =
+    this.nameError(data.first_name, 'First Name') !== null;
+
+  const hasLastNameError =
+    this.nameError(data.last_name, 'Last Name') !== null;
+
+  const hasAgeError =
+    this.ageError(data.age) !== null;
+
+  return (
+    !hasUsernameError &&
+    !hasEmailError &&
+    !hasPasswordError &&
+    !hasFirstNameError &&
+    !hasLastNameError &&
+    !hasAgeError
+  );
+});
 }
