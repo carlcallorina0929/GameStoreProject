@@ -1,1 +1,10 @@
-
+{
+  "buildCommand": "ng build --configuration production",
+  "outputDirectory": "dist/AngularFrontend",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
