@@ -219,25 +219,27 @@
   }
 
   /* ✅ NAV LINKS (mobile size) */
+  /* NAV LINKS */
   .nav-links li a {
     width: 100%;
-    font-size: 0.85rem;   /* readable but smaller */
-    padding: 1rem 1.2rem;
-    letter-spacing: 0.12em;
+    font-size: 0.72rem;   /* smaller */
+    padding: 0.8rem 1rem; /* tighter spacing */
+    letter-spacing: 0.08em;
   }
 
   /* ✅ ACCOUNT BUTTON (mobile size) */
-  .nav-action {
+  /* NAV LINKS */
+  .nav-links li a {
     width: 100%;
-    font-size: 0.85rem;
-    padding: 1rem 1.2rem;
+    font-size: 0.72rem;   /* smaller */
+    padding: 0.8rem 1rem; /* tighter spacing */
+    letter-spacing: 0.08em;
   }
-
   /* ✅ DROPDOWN ITEMS */
   .dropdown a,
   .dropdown button {
-    font-size: 0.85rem;   /* match nav links */
-    padding: 0.9rem 1rem;
+    font-size: 0.72rem;
+    padding: 0.75rem 0.9rem;
   }
 
   .dropdown {
