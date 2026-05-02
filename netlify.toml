@@ -1,9 +1,0 @@
-[build]
-  base = "game-store/Frontend/AngularFrontend"
-  command = "npm run build"
-  publish = "dist/AngularFrontend"
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
