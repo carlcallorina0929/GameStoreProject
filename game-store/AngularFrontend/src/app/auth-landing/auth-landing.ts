@@ -61,8 +61,44 @@ loginErrorMessage = signal<string | null>(null);
   // --- ACTIONS ---
 
   setAuthMode(mode: 'login' | 'register') {
-    this.authMode.set(mode);
+  this.authMode.set(mode);
+
+  // RESET LOGIN STATE
+  if (mode === 'login') {
+    this.loginData.set({ username: '', password: '' });
+    this.loginTouched.set({ username: false, password: false });
+    this.loginSubmitted.set(false);
+    this.loginErrorMessage.set(null);
   }
+
+  // RESET REGISTER STATE
+  if (mode === 'register') {
+    this.registerData.set({
+      username: '',
+      first_name: '',
+      last_name: '',
+      age: '',
+      email: '',
+      password: '',
+      confirmPassword: ''
+    });
+
+    this.registerTouched.set({
+      username: false,
+      first_name: false,
+      last_name: false,
+      age: false,
+      email: false,
+      password: false,
+      confirmPassword: false
+    });
+
+    this.registerSubmitted.set(false);
+
+    this.usernameAvailability.set('unknown');
+    this.emailAvailability.set('unknown');
+  }
+}
 
   onLoginInput(field: 'username' | 'password', value: string) {
     this.loginData.update(prev => ({ ...prev, [field]: value }));

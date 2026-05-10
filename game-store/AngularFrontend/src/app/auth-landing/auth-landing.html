@@ -283,6 +283,7 @@
             <span>Confirm Password</span>
             <input
               type="password"
+              autocomplete="new-password"
               [value]="registerData().confirmPassword"
               (input)="onRegisterInput('confirmPassword', $any($event.target).value)"
               (blur)="markRegisterTouched('confirmPassword')"
