@@ -153,7 +153,7 @@ const registerUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
   try {
-    const username = String(req.body.username ?? "").trim();
+    const username = String(req.body.username ?? "").trim().toLowerCase();
     const password = String(req.body.password ?? "");
 
     if (!username || !password) {

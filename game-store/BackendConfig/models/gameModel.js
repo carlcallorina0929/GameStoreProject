@@ -1,7 +1,7 @@
 const db = require("../config/db");
 
 // GET ALL GAMES WITH GENRES + OWNERSHIP
-const getAllGames = async (userId) => {
+const getAllFilteredGames = async (userId) => {
   const [rows] = await db.query(`
     SELECT 
       g.id,
@@ -29,4 +29,8 @@ const getAllGames = async (userId) => {
   return rows;
 };
 
-module.exports = { getAllGames };
+//GET FEATURED DISCOUNTED GAMES
+
+
+
+module.exports = { getAllFilteredGames };

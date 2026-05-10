@@ -30,7 +30,8 @@ export class AuthLandingComponent {
     last_name: '',
     age: '',
     email: '',
-    password: ''
+    password: '',
+    confirmPassword: ''
   });
 loginErrorMessage = signal<string | null>(null);
   loginTouched = signal({ username: false, password: false });
@@ -40,7 +41,8 @@ loginErrorMessage = signal<string | null>(null);
     last_name: false,
     age: false,
     email: false,
-    password: false
+    password: false,
+    confirmPassword: false
   });
 
   loginSubmitted = signal(false);
@@ -69,6 +71,21 @@ loginErrorMessage = signal<string | null>(null);
   onRegisterInput(field: keyof ReturnType<typeof this.registerData>, value: string) {
     let val = value;
     
+    if (field === 'password') {
+  const passwordValid = this.passwordError(value) === null;
+
+  if (!passwordValid) {
+    this.registerData.update(prev => ({
+      ...prev,
+      confirmPassword: ''
+    }));
+
+    this.registerTouched.update(prev => ({
+      ...prev,
+      confirmPassword: false
+    }));
+  }
+}
     // Auto-strip non-letters for name fields
     if (field === 'first_name' || field === 'last_name') {
       
@@ -135,6 +152,12 @@ loginErrorMessage = signal<string | null>(null);
     if (!/^(?=.*[A-Z])(?=.*\d).{8,64}$/.test(v)) {
       return 'Min 8 chars, 1 uppercase, 1 number.';
     }
+    return null;
+  }
+
+  confirmPasswordError(password: string, confirmPassword: string) {
+    if (!confirmPassword) return 'This field is required.';
+    if (password !== confirmPassword) return 'Password do not match.';
     return null;
   }
 
@@ -217,7 +240,8 @@ loginErrorMessage = signal<string | null>(null);
       this.nameError(data.last_name, 'Last Name') ||
       this.ageError(data.age) ||
       this.emailError(data.email) || 
-      this.passwordError(data.password)
+      this.passwordError(data.password) ||
+      this.confirmPasswordError(data.password, data.confirmPassword)
     ) return;
 
     if (!this.isFormValid()) return;
@@ -235,17 +259,50 @@ loginErrorMessage = signal<string | null>(null);
     });
   }
 
-  goToLoginFromSuccessModal() {
-    this.showRegistrationSuccessModal.set(false);
-    this.registerData.set({ username: '', first_name: '', last_name: '', age: '', email: '', password: '' });
-    this.usernameAvailability.set('unknown');
-    this.emailAvailability.set('unknown');
-    this.authMode.set('login');
-  }
+goToLoginFromSuccessModal() {
+  this.showRegistrationSuccessModal.set(false);
 
+  this.registerData.set({
+    username: '',
+    first_name: '',
+    last_name: '',
+    age: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  });
+
+  // RESET TOUCHED STATES
+  this.registerTouched.set({
+    username: false,
+    first_name: false,
+    last_name: false,
+    age: false,
+    email: false,
+    password: false,
+    confirmPassword: false
+  });
+
+  // RESET SUBMITTED STATE
+  this.registerSubmitted.set(false);
+
+  // RESET AVAILABILITY
+  this.usernameAvailability.set('unknown');
+  this.emailAvailability.set('unknown');
+
+  // SWITCH MODE
+  this.authMode.set('login');
+}
+showConfirmPassword = computed(() => {
+  return this.passwordError(this.registerData().password) === null;
+});
   // --- REACTIVE FORM STATUS ---
 isFormValid = computed(() => {
   const data = this.registerData();
+  
+
+  const hasConfirmPasswordError =
+    this.confirmPasswordError(data.password, data.confirmPassword) !== null;
 
   const hasUsernameError =
     this.usernameError(data.username) !== null ||
@@ -268,6 +325,7 @@ isFormValid = computed(() => {
     this.ageError(data.age) !== null;
 
   return (
+    !hasConfirmPasswordError &&
     !hasUsernameError &&
     !hasEmailError &&
     !hasPasswordError &&

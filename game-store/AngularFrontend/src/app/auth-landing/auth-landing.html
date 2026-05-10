@@ -132,6 +132,7 @@
             <span>Username</span>
             <input
               type="text"
+              autocomplete="new-username"
               [value]="registerData().username"
               (input)="onRegisterInput('username', $any($event.target).value)"
               (blur)="markRegisterTouched('username')"
@@ -232,6 +233,7 @@
             <span>Email</span>
             <input
               type="email"
+              autocomplete="off"
               [value]="registerData().email"
               (input)="onRegisterInput('email', $any($event.target).value)"
               (blur)="markRegisterTouched('email')"
@@ -257,6 +259,7 @@
             <span>Password</span>
             <input
               type="password"
+              autocomplete="new-password"
               [value]="registerData().password"
               (input)="onRegisterInput('password', $any($event.target).value)"
               (blur)="markRegisterTouched('password')"
@@ -273,6 +276,29 @@
               "
             >
               {{ passwordError(registerData().password) }}
+            </span>
+          </label>
+
+          <label *ngIf="showConfirmPassword()">
+            <span>Confirm Password</span>
+            <input
+              type="password"
+              [value]="registerData().confirmPassword"
+              (input)="onRegisterInput('confirmPassword', $any($event.target).value)"
+              (blur)="markRegisterTouched('confirmPassword')"
+              [class.is-invalid]="
+                (registerSubmitted() || registerTouched().confirmPassword) &&
+                confirmPasswordError(registerData().password, registerData().confirmPassword)
+              "
+            />
+            <span
+              class="field-error"
+              *ngIf="
+                (registerSubmitted() || registerTouched().confirmPassword) &&
+                confirmPasswordError(registerData().password, registerData().confirmPassword)
+              "
+            >
+              {{ confirmPasswordError(registerData().password, registerData().confirmPassword) }}
             </span>
           </label>
 
