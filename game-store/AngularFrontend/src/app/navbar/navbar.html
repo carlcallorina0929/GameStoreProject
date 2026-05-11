@@ -1,4 +1,4 @@
-﻿<nav class="navbar">
+<nav class="navbar">
   <div class="navbar-container">
 
     <!-- Brand -->
@@ -38,10 +38,46 @@
           <a href="javascript:void(0)">Profile</a>
           <a href="javascript:void(0)">Settings</a>
           <div class="divider"></div>
-          <button (click)="logout()">Logout</button>
+          <button (click)="openLogoutModal()">Logout</button>
         </div>
       </li>
     </ul>
 
   </div>
 </nav>
+
+<!-- Logout Confirmation Modal (placed at the bottom as requested) -->
+<div
+  class="auth-modal-backdrop"
+  *ngIf="logoutModalOpen()"
+  (click)="closeLogoutModal()"
+>
+  <div
+    class="auth-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Logout confirmation"
+    (click)="$event.stopPropagation()"
+  >
+    <span class="auth-kicker">Alert</span>
+    <h3>Are you sure you want to logout?</h3>
+    <p>You will be redirected to the login screen.</p>
+
+    <div class="logout-modal-actions">
+      <button
+        type="button"
+        class="logout-modal-btn logout-modal-yes"
+        (click)="confirmLogout()"
+      >
+        YES
+      </button>
+      <button
+        type="button"
+        class="logout-modal-btn logout-modal-no"
+        (click)="closeLogoutModal()"
+      >
+        NO
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,6 +1,26 @@
 <section class="hero" (mouseenter)="pause()" (mouseleave)="resume()">
+   <button
+    class="hero-nav hero-nav-left"
+    type="button"
+    (click)="prev()"
+    [disabled]="!canSlide"
+    aria-label="Previous game"
+  >
+    ‹
+  </button>
+
+  <button
+    class="hero-nav hero-nav-right"
+    type="button"
+    (click)="next()"
+    [disabled]="!canSlide"
+    aria-label="Next game"
+  >
+    ›
+  </button>
   <!-- Loading state: keep layout stable, show shimmer blocks -->
   <div class="hero-card" *ngIf="isLoading()">
+   
     <div class="hero-media hero-media-skeleton" aria-hidden="true"></div>
     <div class="hero-body">
       <div class="skeleton skeleton-title" aria-hidden="true"></div>
@@ -52,14 +72,7 @@
           {{ game.isOwned ? 'In Library' : 'Acquire Now' }}
         </button>
 
-        <div class="hero-controls">
-          <button class="hero-nav" type="button" (click)="prev()" [disabled]="!canSlide" aria-label="Previous game">
-            ‹
-          </button>
-          <button class="hero-nav" type="button" (click)="next()" [disabled]="!canSlide" aria-label="Next game">
-            ›
-          </button>
-        </div>
+        
       </div>
 
       <div class="hero-dots" *ngIf="games().length > 1">

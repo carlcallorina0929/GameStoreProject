@@ -1,4 +1,4 @@
-﻿import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
@@ -12,6 +12,8 @@ import { Router } from '@angular/router';
 export class Navbar {
   menuOpen = false;
   accountMenuOpen = false;
+  // Controls logout confirmation modal visibility (signal matches the app's existing pattern).
+  logoutModalOpen = signal(false);
 
   constructor(private router: Router) {}
 
@@ -23,12 +25,31 @@ export class Navbar {
     this.accountMenuOpen = !this.accountMenuOpen;
   }
 
-  logout() {
+  // Opens the confirmation modal instead of logging out immediately.
+  openLogoutModal() {
+    this.logoutModalOpen.set(true);
+    this.accountMenuOpen = false;
+  }
+
+  // Closes the confirmation modal without logging out.
+  closeLogoutModal() {
+    this.logoutModalOpen.set(false);
+  }
+
+  // Performs the actual logout (moved from the old logout() body).
+  confirmLogout() {
     localStorage.removeItem('token'); // remove login
     localStorage.removeItem('userId'); // remove userId
     this.accountMenuOpen = false;
+    this.logoutModalOpen.set(false);
 
+    // Login/auth landing route is the root path.
     this.router.navigate(['']);
+  }
+
+  // Kept for compatibility if referenced elsewhere; now opens the modal.
+  logout() {
+    this.openLogoutModal();
   }
 
   @HostListener('document:click', ['$event'])

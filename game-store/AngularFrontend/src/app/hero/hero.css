@@ -1,8 +1,11 @@
 /* Hero slider: Obsidian + gold styling to match the existing theme */
 .hero {
+  position: relative;
   padding: 2rem clamp(1rem, 2vw, 2rem);
+  overflow: visible; /* important */
 }
 .hero-card {
+  position:relative;
   width: 100%;
   max-width: 1400px;
   min-height: 420px;
@@ -15,11 +18,23 @@
   padding: 1.75rem;
 }
 
+.hero-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 9999; /* make it undeniable */
+  pointer-events: auto;
+}
+
 .hero-media {
   position: relative;
+
+  width: 100%;
+  aspect-ratio: 16 / 9;
+
   border-radius: 20px;
   overflow: hidden;
-  min-height: 300px;
+
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.06);
 }
@@ -170,27 +185,50 @@
 }
 
 .hero-nav {
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.06);
-  color: #f7fbff;
-  font-size: 1.5rem;
-  line-height: 1;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+
+  width: 56px;
+  height: 56px;
+
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+
+  background: rgba(5, 8, 18, 0.85);
+  backdrop-filter: blur(12px);
+
+  color: #ffffff;
+  font-size: 2rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   cursor: pointer;
-  transition: transform 0.2s ease, background 0.2s ease;
+
+  z-index: 999;
+
+  transition: all 0.2s ease;
+}
+
+.hero-nav-left {
+  left: 0.5rem;
+}
+
+.hero-nav-right {
+  right: 0.5rem;
 }
 
 .hero-nav:hover {
-  background: rgba(255, 255, 255, 0.1);
-  transform: translateY(-1px);
+  transform: translateY(-50%) scale(1.05);
+  border-color: rgba(214, 173, 8, 0.5);
+  color: #ffd700;
 }
 
 .hero-nav:disabled {
-  opacity: 0.5;
+  opacity: 0.4;
   cursor: not-allowed;
-  transform: none;
 }
 
 .hero-dots {
