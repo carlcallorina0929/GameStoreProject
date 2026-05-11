@@ -2,11 +2,12 @@ import { Component , OnInit } from '@angular/core';
 import { Navbar } from '../navbar/navbar';
 import { LoaderComponent } from '../loader/loader';
 import { CommonModule } from '@angular/common';
+import { HeroComponent } from '../hero/hero';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [Navbar , LoaderComponent, CommonModule],
+  imports: [Navbar , LoaderComponent, CommonModule, HeroComponent],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })

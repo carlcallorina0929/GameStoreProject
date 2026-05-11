@@ -1,0 +1,77 @@
+<section class="hero" (mouseenter)="pause()" (mouseleave)="resume()">
+  <!-- Loading state: keep layout stable, show shimmer blocks -->
+  <div class="hero-card" *ngIf="isLoading()">
+    <div class="hero-media hero-media-skeleton" aria-hidden="true"></div>
+    <div class="hero-body">
+      <div class="skeleton skeleton-title" aria-hidden="true"></div>
+      <div class="skeleton skeleton-text" aria-hidden="true"></div>
+      <div class="skeleton skeleton-text short" aria-hidden="true"></div>
+      <div class="skeleton skeleton-cta" aria-hidden="true"></div>
+    </div>
+  </div>
+
+  <!-- Empty state: API returned 0 discounted games -->
+  <div class="hero-empty" *ngIf="!isLoading() && games().length === 0">
+    <h2>No active discounts right now</h2>
+    <p>Check back soon for new deals.</p>
+  </div>
+
+  <!-- Slider: only render when we have data -->
+  <div class="hero-card" *ngIf="!isLoading() && currentGame() as game">
+    <div class="hero-media">
+      <img
+        *ngIf="game.imageUrl; else noImage"
+        class="hero-image"
+        [src]="game.imageUrl"
+        [alt]="game.title"
+      />
+      <ng-template #noImage>
+        <div class="hero-image-fallback" aria-hidden="true"></div>
+      </ng-template>
+
+      <span class="hero-discount-pill">-{{ game.discountPercent }}%</span>
+      <span class="hero-owned-pill" *ngIf="game.isOwned">Owned</span>
+    </div>
+
+    <div class="hero-body">
+      <p class="hero-eyebrow">Featured Deal</p>
+      <h2 class="hero-title">{{ game.title }}</h2>
+      <p class="hero-description">{{ game.description }}</p>
+
+      <div class="hero-pricing">
+        <span class="hero-final">{{ game.finalPrice | currency }}</span>
+        <span class="hero-original">{{ game.originalPrice | currency }}</span>
+      </div>
+
+      <div class="hero-actions">
+        <button
+          class="hero-cta"
+          type="button"
+          [disabled]="game.isOwned"
+        >
+          {{ game.isOwned ? 'In Library' : 'Acquire Now' }}
+        </button>
+
+        <div class="hero-controls">
+          <button class="hero-nav" type="button" (click)="prev()" [disabled]="!canSlide" aria-label="Previous game">
+            ‹
+          </button>
+          <button class="hero-nav" type="button" (click)="next()" [disabled]="!canSlide" aria-label="Next game">
+            ›
+          </button>
+        </div>
+      </div>
+
+      <div class="hero-dots" *ngIf="games().length > 1">
+        <button
+          *ngFor="let _ of games(); let i = index"
+          type="button"
+          class="hero-dot"
+          [class.is-active]="i === currentIndex()"
+          (click)="goTo(i)"
+          [attr.aria-label]="'Go to slide ' + (i + 1)"
+        ></button>
+      </div>
+    </div>
+  </div>
+</section>
