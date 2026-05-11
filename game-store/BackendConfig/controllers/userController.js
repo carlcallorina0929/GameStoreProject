@@ -186,8 +186,12 @@ const loginUser = async (req, res) => {
 
     return res.json({ message: "Login successful", token, id: user.id });
   } catch (error) {
-    return res.status(500).json({ error: "Internal server error" });
-  }
+  console.log("LOGIN ERROR:", error);
+
+  return res.status(500).json({
+    error: error.message,
+  });
+}
 };
 
 module.exports = {

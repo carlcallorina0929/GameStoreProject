@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 
 // ROUTES
 const gameRoutes = require("./routes/gameRoutes");
-app.use("/api/games", gameRoutes);
+app.use("/api", gameRoutes);
 
 
 
