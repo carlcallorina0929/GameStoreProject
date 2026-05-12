@@ -2,7 +2,9 @@
    GAME DEN — Global Styles
    Premium Dark Theme
    ============================================= */
-
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 :root {
   --color-bg:          #0a0a0f;
   --color-surface:     #12121a;

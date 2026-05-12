@@ -1,0 +1,136 @@
+:host {
+      display: block;
+      width: 100%;
+      min-height: 100vh;
+      user-select: none;
+    }
+
+    .genre-nav-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem;
+    }
+
+    /* Header & Navigation */
+    .genre-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .genre-title {
+      color: #ffffff;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3rem;
+      margin: 0;
+      opacity: 0.7;
+    }
+
+    .genre-controls {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .control-btn {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      color: #d4af37;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .control-btn:hover:not(:disabled) {
+      border-color: #f2d472;
+      background: #d4af37;
+      color: #0d0d0d;
+      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .control-btn:disabled {
+      opacity: 0.1;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    /* Grid Layout */
+    .genre-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1.5rem;
+    }
+
+    /* Elevated Pill Styling */
+    .genre-pill {
+      position: relative;
+      /* Gradient gives a slight curved, lit look from the top */
+      background: linear-gradient(180deg, #1c1c1c 0%, #121212 100%);
+      border: 2px solid rgba(212, 175, 55, 0.2); 
+      padding: 1.4rem 1rem;
+      border-radius: 100px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      
+      /* Multi-layer shadow for elevation */
+      box-shadow: 
+        0 4px 6px rgba(0, 0, 0, 0.4),
+        0 10px 20px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    /* --- Hover State: More elevation + Turn Gold --- */
+    .genre-pill:hover {
+      background: linear-gradient(135deg, #d4af37 0%, #f2d472 100%);
+      border-color: #f2d472;
+      transform: translateY(-8px); /* Lift higher on hover */
+      box-shadow: 
+        0 15px 30px rgba(212, 175, 55, 0.3),
+        0 5px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    .pill-text {
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 0.05rem;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+      transition: all 0.3s ease;
+      z-index: 2;
+    }
+
+    .genre-pill:hover .pill-text {
+      color: #0d0d0d;
+      text-shadow: none;
+    }
+
+    /* --- Responsive Breakpoints --- */
+    @media (max-width: 1200px) {
+      .genre-row { grid-template-columns: repeat(4, 1fr); }
+    }
+
+    @media (max-width: 900px) {
+      .genre-row { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (max-width: 600px) {
+      .genre-row {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+      }
+      
+      .genre-pill { padding: 1.1rem 0.75rem; }
+      .pill-text { font-size: 0.85rem; }
+    }

@@ -1,11 +1,12 @@
 <app-loader *ngIf="isPageLoading"></app-loader>
 
-<div *ngIf="!isPageLoading">
+  <div *ngIf="!isPageLoading">
   <app-navbar></app-navbar>
-
+<div>
   <main class="home">
     <section class="home-shell">
       <app-hero></app-hero>
+      <app-categories></app-categories>
     </section>
   </main>
 </div>

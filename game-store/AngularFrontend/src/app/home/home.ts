@@ -3,11 +3,12 @@ import { Navbar } from '../navbar/navbar';
 import { LoaderComponent } from '../loader/loader';
 import { CommonModule } from '@angular/common';
 import { HeroComponent } from '../hero/hero';
+import { Categories } from '../categories/categories';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [Navbar , LoaderComponent, CommonModule, HeroComponent],
+  imports: [Navbar , LoaderComponent, CommonModule, HeroComponent, Categories],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })

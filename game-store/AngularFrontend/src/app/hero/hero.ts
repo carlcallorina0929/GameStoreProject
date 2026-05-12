@@ -16,10 +16,29 @@ export class HeroComponent implements OnInit, OnDestroy {
   // ----- Reactive state -----
   games = signal<Game[]>([]);
   isLoading = signal(true);
-
+  imageLoaded = signal(false);
+readyGame = signal<Game | null>(null);
   // Slider state
   currentIndex = signal(0);
   isPaused = signal(false);
+
+  private preloadImage(url: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+
+    img.src = url;
+
+    img.onload = () => resolve();
+    img.onerror = () => reject();
+  });
+}
+private fastSlide(index: number) {
+  const game = this.games()[index];
+  if (!game) return;
+
+  this.currentIndex.set(index);
+  this.readyGame.set(game);
+}
 
   // Derived: safely get the current game (or null if none)
   currentGame = computed(() => {
@@ -63,40 +82,72 @@ export class HeroComponent implements OnInit, OnDestroy {
 
   // ----- Slider controls -----
 
-  next(): void {
-    const list = this.games();
-    if (list.length === 0) return;
+ next(): void {
+  const list = this.games();
+  if (list.length === 0) return;
 
-    this.currentIndex.update((i) => (i + 1) % list.length);
-  }
+  const newIndex = (this.currentIndex() + 1) % list.length;
 
-  prev(): void {
-    const list = this.games();
-    if (list.length === 0) return;
+  this.fastSlide(newIndex);
+}
 
-    this.currentIndex.update((i) => (i - 1 + list.length) % list.length);
-  }
+ prev(): void {
+  const list = this.games();
+  if (list.length === 0) return;
+
+  const newIndex = (this.currentIndex() - 1 + list.length) % list.length;
+
+  this.fastSlide(newIndex);
+}
 
   goTo(index: number): void {
-    const list = this.games();
-    if (list.length === 0) return;
+  const list = this.games();
+  if (list.length === 0) return;
 
-    const safeIndex = Math.min(Math.max(index, 0), list.length - 1);
-    this.currentIndex.set(safeIndex);
+  const safeIndex = Math.min(Math.max(index, 0), list.length - 1);
 
-    // Nice UX: reset the timer after manual navigation.
-    this.startAutoSlide();
+  this.loadSlide(safeIndex);
+  this.stopAutoSlide();
+  this.startAutoSlide();
+}
+private async loadSlide(index: number) {
+  const game = this.games()[index];
+  if (!game) return;
+
+  this.isLoading.set(true);
+
+  try {
+    // If no image, skip preload
+    if (game.imageUrl) {
+      await this.preloadImage(game.imageUrl);
+    }
+
+    // Only now update UI state
+    this.currentIndex.set(index);
+    this.readyGame.set(game);
+  } catch (err) {
+    // fallback even if image fails
+    this.currentIndex.set(index);
+    this.readyGame.set(game);
+  } finally {
+    this.isLoading.set(false);
   }
-
+}
   // ----- Auto-slide (every 5 seconds) -----
 
-  startAutoSlide(): void {
-    const list = this.games();
-    if (this.isLoading() || this.isPaused() || list.length <= 1) return;
+ startAutoSlide(): void {
+  const list = this.games();
 
-    this.stopAutoSlide();
-    this.autoSlideTimer = setInterval(() => this.next(), 5000);
-  }
+  if (this.isPaused() || list.length <= 1) return;
+
+  this.stopAutoSlide(); // always reset first
+
+  this.autoSlideTimer = setInterval(() => {
+    if (!this.isPaused()) {
+      this.next();
+    }
+  }, 5000);
+}
 
   stopAutoSlide(): void {
     if (!this.autoSlideTimer) return;
@@ -118,4 +169,5 @@ export class HeroComponent implements OnInit, OnDestroy {
   get canSlide(): boolean {
     return this.games().length > 1 && !this.isLoading();
   }
+  
 }
