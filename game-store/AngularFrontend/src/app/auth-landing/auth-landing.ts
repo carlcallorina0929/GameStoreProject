@@ -231,7 +231,7 @@ loginErrorMessage = signal<string | null>(null);
     this.authService.login(this.loginData()).subscribe({
       next: (res) => {
         this.isLoginSubmitting.set(false);
-        console.log('Login successful', res);
+       
 
         // 1. Clear any old errors
         this.loginErrorMessage.set(null);
