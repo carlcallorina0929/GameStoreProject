@@ -1,31 +1,40 @@
 const db = require("../config/db");
 
 // GET ALL GAMES WITH GENRES + OWNERSHIP
-const getAllFilteredGames = async (userId) => {
-  const [rows] = await db.query(`
+const getAllFilteredGames = async (userId, genre = null) => {
+  let sql = `
     SELECT 
       g.id,
       g.title,
       g.description,
       g.price,
       g.image_url,
-
-      GROUP_CONCAT(ge.name) AS genres,
-
+      GROUP_CONCAT(DISTINCT ge.name) AS genres,
       CASE 
         WHEN l.game_id IS NOT NULL THEN 1
         ELSE 0
       END AS is_owned
-
     FROM games g
     LEFT JOIN game_genres gg ON g.id = gg.game_id
     LEFT JOIN genres ge ON ge.id = gg.genre_id
     LEFT JOIN library l 
       ON g.id = l.game_id AND l.user_id = ?
+  `;
 
-    GROUP BY g.id
-  `, [userId]);
+  const params = [userId];
 
+  if (genre) {
+    sql += `
+      INNER JOIN game_genres gg2 ON g.id = gg2.game_id
+      INNER JOIN genres ge2 ON gg2.genre_id = ge2.id
+      WHERE ge2.name = ?
+    `;
+    params.push(genre);
+  }
+
+  sql += ` GROUP BY g.id`;
+
+  const [rows] = await db.query(sql, params);
   return rows;
 };
 
@@ -65,5 +74,16 @@ const getDiscountedGames = async (userId) => {
 
   return rows;
 };
+//GET GENRES
+const getAllGenres = async () => {
+  const [rows] = await db.query(`
+    SELECT id, name
+    FROM genres
+    ORDER BY name ASC
+  `);
 
-module.exports = { getAllFilteredGames, getDiscountedGames };
+  return rows;
+};
+
+
+module.exports = { getAllFilteredGames, getDiscountedGames, getAllGenres };

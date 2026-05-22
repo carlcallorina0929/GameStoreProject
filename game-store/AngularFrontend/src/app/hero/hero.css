@@ -23,11 +23,11 @@ section {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Optional: subtle hover lift for premium feel */
+
 section:hover {
-  transform: translateY(-4px);
+  transform: translateY(-2px);
   box-shadow:
-    0 18px 40px rgba(0, 0, 0, 0.7),
+    0 18px 40px rgba(71, 63, 14, 0.4),
     0 0 0 1px rgba(255, 215, 0, 0.08),
     0 0 45px rgba(212, 175, 55, 0.12);
 }
@@ -36,20 +36,30 @@ section:hover {
   padding: 2rem clamp(1rem, 2vw, 2rem);
   overflow: visible; /* important */
 }
+.hero-media img{
+  
+  transition: transform 0.5s ease-in-out ;
+}
+.hero-media img:hover{
+  transform: scale(1.1);
+}
+
 
 .hero-card {
   position:relative;
+  border-radius: 20px;
   width: 100%;
   max-width: 1400px;
-  min-height: 420px; /* ⬆ increased from 420px */
+  min-height: 420px; 
   margin: 0 auto;
-
+  
   display: grid;
-  grid-template-columns: 1.3fr 1fr; /* 👈 IMAGE becomes bigger */
+  grid-template-columns: 1.3fr 1fr; 
   gap: 1.5rem;
 
   padding: 1.75rem;
 }
+
 
 .hero-nav {
   position: absolute;
@@ -101,7 +111,7 @@ section:hover {
 .hero-discount-pill,
 .hero-owned-pill {
   position: absolute;
-  top: 1rem;
+  top: 0.5rem;
   padding: 0.45rem 0.75rem;
   border-radius: 999px;
   font-size: 0.78rem;
@@ -138,9 +148,10 @@ section:hover {
   margin: 0;
   color: #f6d37e;
   font-size: 0.9rem;
+  font-weight: 900;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  font-weight: 700;
+  
 }
 
 .hero-title {
@@ -248,11 +259,11 @@ section:hover {
 }
 
 .hero-nav-left {
-  left: 0.5rem;
+  left: 10rem;
 }
 
 .hero-nav-right {
-  right: 0.5rem;
+  right: 10rem;
 }
 
 .hero-nav:hover {
@@ -359,12 +370,32 @@ section:hover {
   .hero-card {
     grid-template-columns: 1fr;
   }
+
   .hero-nav{
     display: none;
     z-index: -1;
   }
+  .hero-discount-pill{
+    
+    left: 85%;
+  }
+  .hero-discount-pill-text{
+    font-size: 1rem;
+    
+    
+  }
 
   .hero-media {
-    min-height: 260px;
+    min-height: 300px;
+    min-width: 300px;
+  }
+  .hero-body{ 
+    padding: 1rem;
+    
+  }
+  .hero-dots{
+    position:relative;
+    align-items: center;
+    justify-content: center;
   }
 }

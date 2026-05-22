@@ -1,26 +1,15 @@
 .home {
-  min-height: calc(100vh - 72px);
-  padding: 3rem clamp(1.25rem, 2vw, 2.5rem);
+  min-height: 100vh;
+  margin-top:2rem;
+  padding: 1rem;
   background: transparent;
 }
 
 .home-shell {
-  max-width: 1720px;
-  margin: 0 auto;
-  padding: 2.25rem 2rem;
-  border-radius: 26px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+
   background: linear-gradient(145deg, rgba(11, 15, 28, 0.72), rgba(16, 11, 31, 0.62));
   box-shadow: 0 26px 80px rgba(0, 0, 0, 0.28);
 }
 
-.home-shell h1 {
-  margin: 0;
-  font-family: 'Rajdhani', sans-serif;
-  font-size: clamp(2.4rem, 4.8vw, 4.25rem);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: #f7fbff;
-  text-shadow: 0 0 28px rgba(95, 245, 255, 0.16);
-}
+
 

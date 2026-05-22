@@ -1,9 +1,11 @@
 const Game = require("../models/gameModel");
 
+
 // GET GAMES
 const getGames = async (req, res) => {
   try {
     const userId = req.user.id;
+    const {genre} = req.query;
 
     const games = await Game.getAllFilteredGames(userId);
 
@@ -25,17 +27,13 @@ const getGames = async (req, res) => {
 // Returns ONLY games that have an active discount right now.
 const getDiscountedGames = async (req, res) => {
   try {
-    // authMiddleware attaches the decoded JWT payload to req.user
-    // so we can safely read the currently logged-in user's id here.
+   
     const userId = req.user.id;
 
     const games = await Game.getDiscountedGames(userId);
 
     // FORMAT IMAGE URL
-    // Example:
-    // image_url in DB: "/uploads/games/halo.jpg"
-    // BASE_URL: "http://localhost:5000"
-    // final: "http://localhost:5000/uploads/games/halo.jpg"
+   
     const formattedGames = games.map(game => ({
       ...game,
       image_url: game.image_url
@@ -50,4 +48,16 @@ const getDiscountedGames = async (req, res) => {
   }
 };
 
-module.exports = { getGames, getDiscountedGames };
+const getGenres = async (req, res) => {
+  try {
+    const genres = await Game.getAllGenres();
+    res.json(genres);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
+
+
+module.exports = { getGames, getDiscountedGames, getGenres };

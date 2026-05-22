@@ -40,3 +40,24 @@ export interface DiscountedGameApiResponse {
   is_owned: boolean;
 }
 
+// "All games" catalog response (snake_case) from GET /api/games.
+export interface GameCatalogApiResponse {
+  id: number;
+  title: string;
+  description: string;
+  price: number;
+  image_url: string | null;
+  genres: string | null;
+  is_owned: boolean | 0 | 1;
+}
+
+// Clean shape used by the games list component.
+export interface GameCatalogItem {
+  id: number;
+  title: string;
+  description: string;
+  price: number;
+  imageUrl: string | null;
+  genres: string[];
+  isOwned: boolean;
+}
