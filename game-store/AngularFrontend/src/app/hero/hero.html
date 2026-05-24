@@ -1,4 +1,4 @@
-<section class="hero" (mouseenter)="pause()" (mouseleave)="resume()">
+<section class="hero" (mouseenter)="pause()" (mouseleave)="resume()"(touchstart) = onTouchStart($event) (touchend)="onTouchEnd($event)">
    <button
     class="hero-nav hero-nav-left"
     type="button"
@@ -67,9 +67,13 @@
         <button
           class="hero-cta"
           type="button"
-          [disabled]="game.isOwned"
+          [disabled]="game.isOwned || game.isInCart"
         >
-          {{ game.isOwned ? 'In Library' : 'Acquire Now' }}
+          {{  game.isOwned
+      ? 'Already in Library'
+      : game.isInCart
+      ? 'In Cart'
+      : 'Add to Cart' }}
         </button>
 
         

@@ -22,10 +22,19 @@
       </div>
 
       <div class="genre-row">
+         <button
+    class="genre-pill"
+    (click)="selectCategory(null)"
+    [class.active]="activeGenre === null">
+    All
+  </button>
         @for (category of visibleCategories(); track category.id) {
-          <button class="genre-pill" type="button">
-            <span class="pill-text">{{ category.name }}</span>
-          </button>
+         <button
+  class="genre-pill"
+  (click)="selectCategory(category.name)"
+  [class.active]="isActive(category.name)">
+  {{ category.name }}
+</button>
         }
       </div>
     </section>

@@ -22,6 +22,9 @@ section {
   /* Smooth interaction feel */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+.hero {
+  touch-action: pan-y;
+}
 
 
 section:hover {
@@ -133,7 +136,7 @@ section:hover {
 .hero-owned-pill {
   right: 1rem;
   color: #f7fbff;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(11, 3, 3, 0.3);
 }
 
 .hero-body {
@@ -375,10 +378,8 @@ section:hover {
     display: none;
     z-index: -1;
   }
-  .hero-discount-pill{
-    
-    left: 85%;
-  }
+ 
+  
   .hero-discount-pill-text{
     font-size: 1rem;
     
@@ -387,7 +388,7 @@ section:hover {
 
   .hero-media {
     min-height: 300px;
-    min-width: 300px;
+    min-width: 200px;
   }
   .hero-body{ 
     padding: 1rem;
@@ -397,5 +398,12 @@ section:hover {
     position:relative;
     align-items: center;
     justify-content: center;
+  }
+}
+@media screen and (max-width: 480px) {
+    .hero-discount-pill-text{
+    font-size: 0.8rem;
+    
+    
   }
 }

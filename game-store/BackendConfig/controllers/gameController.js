@@ -7,14 +7,17 @@ const getGames = async (req, res) => {
     const userId = req.user.id;
     const {genre} = req.query;
 
-    const games = await Game.getAllFilteredGames(userId);
+    const games = await Game.getAllFilteredGames(userId , genre);
 
     // FORMAT IMAGE URL
     const formattedGames = games.map(game => ({
       ...game,
+       price: Number(game.price),
+      final_price: Number(game.final_price),
       image_url: game.image_url
         ? `${process.env.BASE_URL}${game.image_url}`
         : null
+
     }));
 
     res.json(formattedGames);
@@ -36,9 +39,12 @@ const getDiscountedGames = async (req, res) => {
    
     const formattedGames = games.map(game => ({
       ...game,
+      price: Number(game.price),
+      final_price: Number(game.final_price),
       image_url: game.image_url
         ? `${process.env.BASE_URL}${game.image_url}`
         : null
+      
     }));
 
     res.json(formattedGames);

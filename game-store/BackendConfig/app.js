@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const path = require("path");
 
 const userRoutes = require("./routes/userRoutes");
-
+const cartRoutes = require("./routes/cartRoutes");
 const app = express();
 
 // MAKE UPLOADS FOLDER PUBLIC (for images)
@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 // ROUTES
 const gameRoutes = require("./routes/gameRoutes");
 app.use("/api/games", gameRoutes);
-
+app.use("/api/cart", cartRoutes);
 
 
 // Health check

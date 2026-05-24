@@ -1,7 +1,6 @@
 :host {
       display: block;
       width: 100%;
-      min-height: 100vh;
       user-select: none;
     }
 
@@ -64,57 +63,65 @@
     }
 
     /* Grid Layout */
-    .genre-row {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 1.5rem;
-    }
+   .genre-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem; /* reduced from 1.5rem */
+}
 
     /* Elevated Pill Styling */
-    .genre-pill {
-      position: relative;
-      /* Gradient gives a slight curved, lit look from the top */
-      background: linear-gradient(180deg, #1c1c1c 0%, #121212 100%);
-      border: 2px solid rgba(212, 175, 55, 0.2); 
-      padding: 1.4rem 1rem;
-      border-radius: 100px;
-      cursor: pointer;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-      
-      /* Multi-layer shadow for elevation */
-      box-shadow: 
-        0 4px 6px rgba(0, 0, 0, 0.4),
-        0 10px 20px rgba(0, 0, 0, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05);
-    }
+    /* Smaller elevated pill */
+.genre-pill {
+  position: relative;
+  background: linear-gradient(180deg, #1c1c1c 0%, #121212 100%);
+  border: 1px solid rgba(212, 175, 55, 0.18);
+
+  padding: 0.8rem 0.75rem; /* 🔥 reduced */
+  border-radius: 999px;
+
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  transition: all 0.3s ease;
+
+  box-shadow:
+    0 3px 6px rgba(0, 0, 0, 0.35),
+    0 8px 16px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
 
     /* --- Hover State: More elevation + Turn Gold --- */
-    .genre-pill:hover {
-      background: linear-gradient(135deg, #d4af37 0%, #f2d472 100%);
-      border-color: #f2d472;
-      transform: translateY(-8px); /* Lift higher on hover */
-      box-shadow: 
-        0 15px 30px rgba(212, 175, 55, 0.3),
-        0 5px 15px rgba(0, 0, 0, 0.5);
-    }
+   .genre-pill:hover {
+  background: linear-gradient(135deg, #d4af37 0%, #f2d472 100%);
+  border-color: #f2d472;
+  transform: translateY(-5px); /* slightly less aggressive */
+  box-shadow:
+    0 10px 20px rgba(212, 175, 55, 0.25),
+    0 5px 12px rgba(0, 0, 0, 0.4);
+}
+.genre-pill.active {
+ background: linear-gradient(135deg, #85690d 0%, #f2d472 100%);
+  border-color: #f2d472;
+  color: white;
+  transform: scale(1.05);
+}
 
-    .pill-text {
-      color: #ffffff;
-      font-weight: 700;
-      font-size: 1rem;
-      letter-spacing: 0.05rem;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-      transition: all 0.3s ease;
-      z-index: 2;
-    }
+ .pill-text {
+  color: #ffffff;
+  font-weight: 600; /* slightly lighter than 700 */
+  font-size: 0.85rem; /* 🔥 reduced */
+  letter-spacing: 0.03rem;
+  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.4);
+  transition: all 0.2s ease;
+}
 
     .genre-pill:hover .pill-text {
-      color: #0d0d0d;
-      text-shadow: none;
-    }
+  color: #0d0d0d;
+  text-shadow: none;
+}
 
     /* --- Responsive Breakpoints --- */
     @media (max-width: 1200px) {

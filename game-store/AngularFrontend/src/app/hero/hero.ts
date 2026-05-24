@@ -12,6 +12,8 @@ import { Game } from '../models/game';
 })
 export class HeroComponent implements OnInit, OnDestroy {
   private gameService = inject(GameService);
+  private touchStartX = 0;
+private touchEndX = 0;
 
   // ----- Reactive state -----
   games = signal<Game[]>([]);
@@ -21,6 +23,26 @@ readyGame = signal<Game | null>(null);
   // Slider state
   currentIndex = signal(0);
   isPaused = signal(false);
+
+  onTouchStart(event: TouchEvent): void {
+  this.touchStartX = event.changedTouches[0].screenX;
+}
+onTouchEnd(event: TouchEvent): void {
+  this.touchEndX = event.changedTouches[0].screenX;
+  this.handleSwipe();
+}
+private handleSwipe(): void {
+  const swipeDistance = this.touchStartX - this.touchEndX;
+  const threshold = 50;
+
+  if (Math.abs(swipeDistance) < threshold) return;
+
+  if (swipeDistance > 0) {
+    this.mobileNext();
+  } else {
+    this.mobilePrev();
+  }
+}
 
   private preloadImage(url: string): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -81,6 +103,52 @@ private fastSlide(index: number) {
   }
 
   // ----- Slider controls -----
+  private async mobileLoadSlide(index: number): Promise<void> {
+  const game = this.games()[index];
+  if (!game) return;
+
+  this.isLoading.set(true);
+
+  const start = performance.now();
+
+  try {
+    if (game.imageUrl) {
+      await this.preloadImage(game.imageUrl);
+    }
+
+    this.currentIndex.set(index);
+    this.readyGame.set(game);
+
+  } catch {
+    this.currentIndex.set(index);
+    this.readyGame.set(game);
+  } finally {
+    const elapsed = performance.now() - start;
+    const minDelay = 400; // ms
+
+    const remaining = Math.max(0, minDelay - elapsed);
+
+    setTimeout(() => {
+      this.isLoading.set(false);
+    }, remaining);
+  }
+}
+ async mobileNext(): Promise<void> {
+  const list = this.games();
+  if (list.length === 0) return;
+
+  const nextIndex = (this.currentIndex() + 1) % list.length;
+  await this.mobileLoadSlide(nextIndex);
+}
+async mobilePrev(): Promise<void> {
+  const list = this.games();
+  if (list.length === 0) return;
+
+  const prevIndex =
+    (this.currentIndex() - 1 + list.length) % list.length;
+
+  await this.mobileLoadSlide(prevIndex);
+}
 
  next(): void {
   const list = this.games();
@@ -115,6 +183,7 @@ private async loadSlide(index: number) {
   if (!game) return;
 
   this.isLoading.set(true);
+  const start = performance.now();
 
   try {
     // If no image, skip preload
@@ -130,7 +199,14 @@ private async loadSlide(index: number) {
     this.currentIndex.set(index);
     this.readyGame.set(game);
   } finally {
-    this.isLoading.set(false);
+    const elapsed = performance.now() - start;
+    const minDelay = 400; // ms
+
+    const remaining = Math.max(0, minDelay - elapsed);
+
+    setTimeout(() => {
+      this.isLoading.set(false);
+    }, remaining);
   }
 }
   // ----- Auto-slide (every 5 seconds) -----

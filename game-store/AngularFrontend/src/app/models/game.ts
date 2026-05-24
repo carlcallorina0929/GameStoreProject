@@ -23,6 +23,7 @@ export interface Game {
 
   // Backend: is_owned (computed per logged-in user)
   isOwned: boolean;
+  isInCart: boolean;
 }
 
 // This interface matches the backend JSON response exactly (snake_case).
@@ -38,6 +39,7 @@ export interface DiscountedGameApiResponse {
   discount_end: string | null;
   final_price: number;
   is_owned: boolean;
+  is_in_cart: boolean;
 }
 
 // "All games" catalog response (snake_case) from GET /api/games.
@@ -46,9 +48,12 @@ export interface GameCatalogApiResponse {
   title: string;
   description: string;
   price: number;
+  discount_percent: number;
   image_url: string | null;
   genres: string | null;
+  final_price: number;
   is_owned: boolean | 0 | 1;
+  is_in_cart: boolean | 0 | 1;
 }
 
 // Clean shape used by the games list component.
@@ -56,8 +61,15 @@ export interface GameCatalogItem {
   id: number;
   title: string;
   description: string;
-  price: number;
   imageUrl: string | null;
   genres: string[];
+
+  originalPrice: number;
+  finalPrice: number;
+
+  discountPercent: number;
+
   isOwned: boolean;
+  isInCart: boolean;
 }
+

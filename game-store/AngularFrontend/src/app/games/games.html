@@ -1,0 +1,180 @@
+<div class="store-container">
+
+  <main class="catalog-content">
+
+    <!-- LOADING STATE -->
+    <div class="games-grid" *ngIf="loading(); else loadedState">
+      
+      <div class="game-card skeleton-card" *ngFor="let i of skeletonArray">
+
+        <!-- IMAGE SKELETON -->
+        <div class="image-container skeleton skeleton-img"></div>
+
+        <!-- INFO SKELETON -->
+        <div class="game-info">
+
+          <div class="skeleton skeleton-text skeleton-genre"></div>
+
+          <div class="skeleton skeleton-text skeleton-title"></div>
+
+          <div class="skeleton skeleton-text skeleton-line"></div>
+          <div class="skeleton skeleton-text skeleton-line short"></div>
+
+          <!-- PRICE SKELETON -->
+          <div class="price-container">
+            <div class="skeleton skeleton-text skeleton-price"></div>
+            <div class="skeleton skeleton-text skeleton-price"></div>
+          </div>
+
+          <!-- BUTTON SKELETON -->
+          <div class="skeleton skeleton-button"></div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- LOADED CONTENT -->
+    <ng-template #loadedState>
+
+      <div class="games-grid" *ngIf="paginatedGames().length > 0; else emptyState">
+
+        <div
+          class="game-card"
+          *ngFor="let game of paginatedGames()"
+          (click)="openGameDetails(game)">
+
+          <!-- IMAGE -->
+          <div class="image-container">
+
+            <img [src]="game.imageUrl" [alt]="game.title" />
+
+            <span
+              class="discount-badge"
+              *ngIf="hasDiscount(game)">
+              -{{ ((1 - game.finalPrice / game.originalPrice) * 100) | number:'1.0-0' }}%
+            </span>
+
+            <span class="owned-badge" *ngIf="game.isOwned">
+              Owned
+            </span>
+
+          </div>
+
+          <!-- INFO -->
+          <div class="game-info">
+
+            <!-- GENRES -->
+            <div class="genre-list" *ngIf="game.genres.length > 0">
+              <span
+                class="genre-tag"
+                *ngFor="let genre of game.genres">
+                {{ genre }}
+              </span>
+            </div>
+
+            <h3 class="game-title">{{ game.title }}</h3>
+
+            <p class="game-card-description">
+              {{ game.description }}
+            </p>
+
+            <!-- PRICE -->
+            <div class="price-container">
+
+              <!-- ORIGINAL (only if discount exists) -->
+              <span
+                class="original-price"
+                *ngIf="+game.discountPercent > 0">
+                ₱{{ game.originalPrice | number:'1.2-2' }}
+              </span>
+
+              <!-- FINAL PRICE -->
+              <span
+                class="current-price"
+                *ngIf="game.finalPrice > 0">
+                ₱{{ game.finalPrice | number:'1.2-2' }}
+              </span>
+
+              <!-- FREE -->
+              <span
+                class="price-free"
+                *ngIf="game.finalPrice === 0">
+                FREE
+              </span>
+
+            </div>
+
+            <!-- BUTTON -->
+      <button
+  class="nz-btn"
+  [disabled]="isDisabled(game)"
+  [class.nz-btn-gold]="!isDisabled(game)"
+  [class.nz-btn-secondary]="isDisabled(game)"
+  (click)="toggleCart(game, $event)">
+
+  <span
+    nz-icon
+    [nzType]="getCartIcon(game)"
+    nzTheme="outline">
+  </span>
+
+  <span class="btn-text">
+   {{ game.isOwned
+    ? 'IN LIBRARY'
+    : game.finalPrice === 0
+      ? 'GET NOW'
+      : game.isInCart
+        ? 'IN CART'
+        : 'ADD TO CART'
+}}
+  </span>
+
+</button>
+
+          </div>
+        </div>
+
+      </div>
+
+    </ng-template>
+
+    <!-- EMPTY STATE -->
+    <ng-template #emptyState>
+      <div class="empty-state">
+        <h3>No games found</h3>
+      </div>
+    </ng-template>
+
+    <!-- PAGINATION -->
+    <footer class="store-footer" *ngIf="totalPages() > 1">
+
+      <div class="pagination">
+
+        <button
+          class="pag-btn"
+          [disabled]="currentPage() === 1"
+          (click)="goToPage(currentPage() - 1)">
+          ← PREV
+        </button>
+
+        <button
+          *ngFor="let page of getPagesArray()"
+          (click)="goToPage(page)"
+          [class.active]="currentPage() === page"
+          class="page-number">
+          {{ page }}
+        </button>
+
+        <button
+          class="pag-btn"
+          [disabled]="currentPage() === totalPages()"
+          (click)="goToPage(currentPage() + 1)">
+          NEXT →
+        </button>
+
+      </div>
+
+    </footer>
+
+  </main>
+</div>
