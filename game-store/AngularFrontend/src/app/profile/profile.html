@@ -1,0 +1,80 @@
+<section class="profile-page">
+  <h2 class="title">Profile</h2>
+
+  <div *ngIf="loading()" class="status">Loading...</div>
+  <div *ngIf="successMessage()" class="status success">{{ successMessage() }}</div>
+  <div *ngIf="errorMessage()" class="status error">{{ errorMessage() }}</div>
+
+  <div *ngIf="user() as u" class="grid">
+    <div class="card">
+      <h3 class="card-title">Your Info</h3>
+      <ul class="info">
+        <li><span class="k">Username</span><span class="v">{{ u.username }}</span></li>
+        <li><span class="k">First name</span><span class="v">{{ u.first_name }}</span></li>
+        <li><span class="k">Last name</span><span class="v">{{ u.last_name }}</span></li>
+        <li><span class="k">Age</span><span class="v">{{ u.age }}</span></li>
+        <li><span class="k">Email</span><span class="v">{{ u.email }}</span></li>
+        <li><span class="k">Role</span><span class="v">{{ u.role }}</span></li>
+        <li>
+          <span class="k">Created</span>
+          <span class="v">{{ u.created_at | date: 'medium' }}</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3 class="card-title">Edit Profile</h3>
+      <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="form">
+        <label>
+          Username
+          <input type="text" formControlName="username" />
+        </label>
+        <div class="field-error" *ngIf="profileForm.get('username')?.touched && profileForm.get('username')?.invalid">
+          Username must be 6-30 chars and contain only letters, numbers, underscores.
+        </div>
+
+        <label>
+          Email
+          <input type="email" formControlName="email" />
+        </label>
+        <div class="field-error" *ngIf="profileForm.get('email')?.touched && profileForm.get('email')?.invalid">
+          Enter a valid email address.
+        </div>
+
+        <button type="submit" [disabled]="loading()">Save changes</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h3 class="card-title">Change Password</h3>
+      <form [formGroup]="passwordForm" (ngSubmit)="changePassword()" class="form">
+        <label>
+          Current password
+          <input type="password" formControlName="currentPassword" />
+        </label>
+        <div class="field-error" *ngIf="passwordForm.get('currentPassword')?.touched && passwordForm.get('currentPassword')?.invalid">
+          Current password is required.
+        </div>
+
+        <label>
+          New password
+          <input type="password" formControlName="newPassword" />
+        </label>
+        <div class="field-error" *ngIf="passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.invalid">
+          Password must be 8-64 chars, include 1 capital letter and 1 number.
+        </div>
+
+        <label>
+          Confirm new password
+          <input type="password" formControlName="confirmNewPassword" />
+        </label>
+        <div class="field-error" *ngIf="passwordForm.errors?.['passwordMismatch'] && passwordForm.get('confirmNewPassword')?.touched">
+          New passwords do not match.
+        </div>
+
+        <button type="submit" [disabled]="loading()">Update password</button>
+      </form>
+    </div>
+  </div>
+</section>
+

@@ -1,0 +1,67 @@
+<section class="library-shell">
+  <div class="library-header">
+    <div>
+      <h1 class="cart-title">My Library</h1>
+      <p>Owned games appear here after checkout or free acquisition.</p>
+    </div>
+  </div>
+
+  <div class="library-grid" *ngIf="!loading(); else loadingState">
+    <div class="library-card" *ngFor="let game of paginatedGames(); trackBy: trackByGame">
+      <div class="image-shadow">
+        <img [src]="game.imageUrl" [alt]="game.title" />
+      </div>
+
+      <div class="library-card-body">
+        <div class="card-meta">
+          <span class="genre-tag owned-tag">Owned</span>
+          <span class="purchased-date">Purchased {{ game.purchasedAt | date:'mediumDate' }}</span>
+        </div>
+
+        <h3>{{ game.title }}</h3>
+        <p>{{ game.description }}</p>
+
+        <button nz-button nzType="primary" class="play-btn">
+          <span nz-icon nzType="play-circle"></span>
+          PLAY
+        </button>
+      </div>
+    </div>
+
+    <footer class="library-footer" *ngIf="totalPages() > 1">
+      <button class="page-nav" [disabled]="currentPage() === 1" (click)="goToPage(currentPage() - 1)">
+        ← Prev
+      </button>
+      <button
+        class="page-number"
+        *ngFor="let page of getPagesArray()"
+        (click)="goToPage(page)"
+        [class.active]="currentPage() === page"
+      >
+        {{ page }}
+      </button>
+      <button class="page-nav" [disabled]="currentPage() === totalPages()" (click)="goToPage(currentPage() + 1)">
+        Next →
+      </button>
+    </footer>
+  </div>
+
+  <ng-template #loadingState>
+    <div class="library-grid">
+      <div class="library-card skeleton-card" *ngFor="let i of skeletonArray">
+        <div class="image-shadow skeleton"></div>
+        <div class="library-card-body">
+          <div class="skeleton skeleton-line short"></div>
+          <div class="skeleton skeleton-line"></div>
+          <div class="skeleton skeleton-paragraph"></div>
+          <div class="skeleton skeleton-button"></div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <div class="empty-state" *ngIf="!loading() && libraryGames().length === 0">
+    <h3>Your library is empty</h3>
+    <p>Checkout completed purchases or claim free games to populate your collection.</p>
+  </div>
+</section>

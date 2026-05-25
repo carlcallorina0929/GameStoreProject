@@ -33,4 +33,12 @@ const getCart = async (userId) => {
 
   return rows;
 };
-module.exports = { addToCart, getCart , removeItem };
+
+const clearCart = async (userId) => {
+  return await db.query(`
+    DELETE FROM cart
+    WHERE user_id = ?
+  `, [userId]);
+};
+
+module.exports = { addToCart, getCart, removeItem, clearCart };

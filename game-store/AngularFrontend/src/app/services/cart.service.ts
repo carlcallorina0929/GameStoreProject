@@ -5,6 +5,7 @@ import {Observable} from 'rxjs';
 import {CartItem} from '../models/cart';
 import {ApiResponse} from '../models/cart';
 import {map} from 'rxjs/operators';
+import { CheckoutPayment, CheckoutResponse } from './checkout.service';
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +36,10 @@ removeFromCart(gameId: number): Observable<any> {
     `${this.apiUrl}/cart/remove/${gameId}`,
     {}
   );
+}
+
+processCheckout(payment: CheckoutPayment) : Observable<CheckoutResponse> {
+  return this.http.post<CheckoutResponse>(`${this.apiUrl}/checkout/process`, payment);
 }
 
 }

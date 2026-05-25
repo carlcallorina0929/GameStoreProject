@@ -26,6 +26,17 @@ export class Navbar {
     this.accountMenuOpen = !this.accountMenuOpen;
   }
 
+  goToProfile() {
+    this.accountMenuOpen = false;
+    this.menuOpen = false;
+    this.router.navigate(['/profile']);
+  }
+
+  goToProfileFromLink(event: Event) {
+    event.preventDefault();
+    this.goToProfile();
+  }
+
   // Opens the confirmation modal instead of logging out immediately.
   openLogoutModal() {
     this.logoutModalOpen.set(true);

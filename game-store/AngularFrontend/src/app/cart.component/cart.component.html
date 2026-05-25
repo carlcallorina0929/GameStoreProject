@@ -114,53 +114,231 @@
     <!-- CHECKOUT MODAL -->
     <div class="modal-backdrop" *ngIf="isCheckingOut()">
 
-      <div class="modal-content">
+      <div class="modal-content checkout-modal">
 
-        <div class="modal-body checkout-grid">
+        <!-- PROGRESS STEPS -->
+        <div class="checkout-progress">
+          <nz-steps [nzCurrent]="checkoutStep()" nzLabelPlacement="vertical">
+            <nz-step 
+              *ngFor="let step of steps" 
+              [nzTitle]="step.title"
+              [nzDescription]="step.description">
+            </nz-step>
+          </nz-steps>
+        </div>
 
-          <!-- LEFT -->
-          <div class="checkout-items">
-            <h4 class="section-title">Purchased Items</h4>
+        <!-- MODAL BODY - MULTI STEP -->
+        <div class="modal-body">
 
-            <div class="invoice-summary">
+          <!-- STEP 0: REVIEW CART -->
+          <div *ngIf="checkoutStep() === 0" class="checkout-step review-step">
+            <h3>Order Review</h3>
+            <div class="checkout-items">
               <div class="invoice-row" *ngFor="let item of receiptItems()">
-                <span>{{ item.title }}</span>
-                <span>₱{{ item.final_price | number:'1.2-2' }}</span>
+                <div class="item-preview">
+                  <img [src]="item.image_url" [alt]="item.title" class="preview-img" />
+                  <div class="item-info">
+                    <span class="item-name">{{ item.title }}</span>
+                    <span class="item-platform">Digital License</span>
+                  </div>
+                </div>
+                <span class="item-price">₱{{ item.final_price | number:'1.2-2' }}</span>
               </div>
             </div>
-          </div>
 
-          <!-- RIGHT -->
-          <div class="checkout-summary">
-
-            <div class="success-header">
-              <nz-icon nzType="check-circle" nzTheme="fill"></nz-icon>
-              <h4>Transaction Complete</h4>
-              <p>Secure licenses added to your library.</p>
-            </div>
-
-            <div class="summary-box">
+            <div class="order-summary">
               <div class="summary-row">
                 <span>Total Items</span>
                 <span>{{ receiptItems().length }}</span>
               </div>
-
               <div class="summary-row">
                 <span>Grand Total</span>
-                <span class="gold">
-                  ₱{{ cartTotal() | number:'1.2-2' }}
-                </span>
+                <span class="gold">₱{{ cartTotal() | number:'1.2-2' }}</span>
               </div>
             </div>
+          </div>
 
+          <!-- STEP 1: PAYMENT INFORMATION -->
+          <div *ngIf="checkoutStep() === 1" class="checkout-step payment-step">
+            <h3>Payment Information</h3>
+
+            <!-- ERROR MESSAGE -->
+            <div class="error-box" *ngIf="paymentError()">
+              <nz-icon nzType="exclamation-circle" nzTheme="fill"></nz-icon>
+              <span>{{ paymentError() }}</span>
+            </div>
+
+            <!-- PAYMENT FORM -->
+            <form [formGroup]="paymentForm" class="payment-form" (ngSubmit)="processPayment()">
+              <!-- Cardholder Name -->
+              <div class="form-group">
+                <label>Cardholder Name</label>
+                <input 
+                  type="text"
+                  class="form-input"
+                  formControlName="cardholderName"
+                  (input)="formatCardholderName($event)"
+                  placeholder="John Doe"
+                  [disabled]="processingPayment()"
+                />
+                <div class="field-error" *ngIf="cardholderNameControl.touched && cardholderNameControl.invalid">
+                  <span *ngIf="cardholderNameControl.errors?.['required']">Cardholder name is required.</span>
+                  <span *ngIf="cardholderNameControl.errors?.['pattern']">Only letters and spaces are allowed.</span>
+                </div>
+              </div>
+
+              <!-- Card Number -->
+              <div class="form-group">
+                <label>Card Number</label>
+                <input 
+                  type="text"
+                  class="form-input"
+                  formControlName="cardNumber"
+                  (input)="formatCardNumber($event)"
+                  placeholder="1234 5678 9012 3456"
+                  maxlength="19"
+                  [disabled]="processingPayment()"
+                />
+                <div class="field-error" *ngIf="cardNumberControl.touched && cardNumberControl.invalid">
+                  <span *ngIf="cardNumberControl.errors?.['required']">Card number is required.</span>
+                  <span *ngIf="cardNumberControl.errors?.['invalidCardNumber']">Card number must be 16 digits.</span>
+                </div>
+              </div>
+
+              <!-- Expiry & CVV Row -->
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Expiry (MM/YY)</label>
+                  <input 
+                    type="text"
+                    class="form-input"
+                    formControlName="expiry"
+                    (input)="formatExpiry($event)"
+                    placeholder="12/25"
+                    maxlength="5"
+                    [disabled]="processingPayment()"
+                  />
+                  <div class="field-error" *ngIf="expiryControl.touched && expiryControl.invalid">
+                    <span *ngIf="expiryControl.errors?.['required']">Expiry date is required.</span>
+                    <span *ngIf="expiryControl.errors?.['invalidExpiry']">Expiry must be in MM/YY format.</span>
+                    <span *ngIf="expiryControl.errors?.['expiredCard']">This card has expired.</span>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>CVV</label>
+                  <input 
+                    type="text"
+                    class="form-input"
+                    formControlName="cvv"
+                    (input)="formatCVV($event)"
+                    placeholder="123"
+                    maxlength="3"
+                    [disabled]="processingPayment()"
+                  />
+                  <div class="field-error" *ngIf="cvvControl.touched && cvvControl.invalid">
+                    <span *ngIf="cvvControl.errors?.['required']">CVV is required.</span>
+                    <span *ngIf="cvvControl.errors?.['pattern']">CVV must be 3 digits.</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Order Summary in Payment Step -->
+              <div class="order-summary payment-summary">
+                <div class="summary-row">
+                  <span>Total</span>
+                  <span class="gold">₱{{ cartTotal() | number:'1.2-2' }}</span>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!-- STEP 2: PROCESSING -->
+          <div *ngIf="checkoutStep() === 2" class="checkout-step processing-step">
+            <div class="processing-content">
+              <nz-icon nzType="loading" nzTheme="outline" class="loading-icon"></nz-icon>
+              <h3>Processing Payment</h3>
+              <p>Please wait while we securely process your payment...</p>
+              <div class="progress-bar">
+                <div class="progress-fill"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 3: SUCCESS -->
+          <div *ngIf="checkoutStep() === 3" class="checkout-step success-step">
+            <div class="success-content">
+              <nz-icon nzType="check-circle" nzTheme="fill" class="success-icon"></nz-icon>
+              <h3>Payment Successful</h3>
+              <p>Your digital licenses have been added to your library</p>
+
+              <div class="transaction-details">
+                <div class="detail-row">
+                  <span class="label">Transaction ID</span>
+                  <span class="value">{{ transactionRef() }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="label">Total Paid</span>
+                  <span class="value gold">₱{{ cartTotal() | number:'1.2-2' }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="label">Games Acquired</span>
+                  <span class="value">{{ receiptItems().length }} licenses</span>
+                </div>
+              </div>
+            </div>
           </div>
 
         </div>
 
-        <div class="modal-footer">
-          <button class="nz-btn nz-btn-secondary" (click)="closeModal()">
-            Return
-          </button>
+        <!-- MODAL FOOTER - BUTTONS -->
+        <div class="modal-footer checkout-footer">
+          <!-- STEP 0: REVIEW -->
+          <div *ngIf="checkoutStep() === 0" class="button-group">
+            <button class="nz-btn nz-btn-secondary" (click)="closeModal()">
+              Cancel
+            </button>
+            <button 
+              class="nz-btn nz-btn-gold nz-btn-large" 
+              (click)="goToPaymentStep()"
+            >
+              Continue to Payment
+            </button>
+          </div>
+
+          <!-- STEP 1: PAYMENT -->
+          <div *ngIf="checkoutStep() === 1" class="button-group">
+            <button 
+              class="nz-btn nz-btn-secondary" 
+              (click)="checkoutStep.set(0)"
+              [disabled]="processingPayment()"
+            >
+              Back
+            </button>
+            <button 
+              class="nz-btn nz-btn-gold nz-btn-large" 
+              (click)="processPayment()"
+              [disabled]="processingPayment() || paymentForm.invalid || !orderId()"
+            >
+              <nz-icon *ngIf="!processingPayment()" nzType="credit-card"></nz-icon>
+              {{ processingPayment() ? 'Processing...' : 'Pay Now' }}
+            </button>
+          </div>
+
+          <!-- STEP 2: PROCESSING -->
+          <div *ngIf="checkoutStep() === 2" class="button-group">
+            <p class="processing-text">Do not close this window...</p>
+          </div>
+
+          <!-- STEP 3: SUCCESS -->
+          <div *ngIf="checkoutStep() === 3" class="button-group">
+            <button 
+              class="nz-btn nz-btn-gold nz-btn-large" 
+              (click)="closeModal()"
+            >
+              <nz-icon nzType="shopping" nzTheme="outline"></nz-icon>
+              View My Library
+            </button>
+          </div>
         </div>
 
       </div>

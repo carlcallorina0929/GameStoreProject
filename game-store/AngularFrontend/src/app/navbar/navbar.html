@@ -3,7 +3,7 @@
 
     <!-- Brand -->
     <div class="navbar-brand">
-      <a href="javascript:void(0)">Game <span class="accent">Den</span></a>
+      <a routerLink="/home">Game <span class="accent">Den</span></a>
     </div>
 
     <!-- Mobile Toggle -->
@@ -55,8 +55,7 @@
         </button>
 
         <div *ngIf="accountMenuOpen" class="dropdown animate-pop">
-          <a href="javascript:void(0)">Profile</a>
-          <a href="javascript:void(0)">Settings</a>
+          <a href="/profile" (click)="goToProfileFromLink($event)">Profile</a>
           <div class="divider"></div>
           <button (click)="openLogoutModal()">Logout</button>
         </div>

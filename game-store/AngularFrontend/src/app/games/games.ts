@@ -17,6 +17,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { CartService } from '../services/cart.service';
+import { LibraryService } from '../services/library.service';
 
 @Component({
   selector: 'app-games',
@@ -28,7 +29,12 @@ import { CartService } from '../services/cart.service';
 })
 export class GamesComponent implements OnInit , OnChanges {
 
-  constructor(private gameService: GameService , private cartService: CartService , private notification: NzNotificationService) {}
+  constructor(
+    private gameService: GameService,
+    private cartService: CartService,
+    private libraryService: LibraryService,
+    private notification: NzNotificationService
+  ) {}
 
 
   // STATE
@@ -66,6 +72,37 @@ ngOnChanges(changes: SimpleChanges) {
   return 'shopping-cart';
 }
 
+private addFreeGameToLibrary(game: GameCatalogItem, event: Event) {
+  event.stopPropagation();
+
+  this.libraryService.addToLibrary(game.id).subscribe({
+    next: () => {
+      this.allGames.update((games) =>
+        games.map((item) =>
+          item.id === game.id ? { ...item, isOwned: true } : item
+        )
+      );
+      this.filteredGames.update((games) =>
+        games.map((item) =>
+          item.id === game.id ? { ...item, isOwned: true } : item
+        )
+      );
+
+      this.notification.success('Added to Library', `${game.title} is now in your library.`, {
+        nzPlacement: 'bottomRight',
+        nzDuration: 2500,
+        nzClass: 'toast'
+      });
+    },
+    error: (err) => {
+      console.error(err);
+      this.notification.error('Library Error', 'Unable to add the game to your library.', {
+        nzPlacement: 'bottomRight'
+      });
+    }
+  });
+}
+
 loadGames() {
   this.loading.set(true);
 
@@ -97,6 +134,11 @@ loadGames() {
   event.stopPropagation();
 
   if (game.isOwned || game.isInCart) return;
+
+  if (game.originalPrice === 0) {
+    this.addFreeGameToLibrary(game, event);
+    return;
+  }
 
   this.cartService.addToCart(game.id).subscribe({
    next: () => {
