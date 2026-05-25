@@ -23,8 +23,9 @@ export class App implements OnInit, OnDestroy {
 
   private updateLayoutFlags(url: string) {
     const isAdminRoute = url.startsWith('/admin');
-    this.showNavbar.set(url !== '/' && !isAdminRoute);
-    this.showFooter.set(!isAdminRoute);
+    const isAuthLandingRoute = url === '/' || url.startsWith('/auth-landing');
+    this.showNavbar.set(!isAuthLandingRoute && !isAdminRoute);
+    this.showFooter.set(!isAdminRoute && !isAuthLandingRoute);
   }
 
   ngOnInit() {
