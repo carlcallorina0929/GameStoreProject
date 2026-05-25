@@ -40,7 +40,10 @@ body {
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  margin: 0;
 }
+
+
 
 /* ── Scrollbar ── */
 ::-webkit-scrollbar {
@@ -86,4 +89,69 @@ a:hover {
   padding: 2.5rem 2rem;
   max-width: 1200px;
   margin: 0 auto;
+}
+/* ================================
+   TOAST (NG-ZORRO GLOBAL FIX)
+================================ */
+
+/* IMPORTANT: must target class on SAME element */
+.ant-notification-notice.toast {
+  background: linear-gradient(145deg, #0b0c10, #15181e) !important;
+  border: 1px solid #d4af37 !important;
+  border-radius: 12px !important;
+  overflow: hidden;
+  position: relative;
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.65),
+    0 0 12px rgba(212, 175, 55, 0.15) !important;
+}
+
+/* GOLD LEFT ACCENT BAR */
+.ant-notification-notice.toast::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, #d4af37, #aa8410);
+}
+
+/* TITLE */
+.ant-notification-notice.toast .ant-notification-notice-message {
+  color: #d4af37 !important;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.03em;
+}
+
+/* DESCRIPTION */
+.ant-notification-notice.toast .ant-notification-notice-description {
+  color: #c5c6c7 !important;
+  font-size: 13px;
+  opacity: 0.95;
+}
+
+/* ICON COLORS */
+.ant-notification-notice.toast .ant-notification-notice-icon-success,
+.ant-notification-notice.toast .ant-notification-notice-icon-info,
+.ant-notification-notice.toast .ant-notification-notice-icon-warning {
+  color: #d4af37 !important;
+}
+
+/* CLOSE BUTTON */
+.ant-notification-notice.toast .ant-notification-close-x {
+  color: #8c8d8f;
+  transition: 0.2s ease;
+}
+
+.ant-notification-notice.toast .ant-notification-close-x:hover {
+  color: #d4af37;
+}
+
+/* SUCCESS GLOW */
+.ant-notification-notice.toast.ant-notification-notice-success {
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.75),
+    0 0 18px rgba(212, 175, 55, 0.25) !important;
 }

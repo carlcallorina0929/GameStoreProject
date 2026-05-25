@@ -47,6 +47,8 @@ const getCart = async (req, res) => {
     const cleanedCart = cart.map(item => ({
       game_id: item.game_id,
       title: item.title,
+      price: item.original_price,
+      discount_percent: item.discount_percent,
       image_url: item.image_url
         ? `${process.env.BASE_URL}${item.image_url}`
         : null

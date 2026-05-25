@@ -9,21 +9,28 @@ import {
   inject,
   OnInit,
   OnChanges,
-  SimpleChanges
+  SimpleChanges,
+  OnDestroy
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Category } from '../models/category';
 import { GameService } from '../services/game.service';
+import { FormsModule } from '@angular/forms';
+import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { GameFilterState, PriceFilter, SortFilter } from '../models/game-filter';
 
 @Component({
   selector: 'app-categories',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule, NzInputModule, NzSelectModule, NzIconModule],
   templateUrl: './categories.html',
   styleUrl: './categories.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class Categories implements OnInit, OnChanges {
+export class Categories implements OnInit, OnChanges, OnDestroy {
 
   private gameService = inject(GameService);
 
@@ -33,11 +40,17 @@ export class Categories implements OnInit, OnChanges {
 
   // OUTPUT
   @Output() genreSelected = new EventEmitter<string | null>();
+  @Output() filtersChanged = new EventEmitter<GameFilterState>();
 
   // STATE
   currentIndex = signal(0);
   allCategories = signal<Category[]>([]);
   loading = signal(true);
+  searchText = '';
+  selectedPrice: PriceFilter = 'all';
+  selectedSort: SortFilter = 'az';
+  private searchInput$ = new Subject<string>();
+  private destroy$ = new Subject<void>();
 
   // derived page size (IMPORTANT FIX)
   pageSizeSignal = signal(6);
@@ -46,12 +59,25 @@ export class Categories implements OnInit, OnChanges {
     this.setPageSize();
     this.loadCategories();
     window.addEventListener('resize', () => this.setPageSize());
+
+    this.searchInput$
+      .pipe(debounceTime(350), distinctUntilChanged(), takeUntil(this.destroy$))
+      .subscribe((value) => {
+        this.searchText = value;
+        this.emitFilters();
+      });
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['activeGenre']) {
-      // ensures UI updates immediately when parent changes it
+      this.emitFilters();
     }
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.searchInput$.complete();
   }
 
   loadCategories() {
@@ -92,6 +118,10 @@ export class Categories implements OnInit, OnChanges {
     )
   );
 
+  skeletonPills = computed(() =>
+    Array.from({ length: this.pageSizeSignal() + 1 }, (_, i) => i)
+  );
+
   next() {
     const nextIndex = this.currentIndex() + this.pageSizeSignal();
     if (nextIndex < this.allCategories().length) {
@@ -110,9 +140,38 @@ export class Categories implements OnInit, OnChanges {
   selectCategory(name: string | null) {
     const newValue = this.activeGenre === name ? null : name;
     this.genreSelected.emit(newValue);
+    this.filtersChanged.emit({
+      search: this.searchText.trim(),
+      genre: newValue,
+      price: this.selectedPrice,
+      sort: this.selectedSort
+    });
   }
 
   isActive(name: string): boolean {
     return this.activeGenre === name;
+  }
+
+  onSearchTextChange(value: string) {
+    this.searchInput$.next(value ?? '');
+  }
+
+  onPriceChange(value: PriceFilter) {
+    this.selectedPrice = value || 'all';
+    this.emitFilters();
+  }
+
+  onSortChange(value: SortFilter) {
+    this.selectedSort = value || 'az';
+    this.emitFilters();
+  }
+
+  private emitFilters() {
+    this.filtersChanged.emit({
+      search: this.searchText.trim(),
+      genre: this.activeGenre,
+      price: this.selectedPrice,
+      sort: this.selectedSort
+    });
   }
 }

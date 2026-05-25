@@ -1,121 +1,171 @@
-
 <section>
-<div class="cart-container">
+  <div class="cart-container">
+
     <h1 class="cart-title">My Cart</h1>
-      <div class="empty-page" *ngIf="cartItems().length === 0">
+
+    <!-- EMPTY STATE -->
+    <div class="empty-page" *ngIf="cartItems().length === 0">
       <nz-icon nzType="shopping-cart" nzTheme="outline" class="empty-icon"></nz-icon>
       <h3>Your cart is empty</h3>
       <p>Explore the store to acquire high-value gaming licenses.</p>
     </div>
-      <div class="cart-wrapper">
-        <div class="cart-content-grid">
 
-            <div class="cart-list" *ngIf="cartItems().length > 0">
-              <div class="cart-item" *ngFor="let item of cartItems()">
-                
-                <!-- Game Image with failure fallback -->
-                <div class="item-img-container">
-                  <img 
-                    [src]="item.image_url" 
-                    [alt]="item.title" 
-                     />
-                </div>
+    <!-- CART CONTENT -->
+    <div class="cart-wrapper" *ngIf="cartItems().length > 0">
 
-                <!-- Game Details -->
-                <div class="item-details">
-                  <h3 class="item-title">{{ item.title }}</h3>
-                  <span class="item-platform-tag">Digital License</span>
-                </div>
+      <div class="cart-content-grid">
 
-                <!-- Price and Actions -->
-                <div class="item-meta">
-                  <span class="item-price" *ngIf="item.final_price > 0">
-                    ₱{{ item.final_price | number:'1.2-2' }}
-                  </span>
-                  <span class="item-price-free" *ngIf="item.final_price === 0">
-                    FREE
-                  </span>
-                  
-                  <!-- Trash Bin Button (Ant Design style) -->
-                  <button class="remove-item-btn" (click)="removeItem(item.game_id)" title="Remove item">
-                    <nz-icon nzType="delete" nzTheme="outline"></nz-icon>
-                  </button>
-                </div>
+        <!-- LEFT: ITEMS -->
+        <div class="cart-list">
 
-              </div>
+          <div class="cart-item" *ngFor="let item of cartItems()">
+
+            <!-- IMAGE -->
+            <div class="item-img-container">
+              <img [src]="item.image_url" [alt]="item.title" />
             </div>
+
+            <!-- DETAILS -->
+            <div class="item-details">
+              <h3 class="item-title">{{ item.title }}</h3>
+              <span class="item-platform-tag">Digital License</span>
+            </div>
+
+            <!-- PRICE + ACTIONS -->
+            <div class="item-meta">
+
+              <div class="price-group">
+
+                <span class="original-price" *ngIf="item.discount_percent > 0">
+                  ₱{{ item.price | number:'1.2-2' }}
+                </span>
+
+                <span class="item-price">
+                  ₱{{ item.final_price | number:'1.2-2' }}
+                </span>
+
+                <span class="discount-badge" *ngIf="item.discount_percent > 0">
+                  -{{ item.discount_percent }}%
+                </span>
+
+              </div>
+
+              <button class="remove-item-btn" (click)="removeItem(item.game_id)">
+                <nz-icon nzType="delete" nzTheme="outline"></nz-icon>
+              </button>
+
+            </div>
+
           </div>
+        </div>
 
-          <div class="cart-summary-section" *ngIf="cartItems().length > 0">
-            <div class="summary-card">
-              <h3 class="summary-title">Order</h3>
-              
-              <div class="summary-row">
-                <span class="summary-label">Items Count:</span>
-                <span class="summary-value">{{ cartCount() }}</span>
-              </div>
-              
-              <div class="summary-row">
-                <span class="summary-label">Tax / Vault Fee:</span>
-                <span class="summary-value gold-text">INCLUDED</span>
-              </div>
+        <!-- RIGHT: SUMMARY -->
+        <aside class="cart-summary-section">
 
-              <hr class="summary-divider" />
+          <div class="summary-card">
 
-              <div class="summary-row total-row">
-                <span class="summary-label">TOTAL COST:</span>
-                <span class="total-price-value">
-                  ₱{{ cartTotal() | number:'1.2-2' }}
+            <h3 class="summary-title">Order Summary</h3>
+
+            <!-- ITEMIZED SUMMARY -->
+            <div class="summary-items">
+
+              <div class="summary-item" *ngFor="let item of cartItems()">
+                <span class="summary-item-title">
+                  {{ item.title }}
+                </span>
+
+                <span class="summary-item-price">
+                  ₱{{ item.final_price | number:'1.2-2' }}
                 </span>
               </div>
 
-              
-              <button 
-                class="nz-btn nz-btn-primary nz-btn-gold nz-btn-large" 
+            </div>
+
+            <hr class="summary-divider" />
+
+            <!-- TOTAL -->
+            <div class="summary-row total-row">
+              <span>TOTAL</span>
+              <span class="total-price-value">
+                ₱{{ cartTotal() | number:'1.2-2' }}
+              </span>
+            </div>
+
+            <!-- CHECKOUT BUTTON (ALWAYS VISIBLE) -->
+            <div class="summary-footer">
+              <button
+                class="nz-btn nz-btn-gold nz-btn-large"
                 (click)="onCheckout()">
-                <span>SECURE ACQUISITION (CHECKOUT)</span>
-                
-                <nz-icon nzType="credit-card" nzTheme="outline" class="nz-btn-sparkle-svg"></nz-icon>
+                 <nz-icon nzType="credit-card"></nz-icon>
+
+                PROCEED TO CHECKOUT
+
+               
               </button>
-              
-              <!-- Safety / Guarantee badge -->
-              <div class="guarantee-badge">
-                <nz-icon nzType="safety-certificate" nzTheme="outline"></nz-icon>
-                <span>Verified Secure Cryptographic Transaction</span>
-              </div>
             </div>
+
           </div>
 
-        </div>
+        </aside>
+
       </div>
+    </div>
 
-      <div class="modal-backdrop" *ngIf="isCheckingOut()">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h3>TRANSACTION COMPLETED</h3>
-          </div>
-          <div class="modal-body">
-            <!-- Custom Success Circle Check Icon -->
-            <nz-icon nzType="check-circle" nzTheme="fill" class="success-icon-svg"></nz-icon>
-            <h4>Secure Licenses Deposited!</h4>
-            <p>Your transaction has been approved. The acquired catalog has been successfully added to your private library.</p>
-            
+    <!-- CHECKOUT MODAL -->
+    <div class="modal-backdrop" *ngIf="isCheckingOut()">
+
+      <div class="modal-content">
+
+        <div class="modal-body checkout-grid">
+
+          <!-- LEFT -->
+          <div class="checkout-items">
+            <h4 class="section-title">Purchased Items</h4>
+
             <div class="invoice-summary">
-              <div class="invoice-row" *ngFor="let invoiceItem of receiptItems()">
-                <span>{{ invoiceItem.title }}</span>
-                <span>₱{{ invoiceItem.final_price | number:'1.2-2' }}</span>
-              </div>
-              <div class="invoice-row invoice-total">
-                <span>Grand Total:</span>
-                <span>₱{{ cartTotal() | number:'1.2-2' }}</span>
+              <div class="invoice-row" *ngFor="let item of receiptItems()">
+                <span>{{ item.title }}</span>
+                <span>₱{{ item.final_price | number:'1.2-2' }}</span>
               </div>
             </div>
           </div>
-          <div class="modal-footer">
-            <button class="nz-btn nz-btn-secondary" (click)="closeModal()">
-              Return to Catalog
-            </button>
+
+          <!-- RIGHT -->
+          <div class="checkout-summary">
+
+            <div class="success-header">
+              <nz-icon nzType="check-circle" nzTheme="fill"></nz-icon>
+              <h4>Transaction Complete</h4>
+              <p>Secure licenses added to your library.</p>
+            </div>
+
+            <div class="summary-box">
+              <div class="summary-row">
+                <span>Total Items</span>
+                <span>{{ receiptItems().length }}</span>
+              </div>
+
+              <div class="summary-row">
+                <span>Grand Total</span>
+                <span class="gold">
+                  ₱{{ cartTotal() | number:'1.2-2' }}
+                </span>
+              </div>
+            </div>
+
           </div>
+
         </div>
+
+        <div class="modal-footer">
+          <button class="nz-btn nz-btn-secondary" (click)="closeModal()">
+            Return
+          </button>
+        </div>
+
       </div>
-    </section>
+
+    </div>
+
+  </div>
+</section>

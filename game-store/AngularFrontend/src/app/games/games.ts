@@ -3,26 +3,33 @@ import {
   Component,
   computed,
   signal,
-  OnInit, Input , OnChanges , SimpleChanges
+  OnInit,
+  Input,
+  OnChanges,
+  SimpleChanges
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GameService } from '../services/game.service';
 import { GameCatalogItem } from '../models/game';
+import { GameFilterState } from '../models/game-filter';
 import { finalize } from 'rxjs/operators';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { CartService } from '../services/cart.service';
 
 @Component({
   selector: 'app-games',
   standalone: true,
-  imports: [CommonModule , NzIconModule, NzButtonModule],
+  imports: [CommonModule , NzIconModule, NzButtonModule ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './games.html',
   styleUrl: './games.css'
 })
 export class GamesComponent implements OnInit , OnChanges {
 
-  constructor(private gameService: GameService) {}
+  constructor(private gameService: GameService , private cartService: CartService , private notification: NzNotificationService) {}
+
 
   // STATE
   allGames = signal<GameCatalogItem[]>([]);
@@ -34,9 +41,10 @@ export class GamesComponent implements OnInit , OnChanges {
   itemsPerPage = signal<number>(8);
   selectedGame = signal<GameCatalogItem | null>(null);
   hasDiscount(game: GameCatalogItem): boolean {
-  return game.finalPrice < game.originalPrice;
-}
- @Input() genre: string | null = null;
+    return game.finalPrice < game.originalPrice;
+  }
+
+  @Input() filters: GameFilterState | null = null;
 
 
   // INIT
@@ -46,11 +54,12 @@ export class GamesComponent implements OnInit , OnChanges {
  
 
 ngOnChanges(changes: SimpleChanges) {
-  if (changes['genre']) {
+  if (changes['filters']) {
     this.loadGames();
   }
 }
-getCartIcon(game: GameCatalogItem): string {
+
+  getCartIcon(game: GameCatalogItem): string {
   if (game.isOwned) return 'crown';
   if (game.finalPrice === 0) return 'gift';
   if (game.isInCart) return 'check';
@@ -60,10 +69,10 @@ getCartIcon(game: GameCatalogItem): string {
 loadGames() {
   this.loading.set(true);
 
-  this.gameService.getGames(this.genre ?? undefined)
+  this.gameService.getGames(this.filters ?? undefined)
     .pipe(
       finalize(() => {
-        this.loading.set(false);;
+        this.loading.set(false);
       })
     )
     .subscribe({
@@ -81,22 +90,60 @@ loadGames() {
 
   // CART LOGIC
   isGameInCart(gameId: number): boolean {
-    return this.cart().some(g => g.id === gameId);
-  }
+  return this.allGames().some(g => g.id === gameId && g.isInCart);
+}
 
-  toggleCart(game: GameCatalogItem, event: Event) {
-    event.stopPropagation();
+ toggleCart(game: GameCatalogItem, event: Event) {
+  event.stopPropagation();
 
-    if (this.isGameInCart(game.id)) {
-      this.cart.update(c => c.filter(g => g.id !== game.id));
-    } else {
-      this.cart.update(c => [...c, game]);
+  if (game.isOwned || game.isInCart) return;
+
+  this.cartService.addToCart(game.id).subscribe({
+   next: () => {
+
+  // update game state
+  this.allGames.update(games =>
+    games.map(g =>
+      g.id === game.id ? { ...g, isInCart: true } : g
+    )
+  );
+
+  this.filteredGames.update(games =>
+    games.map(g =>
+      g.id === game.id ? { ...g, isInCart: true } : g
+    )
+  );
+
+  // ✅ IMPORTANT: update cart signal too
+  this.cart.update(cart => [...cart, game]);
+
+  this.notification.success(
+    'Added to Cart',
+    `${game.title} added successfully.`,
+    {
+      nzPlacement: 'bottomRight',
+      nzDuration: 2500,
+      nzClass: 'toast'
     }
-  }
+  );
+},
 
+    error: (err) => {
+      console.error(err);
+
+      this.notification.error(
+        'Cart Error',
+        'Failed to add game to cart.',
+        {
+          nzPlacement: 'bottomRight'
+        }
+      );
+    }
+  });
+}
   // DISABLE LOGIC
   isDisabled(game: GameCatalogItem): boolean {
-    return game.isOwned || this.isGameInCart(game.id);
+    return game.isOwned || game.isInCart;
   }
 
   isSelectedGameInCart(): boolean {

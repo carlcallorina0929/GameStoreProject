@@ -3,8 +3,8 @@
   <main class="home">
     <section class="home-shell">
       <app-hero></app-hero>
-     <app-categories (genreSelected)="onGenreSelected($event)" [activeGenre]="selectedGenre()"></app-categories>
-     <app-games [genre]="selectedGenre()"></app-games>
+     <app-categories [activeGenre]="filterState().genre" (filtersChanged)="onFiltersChanged($event)"></app-categories>
+     <app-games [filters]="filterState()"></app-games>
     </section>
   </main>
 </div>

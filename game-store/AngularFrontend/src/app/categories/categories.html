@@ -1,40 +1,85 @@
 <section class="genre-nav-container" aria-labelledby="genre-heading">
-      <div class="genre-header">
-        <h2 id="genre-heading" class="genre-title">Browse by Genre</h2>
-        
-        <div class="genre-controls" *ngIf="allCategories().length > pageSize">
-          <button 
-            class="control-btn" 
-            (click)="prev()" 
-            [disabled]="currentIndex() === 0"
-            aria-label="Previous Genres">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-          </button>
-          
-          <button 
-            class="control-btn" 
-            (click)="next()" 
-            [disabled]="currentIndex() + pageSize >= allCategories().length"
-            aria-label="Next Genres">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-          </button>
-        </div>
-      </div>
+  <div class="genre-header">
+    <h2 id="genre-heading" class="genre-title">Browse by Genre</h2>
 
-      <div class="genre-row">
-         <button
-    class="genre-pill"
-    (click)="selectCategory(null)"
-    [class.active]="activeGenre === null">
-    All
-  </button>
-        @for (category of visibleCategories(); track category.id) {
-         <button
-  class="genre-pill"
-  (click)="selectCategory(category.name)"
-  [class.active]="isActive(category.name)">
-  {{ category.name }}
-</button>
-        }
+    <div class="genre-controls" *ngIf="!loading() && allCategories().length > pageSize">
+      <button
+        class="control-btn"
+        (click)="prev()"
+        [disabled]="currentIndex() === 0"
+        aria-label="Previous Genres">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      </button>
+
+      <button
+        class="control-btn"
+        (click)="next()"
+        [disabled]="currentIndex() + pageSize >= allCategories().length"
+        aria-label="Next Genres">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="filters-row">
+    <div class="search-wrap">
+      <span nz-icon nzType="search"></span>
+      <input
+        nz-input
+        type="text"
+        placeholder="Search by title, description, or genre"
+        [ngModel]="searchText"
+        (ngModelChange)="onSearchTextChange($event)" />
+    </div>
+
+    <nz-select
+      class="filter-select"
+      nzPlaceHolder="Price"
+      [ngModel]="selectedPrice"
+      (ngModelChange)="onPriceChange($event)">
+      <nz-option nzValue="all" nzLabel="All Prices"></nz-option>
+      <nz-option nzValue="free" nzLabel="Free"></nz-option>
+      <nz-option nzValue="paid" nzLabel="Paid"></nz-option>
+      <nz-option nzValue="discounted" nzLabel="Discounted"></nz-option>
+    </nz-select>
+
+    <nz-select
+      class="filter-select"
+      nzPlaceHolder="Sort"
+      [ngModel]="selectedSort"
+      (ngModelChange)="onSortChange($event)">
+      <nz-option nzValue="az" nzLabel="A-Z"></nz-option>
+      <nz-option nzValue="price_asc" nzLabel="Price Low to High"></nz-option>
+      <nz-option nzValue="price_desc" nzLabel="Price High to Low"></nz-option>
+      <nz-option nzValue="most_discounted" nzLabel="Most Discounted"></nz-option>
+      <nz-option nzValue="newest" nzLabel="Newest"></nz-option>
+    </nz-select>
+  </div>
+
+  <div class="genre-row">
+    <ng-container *ngIf="loading(); else loadedGenres">
+      <button
+        class="genre-pill genre-pill-skeleton"
+        type="button"
+        disabled
+        aria-hidden="true"
+        *ngFor="let i of skeletonPills()"></button>
+    </ng-container>
+
+    <ng-template #loadedGenres>
+      <button
+        class="genre-pill"
+        (click)="selectCategory(null)"
+        [class.active]="activeGenre === null">
+        All
+      </button>
+      <button
+        class="genre-pill"
+        *ngFor="let category of visibleCategories()"
+        (click)="selectCategory(category.name)"
+        [class.active]="isActive(category.name)">
+        {{ category.name }}
+      </button>
+    </ng-template>
       </div>
-    </section>
+</section>

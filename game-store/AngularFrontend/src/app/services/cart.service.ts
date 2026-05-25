@@ -4,6 +4,7 @@ import {environment} from  '../environments/environment';
 import {Observable} from 'rxjs';
 import {CartItem} from '../models/cart';
 import {ApiResponse} from '../models/cart';
+import {map} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,18 @@ export class CartService {
     constructor(private http: HttpClient) {}
 
 getCart(): Observable<CartItem[]> {
-  return this.http.get<CartItem[]>(`${this.apiUrl}/cart`);
+  return this.http.get<any[]>(`${this.apiUrl}/cart`).pipe(
+    map(items =>
+      items.map(item => ({
+        game_id: item.game_id,
+        title: item.title,
+        image_url: item.image_url,
+        discount_percent:Number(item.discount_percent),
+        price: Number(item.price),
+        final_price: Number(item.final_price)
+      }))
+    )
+  );
 }
 addToCart(gameId: number): Observable<ApiResponse> {
   return this.http.post<ApiResponse>(`${this.apiUrl}/cart/add`, { gameId });

@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { environment } from '../environments/environment';
 import { DiscountedGameApiResponse, Game, GameCatalogApiResponse, GameCatalogItem } from '../models/game';
 import { Category } from '../models/category';
+import { GameFilterState } from '../models/game-filter';
 
 
 @Injectable({
@@ -20,14 +21,22 @@ export class GameService {
 
   // Fetch all games for the currently logged-in user.
   // The authInterceptor automatically attaches the JWT token.
-getGames(genre?: string): Observable<GameCatalogItem[]> {
-  let url = `${this.apiUrl}/games`;
+getGames(filters?: GameFilterState): Observable<GameCatalogItem[]> {
+  const paramsBuilder = new HttpParams()
+    .set('search', filters?.search?.trim() ?? '')
+    .set('genre', filters?.genre ?? '')
+    .set('price', filters?.price ?? 'all')
+    .set('sort', filters?.sort ?? 'az');
 
-  if (genre) {
-    url += `?genre=${encodeURIComponent(genre)}`;
-  }
+  const params = Object.fromEntries(
+    Array.from(paramsBuilder.keys())
+      .map(key => [key, paramsBuilder.get(key)])
+      .filter(([, value]) => value !== '' && value !== null)
+  );
 
-  return this.http.get<GameCatalogApiResponse[]>(url).pipe(
+  return this.http.get<GameCatalogApiResponse[]>(`${this.apiUrl}/games`, {
+    params: new HttpParams({ fromObject: params as Record<string, string> })
+  }).pipe(
     map((games) =>
       games.map((g) => ({
         id: g.id,

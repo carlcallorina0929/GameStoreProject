@@ -43,20 +43,25 @@ export class CartComponent implements OnInit {
     this.loadCart();
   }
 
-  loadCart() {
-    this.loading.set(true);
+loadCart() {
+  this.loading.set(true);
 
-    this.cartService.getCart().subscribe({
-      next: (items) => {
-        this.cartItems.set(items);
-        this.loading.set(false);
-      },
-      error: (err) => {
-        console.error('Failed to load cart:', err);
-        this.loading.set(false);
-      }
-    });
-  }
+  this.cartService.getCart().subscribe({
+    next: (items) => {
+      console.log('CART ITEMS:', items);
+
+      this.cartItems.set(items);
+
+      console.log('SIGNAL VALUE:', this.cartItems());
+
+      this.loading.set(false);
+    },
+    error: (err) => {
+      console.error(err);
+      this.loading.set(false);
+    }
+  });
+}
 
   // REMOVE ITEM (BACKEND INTEGRATED)
   removeItem(game_id: number) {

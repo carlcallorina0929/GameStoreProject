@@ -1,23 +1,28 @@
 const Game = require("../models/gameModel");
 
-
 // GET GAMES
 const getGames = async (req, res) => {
   try {
     const userId = req.user.id;
-    const {genre} = req.query;
+    const search = req.query.search ? String(req.query.search).trim() : '';
+    const genre = req.query.genre ? String(req.query.genre).trim() : null;
+    const price = req.query.price ? String(req.query.price).trim() : 'all';
+    const sort = req.query.sort ? String(req.query.sort).trim() : 'az';
 
-    const games = await Game.getAllFilteredGames(userId , genre);
+    const games = await Game.getAllFilteredGames(userId, {
+      search,
+      genre,
+      price,
+      sort
+    });
 
-    // FORMAT IMAGE URL
     const formattedGames = games.map(game => ({
       ...game,
-       price: Number(game.price),
+      price: Number(game.price),
       final_price: Number(game.final_price),
       image_url: game.image_url
         ? `${process.env.BASE_URL}${game.image_url}`
         : null
-
     }));
 
     res.json(formattedGames);

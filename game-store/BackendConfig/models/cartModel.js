@@ -19,10 +19,13 @@ const getCart = async (userId) => {
       c.game_id,
       g.title,
       g.description,
-      g.price,
       g.image_url,
-      g.discount_percent,
+
+      g.price AS original_price,
+      g.discount_percent as discount_percent,
+
       (g.price - (g.price * g.discount_percent / 100)) AS final_price
+
     FROM cart c
     JOIN games g ON g.id = c.game_id
     WHERE c.user_id = ?
