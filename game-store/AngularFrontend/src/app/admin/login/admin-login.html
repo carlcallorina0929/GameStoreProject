@@ -1,0 +1,32 @@
+<main class="admin-login-page">
+  <div class="bg-accent bg-accent-a"></div>
+  <div class="bg-accent bg-accent-b"></div>
+
+  <nz-card class="login-card">
+    <h1>Game Den Admin</h1>
+    <p class="subtitle">Sign in with your admin account</p>
+
+    <form nz-form [formGroup]="form" (ngSubmit)="submit()">
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Username is required">
+          <input nz-input formControlName="username" placeholder="Username" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Password is required">
+          <input
+            nz-input
+            type="password"
+            formControlName="password"
+            placeholder="Password"
+          />
+        </nz-form-control>
+      </nz-form-item>
+
+      <button nz-button nzType="primary" [nzLoading]="loading()" class="login-btn">
+        Log In
+      </button>
+    </form>
+  </nz-card>
+</main>

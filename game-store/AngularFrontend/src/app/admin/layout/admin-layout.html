@@ -1,0 +1,52 @@
+<nz-layout class="admin-layout-shell">
+  <nz-sider
+    nzTheme="dark"
+    nzCollapsible
+    [nzCollapsed]="isCollapsed"
+    (nzCollapsedChange)="onCollapsedChange($event)"
+    [nzWidth]="260"
+    [nzCollapsedWidth]="72"
+    [nzTrigger]="null"
+  >
+    <div class="brand">Game Den Admin</div>
+    <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+      <li nz-menu-item routerLink="/admin/dashboard" routerLinkActive="ant-menu-item-selected">
+        Dashboard
+      </li>
+      <li nz-menu-item routerLink="/admin/games" routerLinkActive="ant-menu-item-selected">
+        Games Management
+      </li>
+      <li nz-menu-item routerLink="/admin/users" routerLinkActive="ant-menu-item-selected">
+        Users Management
+      </li>
+      <li nz-menu-item routerLink="/admin/analytics" routerLinkActive="ant-menu-item-selected">
+        Analytics
+      </li>
+      <li nz-menu-item (click)="requestLogout()">Logout</li>
+    </ul>
+  </nz-sider>
+
+  <nz-layout>
+    <nz-header class="admin-header">
+      <button nz-button nzType="default" (click)="toggleSidebar()">Menu</button>
+      <span class="header-title">Control Center</span>
+    </nz-header>
+    <nz-content class="admin-content">
+      <router-outlet />
+    </nz-content>
+  </nz-layout>
+</nz-layout>
+
+<nz-modal
+  [nzVisible]="logoutModalVisible()"
+  [nzTitle]="'Confirm Logout'"
+  [nzOkText]="'Logout'"
+  [nzCancelText]="'Cancel'"
+  [nzOkDanger]="true"
+  (nzOnCancel)="cancelLogout()"
+  (nzOnOk)="confirmLogout()"
+>
+  <ng-container *nzModalContent>
+    <p>Are you sure you want to log out from the admin page?</p>
+  </ng-container>
+</nz-modal>

@@ -1,0 +1,62 @@
+.admin-login-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 1.5rem;
+  background:
+    radial-gradient(circle at 15% 15%, rgba(45, 120, 255, 0.22), transparent 30%),
+    radial-gradient(circle at 85% 20%, rgba(0, 225, 168, 0.18), transparent 35%),
+    linear-gradient(140deg, #0b111d, #111926 45%, #12151d 100%);
+}
+
+.bg-accent {
+  position: absolute;
+  width: 22rem;
+  height: 22rem;
+  border-radius: 50%;
+  filter: blur(50px);
+  opacity: 0.45;
+}
+
+.bg-accent-a {
+  background: rgba(64, 151, 255, 0.45);
+  top: -5rem;
+  left: -5rem;
+}
+
+.bg-accent-b {
+  background: rgba(0, 225, 168, 0.35);
+  right: -6rem;
+  bottom: -6rem;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 460px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(12, 18, 30, 0.88);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.45);
+}
+
+.login-card h1 {
+  margin: 0;
+  font-size: 1.9rem;
+  color: #eff5ff;
+}
+
+.subtitle {
+  margin: 0.35rem 0 1.4rem;
+  color: #9eb1d1;
+}
+
+.login-btn {
+  width: 100%;
+  margin-top: 0.4rem;
+  height: 42px;
+  border-radius: 10px;
+  font-weight: 600;
+}

@@ -1,0 +1,62 @@
+.games-page h2 {
+  margin: 0;
+  color: #eef4ff;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.switch-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #d2def4;
+}
+
+.game-thumb {
+  width: 72px;
+  height: 42px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.action-col {
+  display: flex;
+  gap: 0.45rem;
+}
+
+.game-form {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: #1d2a44;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.created-modal-content h3 {
+  margin: 0 0 0.5rem;
+  color: #1d2a44;
+}
+
+.created-modal-content p {
+  margin: 0;
+  color: #394a6d;
+}

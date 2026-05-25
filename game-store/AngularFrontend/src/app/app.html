@@ -1,9 +1,7 @@
-<app-loader *ngIf="isPageLoading()"></app-loader>
-
-<div *ngIf="!isPageLoading()" class="app-shell">
+<div class="app-shell">
   <app-navbar *ngIf="showNavbar()"></app-navbar>
   <main class="app-main">
     <router-outlet />
   </main>
-  <app-footer></app-footer>
+  <app-footer *ngIf="showFooter()"></app-footer>
 </div>

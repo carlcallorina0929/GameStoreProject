@@ -1,0 +1,94 @@
+<section class="analytics-page">
+  <h2>Analytics</h2>
+
+  @if (loading()) {
+    <div class="analytics-grid">
+      @for (card of [1, 2]; track card) {
+        <nz-card>
+          <nz-skeleton [nzActive]="true" [nzParagraph]="{ rows: 6 }"></nz-skeleton>
+        </nz-card>
+      }
+    </div>
+
+    <div class="ranking-section">
+      @for (table of [1, 2]; track table) {
+        <nz-card>
+          <nz-skeleton [nzActive]="true" [nzParagraph]="{ rows: 5 }"></nz-skeleton>
+        </nz-card>
+      }
+    </div>
+  } @else {
+    <div class="analytics-grid">
+      <nz-card nzTitle="Sales Volume Over Time">
+        @for (point of sales(); track point.sale_date) {
+          <div class="bar-row">
+            <span class="label">{{ point.sale_date }}</span>
+            <div class="bar-wrap">
+              <div class="bar bar-sales" [style.width.%]="getRevenuePercent(point.revenue)"></div>
+            </div>
+            <span class="value">{{ point.revenue | currency: 'PHP':'symbol':'1.2-2' }}</span>
+          </div>
+        }
+      </nz-card>
+
+      <nz-card nzTitle="User Registration Trends">
+        @for (point of registrations(); track point.register_date) {
+          <div class="bar-row">
+            <span class="label">{{ point.register_date }}</span>
+            <div class="bar-wrap">
+              <div
+                class="bar bar-users"
+                [style.width.%]="getRegistrationsPercent(point.registrations)"
+              ></div>
+            </div>
+            <span class="value">{{ point.registrations }}</span>
+          </div>
+        }
+      </nz-card>
+    </div>
+
+    <div class="ranking-section">
+      <nz-card nzTitle="Top Selling Games">
+        <nz-table [nzData]="topGames()" [nzFrontPagination]="false">
+          <thead>
+            <tr>
+              <th>Game</th>
+              <th>Units Sold</th>
+              <th>Revenue</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (game of topGames(); track game.game_id) {
+              <tr>
+                <td>{{ game.title }}</td>
+                <td>{{ game.units_sold }}</td>
+                <td>{{ game.revenue | currency: 'PHP':'symbol':'1.2-2' }}</td>
+              </tr>
+            }
+          </tbody>
+        </nz-table>
+      </nz-card>
+
+      <div class="section-separator"></div>
+
+      <nz-card nzTitle="Top Free Games (By Library Ownership)">
+        <nz-table [nzData]="topFreeGames()" [nzFrontPagination]="false">
+          <thead>
+            <tr>
+              <th>Game</th>
+              <th>Owners</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (game of topFreeGames(); track game.game_id) {
+              <tr>
+                <td>{{ game.title }}</td>
+                <td>{{ game.owners_count }}</td>
+              </tr>
+            }
+          </tbody>
+        </nz-table>
+      </nz-card>
+    </div>
+  }
+</section>

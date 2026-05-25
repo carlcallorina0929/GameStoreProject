@@ -1,0 +1,188 @@
+<section class="games-page">
+  <div class="toolbar">
+    <h2>Games Management</h2>
+    <div class="toolbar-actions">
+      <input
+        nz-input
+        placeholder="Search game title"
+        #searchInput
+        (keyup.enter)="onSearch(searchInput.value)"
+      />
+      <span class="switch-wrap">
+        <span>Show Inactive</span>
+        <nz-switch [ngModel]="includeInactive()" (ngModelChange)="toggleInactive($event)"></nz-switch>
+      </span>
+      <button nz-button nzType="primary" (click)="openCreateModal()">Create Game</button>
+    </div>
+  </div>
+
+  <nz-table
+    [nzData]="games()"
+    [nzLoading]="loading()"
+    [nzFrontPagination]="false"
+    [nzPageIndex]="page()"
+    [nzPageSize]="limit()"
+    [nzTotal]="total()"
+    (nzPageIndexChange)="onPageIndexChange($event)"
+  >
+    <thead>
+      <tr>
+        <th>Image</th>
+        <th>Title</th>
+        <th>Price</th>
+        <th>Discount</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (game of games(); track game.id) {
+        <tr>
+          <td>
+            <img *ngIf="game.image_url" [src]="game.image_url" alt="game" class="game-thumb" />
+          </td>
+          <td>{{ game.title }}</td>
+          <td>{{ game.price | currency: 'PHP':'symbol':'1.2-2' }}</td>
+          <td>{{ game.discount_percent }}%</td>
+          <td>
+            <nz-tag [nzColor]="game.isActive ? 'success' : 'error'">
+              {{ game.isActive ? 'Active' : 'Inactive' }}
+            </nz-tag>
+          </td>
+          <td class="action-col">
+            <button nz-button nzType="default" nzSize="small" (click)="openEditModal(game)">Edit</button>
+            <button
+              nz-button
+              nzDanger
+              nzSize="small"
+              [disabled]="!game.isActive"
+              (click)="softDeleteGame(game)"
+            >
+              Soft Delete
+            </button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </nz-table>
+</section>
+
+<nz-modal
+  [nzTitle]="modalMode() === 'create' ? 'Create Game' : 'Edit Game'"
+  [nzVisible]="modalVisible()"
+  [nzOkLoading]="submitting()"
+  [nzWidth]="700"
+  (nzOnCancel)="closeModal()"
+  (nzOnOk)="submitModal()"
+>
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="form" class="game-form">
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Required">
+          <label class="form-label">Title</label>
+          <input nz-input formControlName="title" placeholder="Title" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Required">
+          <label class="form-label">Description</label>
+          <textarea nz-input rows="4" formControlName="description" placeholder="Description"></textarea>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Required">
+          <label class="form-label">Price</label>
+          <nz-input-number formControlName="price" [nzMin]="0" [nzStep]="1"></nz-input-number>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <label class="form-label">Discount Percent</label>
+          <nz-input-number
+            formControlName="discount_percent"
+            [nzMin]="0"
+            [nzMax]="100"
+            [nzStep]="1"
+          ></nz-input-number>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <label class="form-label">Genres</label>
+          <nz-select
+            formControlName="genre_ids"
+            nzMode="multiple"
+            nzPlaceHolder="Select genres"
+            [nzMaxTagCount]="3"
+          >
+            @for (genre of availableGenres(); track genre.id) {
+              <nz-option [nzValue]="genre.id" [nzLabel]="genre.name"></nz-option>
+            }
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <label class="form-label">Discount Start</label>
+          <input nz-input type="datetime-local" formControlName="discount_start" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <label class="form-label">Discount End</label>
+          <input nz-input type="datetime-local" formControlName="discount_end" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <label class="form-label">Status</label>
+          <span class="switch-wrap">
+            <span>Active</span>
+            <nz-switch formControlName="isActive"></nz-switch>
+          </span>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <label class="form-label">Game Image</label>
+          <nz-upload
+            [nzFileList]="fileList()"
+            [nzBeforeUpload]="beforeUpload"
+            [nzRemove]="removeUpload"
+            [nzMultiple]="false"
+            nzListType="picture"
+          >
+            <button nz-button nzType="default" type="button">Select Image</button>
+          </nz-upload>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+</nz-modal>
+
+<nz-modal
+  [nzVisible]="createdModalVisible()"
+  [nzTitle]="successModalMode() === 'create' ? 'Game Created' : 'Game Updated'"
+  [nzFooter]="createdModalFooter"
+  [nzClosable]="false"
+  [nzMaskClosable]="false"
+  [nzWidth]="480"
+  (nzOnCancel)="closeCreatedModal()"
+>
+  <ng-container *nzModalContent>
+    <div class="created-modal-content">
+      <h3>{{ successModalMode() === 'create' ? 'Game successfully created' : 'Game successfully updated' }}</h3>
+      <p>
+        <strong>{{ createdGameTitle() }}</strong>
+        {{ successModalMode() === 'create' ? 'is now available in the system.' : 'has been updated in the system.' }}
+      </p>
+    </div>
+  </ng-container>
+
+  <ng-template #createdModalFooter>
+    <button nz-button nzType="default" (click)="closeCreatedModal()">Done</button>
+    @if (successModalMode() === 'create') {
+      <button nz-button nzType="primary" (click)="createAnotherGame()">Create Another</button>
+    }
+  </ng-template>
+</nz-modal>

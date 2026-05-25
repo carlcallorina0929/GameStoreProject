@@ -1,0 +1,60 @@
+.analytics-page h2 {
+  margin-bottom: 1rem;
+  color: #eef4ff;
+}
+
+.analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: 120px 1fr 110px;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.label {
+  color: #a8bad8;
+  font-size: 0.78rem;
+}
+
+.bar-wrap {
+  background: #1a263a;
+  border-radius: 999px;
+  height: 10px;
+  overflow: hidden;
+}
+
+.bar {
+  height: 100%;
+  border-radius: 999px;
+}
+
+.bar-sales {
+  background: linear-gradient(90deg, #2fb2ff, #6a67ff);
+}
+
+.bar-users {
+  background: linear-gradient(90deg, #00ca9d, #27d07f);
+}
+
+.value {
+  text-align: right;
+  color: #f1f6ff;
+  font-size: 0.82rem;
+}
+
+.ranking-section {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.section-separator {
+  height: 1px;
+  background: linear-gradient(90deg, rgba(95, 132, 199, 0), rgba(95, 132, 199, 0.65), rgba(95, 132, 199, 0));
+}

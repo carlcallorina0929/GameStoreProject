@@ -1,0 +1,26 @@
+.dashboard-page h2 {
+  margin-bottom: 1rem;
+  color: #eef4ff;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.stat-card {
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(14, 21, 35, 0.9);
+}
+
+.stat-card p {
+  color: #9fb2d1;
+  margin-bottom: 0.35rem;
+}
+
+.stat-card strong {
+  font-size: 1.6rem;
+  color: #ffffff;
+}

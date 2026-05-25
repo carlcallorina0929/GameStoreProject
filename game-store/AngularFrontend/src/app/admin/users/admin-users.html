@@ -1,0 +1,136 @@
+<section class="users-page">
+  <div class="toolbar">
+    <h2>Users Management</h2>
+    <div class="toolbar-actions">
+      <input
+        nz-input
+        placeholder="Search user/email"
+        #searchInput
+        (keyup.enter)="onSearch(searchInput.value)"
+      />
+      <span class="switch-wrap">
+        <span>Show Inactive</span>
+        <nz-switch [ngModel]="includeInactive()" (ngModelChange)="toggleInactive($event)"></nz-switch>
+      </span>
+      <button nz-button nzType="primary" (click)="openCreateModal()">Create User</button>
+    </div>
+  </div>
+
+  <nz-table
+    [nzData]="users()"
+    [nzLoading]="loading()"
+    [nzFrontPagination]="false"
+    [nzPageIndex]="page()"
+    [nzPageSize]="limit()"
+    [nzTotal]="total()"
+    (nzPageIndexChange)="onPageIndexChange($event)"
+  >
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (user of users(); track user.id) {
+        <tr>
+          <td>{{ user.username }}</td>
+          <td>{{ user.first_name }} {{ user.last_name }}</td>
+          <td>{{ user.email }}</td>
+          <td>
+            <nz-tag [nzColor]="user.role === 'admin' ? 'processing' : 'default'">
+              {{ user.role }}
+            </nz-tag>
+          </td>
+          <td>
+            <nz-tag [nzColor]="user.isActive ? 'success' : 'error'">
+              {{ user.isActive ? 'Active' : 'Inactive' }}
+            </nz-tag>
+          </td>
+          <td class="action-col">
+            <button nz-button nzType="default" nzSize="small" (click)="openEditModal(user)">Edit</button>
+            <button
+              nz-button
+              nzDanger
+              nzSize="small"
+              [disabled]="!user.isActive"
+              (click)="softDeleteUser(user)"
+            >
+              Soft Delete
+            </button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </nz-table>
+</section>
+
+<nz-modal
+  [nzTitle]="modalMode() === 'create' ? 'Create User' : 'Edit User'"
+  [nzVisible]="modalVisible()"
+  [nzOkLoading]="submitting()"
+  (nzOnCancel)="closeModal()"
+  (nzOnOk)="submitModal()"
+>
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="form" class="user-form">
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Required">
+          <label class="form-label">Username</label>
+          <input nz-input formControlName="username" placeholder="Username" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Required">
+          <label class="form-label">First Name</label>
+          <input nz-input formControlName="first_name" placeholder="First Name" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Required">
+          <label class="form-label">Last Name</label>
+          <input nz-input formControlName="last_name" placeholder="Last Name" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Valid age required">
+          <label class="form-label">Age</label>
+          <nz-input-number formControlName="age" [nzMin]="1" [nzMax]="120" [nzStep]="1"></nz-input-number>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Valid email required">
+          <label class="form-label">Email</label>
+          <input nz-input formControlName="email" placeholder="Email" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Required for create">
+          <label class="form-label">Password</label>
+          <input nz-input formControlName="password" placeholder="Password" type="password" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <label class="form-label">Role</label>
+          <nz-select formControlName="role">
+            <nz-option nzValue="user" nzLabel="User"></nz-option>
+            <nz-option nzValue="admin" nzLabel="Admin"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      @if (modalMode() === 'edit') {
+        <nz-form-item>
+          <span class="switch-wrap modal-switch-wrap">
+            <span>Active</span>
+            <nz-switch formControlName="isActive"></nz-switch>
+          </span>
+        </nz-form-item>
+      }
+    </form>
+  </ng-container>
+</nz-modal>

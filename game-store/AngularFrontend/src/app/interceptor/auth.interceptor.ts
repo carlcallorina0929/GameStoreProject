@@ -1,7 +1,9 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const token = localStorage.getItem('token');
+  const isAdminRequest = req.url.includes('/api/admin/');
+  const tokenKey = isAdminRequest ? 'admin_token' : 'token';
+  const token = localStorage.getItem(tokenKey);
 
   if (token) {
     req = req.clone({

@@ -8,6 +8,10 @@ const userRoutes = require("./routes/userRoutes");
 const cartRoutes = require("./routes/cartRoutes");
 const profileRoutes = require("./routes/profileRoutes");
 const settingsRoutes = require("./routes/settingsRoutes");
+const adminAuthRoutes = require("./routes/adminAuthRoutes");
+const adminUserRoutes = require("./routes/adminUserRoutes");
+const adminGameRoutes = require("./routes/adminGameRoutes");
+const adminAnalyticsRoutes = require("./routes/adminAnalyticsRoutes");
 const app = express();
 
 // MAKE UPLOADS FOLDER PUBLIC (for images)
@@ -36,6 +40,10 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/library", libraryRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/checkout", checkoutRoutes);
+app.use("/api/admin/auth", adminAuthRoutes);
+app.use("/api/admin/users", adminUserRoutes);
+app.use("/api/admin/games", adminGameRoutes);
+app.use("/api/admin/analytics", adminAnalyticsRoutes);
 
 // Health check
 app.get("/", (req, res) => {

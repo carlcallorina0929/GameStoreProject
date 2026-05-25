@@ -1,0 +1,32 @@
+<section class="dashboard-page">
+  <h2>Dashboard</h2>
+
+  @if (loading()) {
+    <div class="cards-grid">
+      @for (card of [1, 2, 3, 4]; track card) {
+        <nz-card class="stat-card">
+          <nz-skeleton [nzActive]="true" [nzParagraph]="{ rows: 2 }"></nz-skeleton>
+        </nz-card>
+      }
+    </div>
+  } @else {
+    <div class="cards-grid">
+      <nz-card class="stat-card">
+        <p>Total Users</p>
+        <strong>{{ summary().totalUsers }}</strong>
+      </nz-card>
+      <nz-card class="stat-card">
+        <p>Total Games</p>
+        <strong>{{ summary().totalGames }}</strong>
+      </nz-card>
+      <nz-card class="stat-card">
+        <p>Total Revenue</p>
+        <strong>{{ summary().totalRevenue | currency: 'PHP':'symbol':'1.2-2' }}</strong>
+      </nz-card>
+      <nz-card class="stat-card">
+        <p>Total Orders</p>
+        <strong>{{ summary().totalOrders }}</strong>
+      </nz-card>
+    </div>
+  }
+</section>

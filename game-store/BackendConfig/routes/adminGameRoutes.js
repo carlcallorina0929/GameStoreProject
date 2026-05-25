@@ -1,27 +1,16 @@
 const express = require("express");
+const controller = require("../controllers/adminGameController");
+const upload = require("../middleware/adminGameUpload");
+const { verifyToken, verifyAdminRole } = require("../middleware/adminAuthMiddleware");
+
 const router = express.Router();
-const db = require("../db");
-const upload = require("../middleware/upload");
 
-// ADD GAME (ADMIN)
-router.post("/games", upload.single("image"), async (req, res) => {
-  try {
-    const { title, description, price } = req.body;
+router.use(verifyToken, verifyAdminRole);
 
-    const imageUrl = req.file
-      ? `/uploads/${req.file.filename}`
-      : null;
-
-    await db.query(
-      `INSERT INTO games (title, description, price, image_url)
-       VALUES (?, ?, ?, ?)`,
-      [title, description, price, imageUrl]
-    );
-
-    res.json({ message: "Game added successfully" });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+router.get("/", controller.listGames);
+router.get("/genres", controller.listGenres);
+router.post("/", upload.single("image"), controller.createGame);
+router.put("/:id", upload.single("image"), controller.updateGame);
+router.patch("/:id/soft-delete", controller.softDeleteGame);
 
 module.exports = router;

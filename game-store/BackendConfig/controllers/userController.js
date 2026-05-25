@@ -164,8 +164,8 @@ const loginUser = async (req, res) => {
     }
 
     const user = await User.getUserByUsername(username);
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
+    if (!user || !user.isActive) {
+      return res.status(401).json({ error: "Invalid Username or Password" });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
