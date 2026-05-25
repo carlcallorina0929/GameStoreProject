@@ -6,55 +6,61 @@
     </div>
   </div>
 
-  <div class="library-grid" *ngIf="!loading(); else loadingState">
-    <div class="library-card" *ngFor="let game of paginatedGames(); trackBy: trackByGame">
-      <div class="image-shadow">
-        <img [src]="game.imageUrl" [alt]="game.title" />
-      </div>
-
-      <div class="library-card-body">
-        <div class="card-meta">
-          <span class="genre-tag owned-tag">Owned</span>
-          <span class="purchased-date">Purchased {{ game.purchasedAt | date:'mediumDate' }}</span>
+  <div class="library-content" *ngIf="!loading(); else loadingState">
+    <div class="library-grid">
+      <div class="library-card" *ngFor="let game of paginatedGames(); trackBy: trackByGame">
+        <div class="image-shadow">
+          <img [src]="game.imageUrl" [alt]="game.title" />
         </div>
 
-        <h3>{{ game.title }}</h3>
-        <p>{{ game.description }}</p>
+        <div class="library-card-body">
+          <div class="card-meta">
+            <span class="genre-tag owned-tag">Owned</span>
+            <span class="purchased-date">Purchased {{ game.purchasedAt | date:'mediumDate' }}</span>
+          </div>
 
-        <button nz-button nzType="primary" class="play-btn">
-          <span nz-icon nzType="play-circle"></span>
-          PLAY
-        </button>
+          <h3>{{ game.title }}</h3>
+          <p>{{ game.description }}</p>
+
+          <button nz-button nzType="primary" class="play-btn">
+            <span nz-icon nzType="play-circle"></span>
+            PLAY
+          </button>
+        </div>
       </div>
     </div>
 
-    <footer class="library-footer" *ngIf="totalPages() > 1">
-      <button class="page-nav" [disabled]="currentPage() === 1" (click)="goToPage(currentPage() - 1)">
-        ← Prev
+    <footer class="library-footer pagination" *ngIf="totalPages() > 1">
+      <button class="page-nav pag-btn" [disabled]="currentPage() === 1" (click)="goToPage(currentPage() - 1)">
+        Prev
       </button>
-      <button
-        class="page-number"
-        *ngFor="let page of getPagesArray()"
-        (click)="goToPage(page)"
-        [class.active]="currentPage() === page"
-      >
-        {{ page }}
-      </button>
-      <button class="page-nav" [disabled]="currentPage() === totalPages()" (click)="goToPage(currentPage() + 1)">
-        Next →
+      <div class="pages-list">
+        <button
+          class="page-number"
+          *ngFor="let page of getPagesArray()"
+          (click)="goToPage(page)"
+          [class.active]="currentPage() === page"
+        >
+          {{ page }}
+        </button>
+      </div>
+      <button class="page-nav pag-btn" [disabled]="currentPage() === totalPages()" (click)="goToPage(currentPage() + 1)">
+        Next
       </button>
     </footer>
   </div>
 
   <ng-template #loadingState>
-    <div class="library-grid">
-      <div class="library-card skeleton-card" *ngFor="let i of skeletonArray">
-        <div class="image-shadow skeleton"></div>
-        <div class="library-card-body">
-          <div class="skeleton skeleton-line short"></div>
-          <div class="skeleton skeleton-line"></div>
-          <div class="skeleton skeleton-paragraph"></div>
-          <div class="skeleton skeleton-button"></div>
+    <div class="library-content">
+      <div class="library-grid">
+        <div class="library-card skeleton-card" *ngFor="let i of skeletonArray">
+          <div class="image-shadow skeleton"></div>
+          <div class="library-card-body">
+            <div class="skeleton skeleton-line short"></div>
+            <div class="skeleton skeleton-line"></div>
+            <div class="skeleton skeleton-paragraph"></div>
+            <div class="skeleton skeleton-button"></div>
+          </div>
         </div>
       </div>
     </div>

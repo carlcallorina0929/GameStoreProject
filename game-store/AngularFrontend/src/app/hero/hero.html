@@ -67,6 +67,7 @@
         <button
           class="hero-cta"
           type="button"
+          (click)="addCurrentGameToCart()"
           [disabled]="game.isOwned || game.isInCart"
         >
           {{  game.isOwned

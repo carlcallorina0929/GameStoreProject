@@ -56,6 +56,7 @@
 
         <div *ngIf="accountMenuOpen" class="dropdown animate-pop">
           <a href="/profile" (click)="goToProfileFromLink($event)">Profile</a>
+          <a href="/transactions" (click)="goToTransactionsFromLink($event)">Transactions</a>
           <div class="divider"></div>
           <button (click)="openLogoutModal()">Logout</button>
         </div>

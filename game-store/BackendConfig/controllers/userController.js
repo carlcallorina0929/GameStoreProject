@@ -1,11 +1,12 @@
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-
-const usernameRegex = /^[A-Za-z0-9_]{6,30}$/;
-const nameRegex = /^[A-Za-z]+$/;
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,64}$/;
+const {
+  usernameRegex,
+  nameRegex,
+  emailRegex,
+  passwordRegex,
+} = require("../utils/validationPatterns");
 
 const checkUsernameAvailability = async (req, res) => {
   try {

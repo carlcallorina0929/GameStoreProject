@@ -28,6 +28,7 @@ export class ProfileComponent implements OnInit {
   loading = signal(false);
   successMessage = signal<string | null>(null);
   errorMessage = signal<string | null>(null);
+  passwordUpdatedModalOpen = signal(false);
 
   profileForm!: any;
   passwordForm!: any;
@@ -221,7 +222,14 @@ export class ProfileComponent implements OnInit {
         this.loading.set(false);
         if (!res) return;
         this.passwordForm.reset();
-        this.successMessage.set('Password updated successfully');
+        this.passwordUpdatedModalOpen.set(true);
       });
+  }
+
+  confirmPasswordUpdateLogout(): void {
+    this.passwordUpdatedModalOpen.set(false);
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    this.router.navigate(['']);
   }
 }

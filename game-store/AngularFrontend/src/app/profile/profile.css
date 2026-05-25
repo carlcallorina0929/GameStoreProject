@@ -1,7 +1,7 @@
 .profile-page {
   max-width: 1100px;
-  margin: 24px auto;
-  padding: 0 16px;
+  margin: 96px auto 8px;
+  padding: 0 8px;
 }
 
 .title {
@@ -14,11 +14,12 @@
   margin: 12px 0;
   padding: 10px 12px;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(212, 175, 55, 0.2);
 }
 
 .status.success {
-  border: 1px solid rgba(46, 204, 113, 0.5);
+  border: 1px solid rgba(106, 201, 119, 0.5);
 }
 
 .status.error {
@@ -35,8 +36,8 @@
 .card {
   border-radius: 14px;
   padding: 16px;
-  background: rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(8, 10, 19, 0.65);
+  border: 1px solid rgba(212, 175, 55, 0.22);
 }
 
 .card-title {
@@ -83,8 +84,8 @@ input {
   width: 100%;
   padding: 10px 12px;
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  background: rgba(255, 255, 255, 0.02);
   color: inherit;
 }
 
@@ -92,8 +93,8 @@ button {
   padding: 10px 12px;
   border-radius: 10px;
   border: 0;
-  background: #5b8cff;
-  color: #fff;
+  background: linear-gradient(135deg, #f6d37e 0%, #d4af37 100%);
+  color: #201600;
   font-weight: 700;
   cursor: pointer;
 }
@@ -110,8 +111,55 @@ button[disabled] {
 }
 
 @media (max-width: 900px) {
+  .profile-page {
+    margin-top: 88px;
+  }
+
   .grid {
     grid-template-columns: 1fr;
   }
 }
 
+.profile-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  background: rgba(5, 8, 18, 0.78);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.profile-modal {
+  width: 100%;
+  max-width: 460px;
+  padding: 2rem;
+  border-radius: 20px;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  background: linear-gradient(145deg, rgba(11, 15, 28, 0.98), rgba(16, 11, 31, 0.96));
+  text-align: center;
+}
+
+.modal-kicker {
+  display: inline-block;
+  color: #f6d37e;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.profile-modal h3 {
+  margin: 0.75rem 0 0.7rem;
+}
+
+.profile-modal p {
+  margin: 0 0 1.2rem;
+  color: #c6c8da;
+}
+
+.modal-ok-btn {
+  min-width: 120px;
+}

@@ -1,9 +1,10 @@
 const bcrypt = require("bcrypt");
 const Profile = require("../models/profileModel");
-
-const usernameRegex = /^[A-Za-z0-9_]{6,30}$/;
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{8,64}$/;
+const {
+  usernameRegex,
+  emailRegex,
+  passwordRegex,
+} = require("../utils/validationPatterns");
 
 const getAuthedUserId = (req) => {
   const userId = req.user?.id;
@@ -115,4 +116,3 @@ module.exports = {
   updateProfile,
   changePassword,
 };
-

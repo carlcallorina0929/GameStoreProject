@@ -1,0 +1,129 @@
+.transactions-wrap {
+  width: 100%;
+}
+
+.title {
+  margin: 0 0 16px;
+  color: #f5f5f7;
+}
+
+.status-box {
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  background: rgba(255, 255, 255, 0.03);
+  color: #f0efe9;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+}
+
+.status-box.error {
+  border-color: rgba(220, 83, 83, 0.7);
+}
+
+.desktop-table-wrap {
+  overflow-x: auto;
+}
+
+.tx-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(8, 10, 19, 0.65);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.tx-table th,
+.tx-table td {
+  text-align: left;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  color: #f2f2f2;
+}
+
+.tx-table th {
+  color: #d4af37;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.games-cell {
+  max-width: 260px;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.status-pill {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.status-paid {
+  background: rgba(88, 200, 120, 0.2);
+  color: #a8f0bc;
+  border: 1px solid rgba(88, 200, 120, 0.45);
+}
+
+.status-pending {
+  background: rgba(212, 175, 55, 0.2);
+  color: #f5df93;
+  border: 1px solid rgba(212, 175, 55, 0.5);
+}
+
+.status-failed {
+  background: rgba(220, 83, 83, 0.2);
+  color: #ffb7b7;
+  border: 1px solid rgba(220, 83, 83, 0.5);
+}
+
+.status-refunded {
+  background: rgba(110, 148, 255, 0.2);
+  color: #bbccff;
+  border: 1px solid rgba(110, 148, 255, 0.5);
+}
+
+.status-default {
+  background: rgba(255, 255, 255, 0.15);
+  color: #e2e2e2;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.mobile-cards {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .desktop-table-wrap {
+    display: none;
+  }
+
+  .mobile-cards {
+    display: grid;
+    gap: 12px;
+  }
+
+  .tx-card {
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    background: rgba(8, 10, 19, 0.65);
+    border-radius: 12px;
+    padding: 12px;
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 10px;
+    margin-bottom: 8px;
+    color: #f2f2f2;
+  }
+
+  .k {
+    color: #d4af37;
+    font-weight: 700;
+  }
+}

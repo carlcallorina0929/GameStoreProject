@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
 import { GameService } from '../services/game.service';
 import { Game } from '../models/game';
+import { CartService } from '../services/cart.service';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'app-hero',
@@ -12,6 +14,8 @@ import { Game } from '../models/game';
 })
 export class HeroComponent implements OnInit, OnDestroy {
   private gameService = inject(GameService);
+  private cartService = inject(CartService);
+  private notification = inject(NzNotificationService);
   private touchStartX = 0;
 private touchEndX = 0;
 
@@ -245,5 +249,40 @@ private async loadSlide(index: number) {
   get canSlide(): boolean {
     return this.games().length > 1 && !this.isLoading();
   }
-  
+
+  addCurrentGameToCart(): void {
+    const game = this.currentGame();
+    if (!game || game.isOwned || game.isInCart) {
+      return;
+    }
+
+    this.cartService.addToCart(game.id).subscribe({
+      next: () => {
+        this.games.update((games) =>
+          games.map((item) =>
+            item.id === game.id ? { ...item, isInCart: true } : item
+          )
+        );
+
+        this.notification.success(
+          'Added to Cart',
+          `${game.title} added successfully.`,
+          {
+            nzPlacement: 'bottomRight',
+            nzDuration: 2500,
+            nzClass: 'toast',
+          }
+        );
+      },
+      error: () => {
+        this.notification.error(
+          'Cart Error',
+          'Failed to add game to cart.',
+          {
+            nzPlacement: 'bottomRight',
+          }
+        );
+      },
+    });
+  }
 }

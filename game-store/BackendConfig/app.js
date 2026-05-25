@@ -7,6 +7,7 @@ const path = require("path");
 const userRoutes = require("./routes/userRoutes");
 const cartRoutes = require("./routes/cartRoutes");
 const profileRoutes = require("./routes/profileRoutes");
+const settingsRoutes = require("./routes/settingsRoutes");
 const app = express();
 
 // MAKE UPLOADS FOLDER PUBLIC (for images)
@@ -28,6 +29,7 @@ const orderRoutes = require("./routes/orderRoutes");
 const checkoutRoutes = require("./routes/checkoutRoutes");
 app.use("/api/users", userRoutes);
 app.use("/api/profile", profileRoutes);
+app.use("/api/settings", settingsRoutes);
 
 app.use("/api/games", gameRoutes);
 app.use("/api/cart", cartRoutes);

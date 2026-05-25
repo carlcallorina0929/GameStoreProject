@@ -1,0 +1,29 @@
+<section class="settings-page">
+  <aside class="settings-sidebar">
+    <h2 class="sidebar-title">Settings</h2>
+
+    <button
+      type="button"
+      class="nav-item"
+      [class.active]="activeSection() === 'profile'"
+      (click)="setSection('profile')"
+    >
+      Profile Settings
+    </button>
+
+    <button
+      type="button"
+      class="nav-item"
+      [class.active]="activeSection() === 'transactions'"
+      (click)="setSection('transactions')"
+    >
+      Transactions
+    </button>
+  </aside>
+
+  <main class="settings-content">
+    <app-profile *ngIf="activeSection() === 'profile'"></app-profile>
+    <app-transactions *ngIf="activeSection() === 'transactions'"></app-transactions>
+  </main>
+</section>
+

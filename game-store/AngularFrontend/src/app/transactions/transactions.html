@@ -1,0 +1,84 @@
+<section class="transactions-wrap">
+  <h2 class="title">Transactions</h2>
+
+  <div *ngIf="loading()" class="status-box">Loading transactions...</div>
+  <div *ngIf="errorMessage()" class="status-box error">{{ errorMessage() }}</div>
+
+  <div *ngIf="!loading() && !errorMessage() && transactions().length === 0" class="status-box">
+    No transaction history yet.
+  </div>
+
+  <div *ngIf="transactions().length > 0" class="desktop-table-wrap">
+    <table class="tx-table">
+      <thead>
+        <tr>
+          <th>Reference</th>
+          <th>Status</th>
+          <th>Method</th>
+          <th>Games Bought</th>
+          <th>Price Paid</th>
+          <th>Card Last 4</th>
+          <th>Paid At</th>
+          <th>Order ID</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let tx of transactions()">
+          <td>{{ tx.transaction_reference || 'N/A' }}</td>
+          <td>
+            <span class="status-pill" [ngClass]="statusClass(tx.payment_status)">
+              {{ tx.payment_status }}
+            </span>
+          </td>
+          <td>{{ tx.payment_method }}</td>
+          <td class="games-cell">{{ tx.games_bought || 'N/A' }}</td>
+          <td>₱{{ tx.total_paid | number:'1.2-2' }}</td>
+          <td>{{ tx.card_last4 ? '**** ' + tx.card_last4 : 'N/A' }}</td>
+          <td>{{ (tx.paid_at || tx.created_at) | date:'medium' }}</td>
+          <td>#{{ tx.order_id }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mobile-cards">
+    <article class="tx-card" *ngFor="let tx of transactions()">
+      <div class="row">
+        <span class="k">Reference</span>
+        <span class="v">{{ tx.transaction_reference || 'N/A' }}</span>
+      </div>
+      <div class="row">
+        <span class="k">Status</span>
+        <span class="v">
+          <span class="status-pill" [ngClass]="statusClass(tx.payment_status)">
+            {{ tx.payment_status }}
+          </span>
+        </span>
+      </div>
+      <div class="row">
+        <span class="k">Method</span>
+        <span class="v">{{ tx.payment_method }}</span>
+      </div>
+      <div class="row">
+        <span class="k">Games Bought</span>
+        <span class="v">{{ tx.games_bought || 'N/A' }}</span>
+      </div>
+      <div class="row">
+        <span class="k">Price Paid</span>
+        <span class="v">₱{{ tx.total_paid | number:'1.2-2' }}</span>
+      </div>
+      <div class="row">
+        <span class="k">Card Last 4</span>
+        <span class="v">{{ tx.card_last4 ? '**** ' + tx.card_last4 : 'N/A' }}</span>
+      </div>
+      <div class="row">
+        <span class="k">Paid At</span>
+        <span class="v">{{ (tx.paid_at || tx.created_at) | date:'medium' }}</span>
+      </div>
+      <div class="row">
+        <span class="k">Order</span>
+        <span class="v">#{{ tx.order_id }}</span>
+      </div>
+    </article>
+  </div>
+</section>

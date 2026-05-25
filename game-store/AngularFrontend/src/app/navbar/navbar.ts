@@ -37,6 +37,17 @@ export class Navbar {
     this.goToProfile();
   }
 
+  goToTransactions() {
+    this.accountMenuOpen = false;
+    this.menuOpen = false;
+    this.router.navigate(['/transactions']);
+  }
+
+  goToTransactionsFromLink(event: Event) {
+    event.preventDefault();
+    this.goToTransactions();
+  }
+
   // Opens the confirmation modal instead of logging out immediately.
   openLogoutModal() {
     this.logoutModalOpen.set(true);

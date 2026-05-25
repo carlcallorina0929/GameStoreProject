@@ -78,3 +78,17 @@
   </div>
 </section>
 
+<div
+  class="profile-modal-backdrop"
+  *ngIf="passwordUpdatedModalOpen()"
+  (click)="confirmPasswordUpdateLogout()"
+>
+  <div class="profile-modal" role="dialog" aria-modal="true" aria-label="Password update success" (click)="$event.stopPropagation()">
+    <span class="modal-kicker">Success</span>
+    <h3>Password updated successfully</h3>
+    <p>For security, please log in again.</p>
+    <button type="button" class="modal-ok-btn" (click)="confirmPasswordUpdateLogout()">
+      OK
+    </button>
+  </div>
+</div>

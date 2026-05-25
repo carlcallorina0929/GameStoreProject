@@ -1,0 +1,12 @@
+.transactions-page {
+  max-width: 1200px;
+  margin: 96px auto 8px;
+  padding: 0 16px;
+}
+
+@media (max-width: 900px) {
+  .transactions-page {
+    margin-top: 88px;
+  }
+}
+
