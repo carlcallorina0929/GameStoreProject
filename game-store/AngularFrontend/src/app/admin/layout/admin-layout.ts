@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { Component, HostListener, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
@@ -23,17 +23,38 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
   styleUrl: './admin-layout.css',
 })
 export class AdminLayoutComponent {
-  isCollapsed = false;
+  isMobile = signal(false);
+  mobileSidebarOpen = signal(false);
   logoutModalVisible = signal(false);
 
   constructor(private router: Router) {}
 
-  toggleSidebar(): void {
-    this.isCollapsed = !this.isCollapsed;
+  ngOnInit(): void {
+    this.handleViewportChange();
   }
 
-  onCollapsedChange(value: boolean): void {
-    this.isCollapsed = value;
+  @HostListener('window:resize')
+  onResize(): void {
+    this.handleViewportChange();
+  }
+
+  private handleViewportChange(): void {
+    const mobile = window.innerWidth <= 900;
+    this.isMobile.set(mobile);
+
+    if (!mobile) {
+      this.mobileSidebarOpen.set(false);
+    }
+  }
+
+  toggleSidebar(): void {
+    this.mobileSidebarOpen.set(!this.mobileSidebarOpen());
+  }
+
+  closeMobileSidebar(): void {
+    if (this.isMobile()) {
+      this.mobileSidebarOpen.set(false);
+    }
   }
 
   requestLogout(): void {

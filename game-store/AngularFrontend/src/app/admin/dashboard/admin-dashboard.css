@@ -24,3 +24,13 @@
   font-size: 1.6rem;
   color: #ffffff;
 }
+
+@media (max-width: 900px) {
+  .dashboard-page h2 {
+    font-size: 1.2rem;
+  }
+
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+}

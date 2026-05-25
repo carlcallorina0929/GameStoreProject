@@ -1,6 +1,7 @@
 .admin-layout-shell {
   min-height: 100vh;
   background: #0f1624;
+  position: relative;
 }
 
 .brand {
@@ -31,4 +32,47 @@
   background:
     radial-gradient(circle at 90% 0%, rgba(62, 121, 255, 0.14), transparent 35%),
     linear-gradient(130deg, #0f1624, #101726 45%, #0f1420 100%);
+  overflow-x: auto;
+}
+
+.admin-sider {
+  z-index: 20;
+}
+
+.mobile-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 12, 21, 0.5);
+  backdrop-filter: blur(2px);
+  z-index: 15;
+}
+
+@media (max-width: 900px) {
+  .admin-sider {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    box-shadow: none;
+  }
+
+  .admin-sider.mobile-open {
+    transform: translateX(0);
+    box-shadow: 8px 0 24px rgba(0, 0, 0, 0.35);
+  }
+
+  .admin-header {
+    padding-inline: 0.75rem;
+    min-height: 56px;
+  }
+
+  .header-title {
+    font-size: 0.95rem;
+  }
+
+  .admin-content {
+    padding: 0.8rem;
+  }
 }

@@ -58,3 +58,23 @@
   height: 1px;
   background: linear-gradient(90deg, rgba(95, 132, 199, 0), rgba(95, 132, 199, 0.65), rgba(95, 132, 199, 0));
 }
+
+::ng-deep .analytics-page .ant-table-wrapper {
+  overflow-x: auto;
+}
+
+@media (max-width: 900px) {
+  .analytics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bar-row {
+    grid-template-columns: 88px 1fr 90px;
+    gap: 0.45rem;
+  }
+
+  .label,
+  .value {
+    font-size: 0.72rem;
+  }
+}

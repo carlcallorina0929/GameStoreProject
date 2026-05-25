@@ -1,25 +1,30 @@
-<nz-layout class="admin-layout-shell">
+<nz-layout class="admin-layout-shell" [class.mobile-shell]="isMobile()">
+  <div
+    class="mobile-backdrop"
+    *ngIf="isMobile() && mobileSidebarOpen()"
+    (click)="closeMobileSidebar()"
+  ></div>
+
   <nz-sider
+    class="admin-sider"
+    [class.mobile-open]="isMobile() && mobileSidebarOpen()"
     nzTheme="dark"
-    nzCollapsible
-    [nzCollapsed]="isCollapsed"
-    (nzCollapsedChange)="onCollapsedChange($event)"
     [nzWidth]="260"
-    [nzCollapsedWidth]="72"
+    [nzCollapsedWidth]="0"
     [nzTrigger]="null"
   >
     <div class="brand">Game Den Admin</div>
-    <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
-      <li nz-menu-item routerLink="/admin/dashboard" routerLinkActive="ant-menu-item-selected">
+    <ul nz-menu nzTheme="dark" nzMode="inline">
+      <li nz-menu-item routerLink="/admin/dashboard" routerLinkActive="ant-menu-item-selected" (click)="closeMobileSidebar()">
         Dashboard
       </li>
-      <li nz-menu-item routerLink="/admin/games" routerLinkActive="ant-menu-item-selected">
+      <li nz-menu-item routerLink="/admin/games" routerLinkActive="ant-menu-item-selected" (click)="closeMobileSidebar()">
         Games Management
       </li>
-      <li nz-menu-item routerLink="/admin/users" routerLinkActive="ant-menu-item-selected">
+      <li nz-menu-item routerLink="/admin/users" routerLinkActive="ant-menu-item-selected" (click)="closeMobileSidebar()">
         Users Management
       </li>
-      <li nz-menu-item routerLink="/admin/analytics" routerLinkActive="ant-menu-item-selected">
+      <li nz-menu-item routerLink="/admin/analytics" routerLinkActive="ant-menu-item-selected" (click)="closeMobileSidebar()">
         Analytics
       </li>
       <li nz-menu-item (click)="requestLogout()">Logout</li>
@@ -28,8 +33,8 @@
 
   <nz-layout>
     <nz-header class="admin-header">
-      <button nz-button nzType="default" (click)="toggleSidebar()">Menu</button>
-      <span class="header-title">Control Center</span>
+      <button *ngIf="isMobile()" nz-button nzType="default" (click)="toggleSidebar()">☰</button>
+      <span class="header-title"></span>
     </nz-header>
     <nz-content class="admin-content">
       <router-outlet />
