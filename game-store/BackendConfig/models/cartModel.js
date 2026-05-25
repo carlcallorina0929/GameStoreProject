@@ -7,6 +7,12 @@ const addToCart = async (userId, gameId) => {
     ON DUPLICATE KEY UPDATE game_id = game_id
   `, [userId, gameId]);
 };
+const removeItem = async (userId, gameId) => {
+  return await db.query(`
+    DELETE FROM cart
+    WHERE user_id = ? AND game_id = ?
+  `, [userId, gameId]);
+};
 const getCart = async (userId) => {
   const [rows] = await db.query(`
     SELECT
@@ -24,4 +30,4 @@ const getCart = async (userId) => {
 
   return rows;
 };
-module.exports = { addToCart, getCart };
+module.exports = { addToCart, getCart , removeItem };

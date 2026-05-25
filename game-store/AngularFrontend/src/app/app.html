@@ -1,2 +1,7 @@
+<app-loader *ngIf="isPageLoading()"></app-loader>
+
+  <div *ngIf="!isPageLoading()">
+  <app-navbar></app-navbar>
+<div>
 
 <router-outlet />

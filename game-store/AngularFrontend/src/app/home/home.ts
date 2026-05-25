@@ -1,6 +1,4 @@
 import { Component , OnInit , signal } from '@angular/core';
-import { Navbar } from '../navbar/navbar';
-import { LoaderComponent } from '../loader/loader';
 import { CommonModule } from '@angular/common';
 import { HeroComponent } from '../hero/hero';
 import { Categories } from '../categories/categories';
@@ -9,7 +7,7 @@ import {GamesComponent} from '../games/games';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [Navbar , LoaderComponent, CommonModule, HeroComponent, Categories , GamesComponent],
+  imports: [CommonModule, HeroComponent, Categories , GamesComponent],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })

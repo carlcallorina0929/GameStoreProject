@@ -20,6 +20,25 @@ const addToCart = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+const removeCartItem = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { gameId } = req.params;
+
+    await cartModel.removeItem(userId, gameId);
+
+    res.json({
+      message: 'Item removed from cart'
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: 'Failed to remove item'
+    });
+  }
+};
 const getCart = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -28,7 +47,10 @@ const getCart = async (req, res) => {
     const cleanedCart = cart.map(item => ({
       game_id: item.game_id,
       title: item.title,
-      image_url: item.image_url,
+      image_url: item.image_url
+        ? `${process.env.BASE_URL}${item.image_url}`
+        : null
+,
       final_price: Number(item.final_price)
     }));
 
@@ -38,4 +60,4 @@ const getCart = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
-module.exports = { addToCart , getCart };
+module.exports = { addToCart , getCart , removeCartItem };

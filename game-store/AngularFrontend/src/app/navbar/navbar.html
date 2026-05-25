@@ -19,13 +19,27 @@
     <!-- Navigation Links -->
     <ul class="nav-links" [class.open]="menuOpen">
      <li>
-  <a href="javascript:void(0)" class="active">
-    <span nz-icon nzType="home"></span>
-    Home
-  </a>
+  <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+  <span nz-icon nzType="home"></span>
+  Home
+</a>
 </li>
-      <li><a href="javascript:void(0)">Library</a></li>
-      <li><a href="javascript:void(0)">Cart</a></li>
+      <li><a 
+    routerLink="/library" 
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{ exact: true }">
+
+    <span nz-icon nzType="appstore"></span>
+    Library
+  </a></li>
+      <li><a 
+  routerLink="/cart"
+  routerLinkActive="active"
+  [routerLinkActiveOptions]="{ exact: true }"
+>
+  <span nz-icon nzType="shopping-cart"></span>
+  Cart
+</a></li>
 
       <!-- Account Dropdown -->
       <li class="account-menu">

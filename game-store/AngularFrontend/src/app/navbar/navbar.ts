@@ -1,12 +1,12 @@
 import { Component, HostListener, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router , RouterLink , RouterLinkActive  } from '@angular/router';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule , NzIconModule],
+  imports: [CommonModule , NzIconModule , RouterLink , RouterLinkActive],
   templateUrl: './navbar.html',
   styleUrls: ['./navbar.css']
 })

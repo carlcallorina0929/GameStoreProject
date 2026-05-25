@@ -17,7 +17,10 @@ app.use(bodyParser.json());
 
 // ROUTES
 const gameRoutes = require("./routes/gameRoutes");
+app.use("/api/users", userRoutes);
+
 app.use("/api/games", gameRoutes);
+
 app.use("/api/cart", cartRoutes);
 
 
@@ -26,6 +29,6 @@ app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
-app.use("/api/users", userRoutes);
+
 
 module.exports = app;
