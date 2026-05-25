@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, computed, inject, signal } from '@angular/core';
 import { GameService } from '../services/game.service';
-import { Game } from '../models/game';
+import { GameCatalogItem } from '../models/game';
 import { CartService } from '../services/cart.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 
@@ -20,10 +20,10 @@ export class HeroComponent implements OnInit, OnDestroy {
 private touchEndX = 0;
 
   // ----- Reactive state -----
-  games = signal<Game[]>([]);
+  games = signal<GameCatalogItem[]>([]);
   isLoading = signal(true);
   imageLoaded = signal(false);
-readyGame = signal<Game | null>(null);
+readyGame = signal<GameCatalogItem | null>(null);
   // Slider state
   currentIndex = signal(0);
   isPaused = signal(false);
@@ -78,9 +78,13 @@ private fastSlide(index: number) {
   private autoSlideTimer: ReturnType<typeof setInterval> | null = null;
 
   ngOnInit(): void {
-    // 1) Fetch discounted games from the backend API.
-    // The JWT token is added automatically by the authInterceptor.
-    this.gameService.getDiscountedGames().subscribe({
+    // Use the same data source as the games catalog to keep discount behavior consistent.
+    this.gameService.getGames({
+      search: '',
+      genre: null,
+      price: 'discounted',
+      sort: 'most_discounted',
+    }).subscribe({
       next: (games) => {
         this.games.set(games);
         this.currentIndex.set(0);
