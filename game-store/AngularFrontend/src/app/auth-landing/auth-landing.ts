@@ -20,6 +20,9 @@ export class AuthLandingComponent {
   private router = inject(Router);
   private cd = inject(ChangeDetectorRef);
 
+  // Keep frontend validation aligned with backend `BackendConfig/utils/validationPatterns.js`
+  private readonly usernameRegex = /^[A-Za-z0-9_]{6,20}$/;
+
   // --- SIGNALS FOR REACTIVE STATE ---
   authMode = signal<'login' | 'register'>('login');
   
@@ -33,9 +36,19 @@ export class AuthLandingComponent {
     password: '',
     confirmPassword: ''
   });
-loginErrorMessage = signal<string | null>(null);
+  loginErrorMessage = signal<string | null>(null);
   loginTouched = signal({ username: false, password: false });
+  loginFocused = signal({ username: false, password: false });
   registerTouched = signal({
+    username: false,
+    first_name: false,
+    last_name: false,
+    age: false,
+    email: false,
+    password: false,
+    confirmPassword: false
+  });
+  registerFocused = signal({
     username: false,
     first_name: false,
     last_name: false,
@@ -150,12 +163,34 @@ loginErrorMessage = signal<string | null>(null);
     this.registerTouched.update(prev => ({ ...prev, [field]: true }));
   }
 
+  setLoginFocused(field: 'username' | 'password', focused: boolean) {
+    this.loginFocused.update(prev => ({ ...prev, [field]: focused }));
+  }
+
+  setRegisterFocused(field: keyof ReturnType<typeof this.registerFocused>, focused: boolean) {
+    this.registerFocused.update(prev => ({ ...prev, [field]: focused }));
+  }
+
   // --- VALIDATION LOGIC ---
+
+  // Login should only validate presence (backend will validate credentials).
+  loginUsernameError(v: string) {
+    const t = v.trim();
+    if (!t) return 'Username is required.';
+    return null;
+  }
+
+  loginPasswordError(v: string) {
+    if (!v) return 'Password is required.';
+    return null;
+  }
 
   usernameError(v: string) {
     const t = v.trim();
     if (!t) return 'Username is required.';
-    if (!/^[A-Za-z0-9_]{6,30}$/.test(t)) return 'Invalid username format.';
+    if (!this.usernameRegex.test(t)) {
+      return 'Username must be 6-30 characters and contain only letters, numbers, and underscores.';
+    }
     return null;
   }
 
@@ -225,7 +260,7 @@ loginErrorMessage = signal<string | null>(null);
     event.preventDefault();
     this.loginSubmitted.set(true);
     const data = this.loginData();
-    if (this.usernameError(data.username) || this.passwordError(data.password)) return;
+    if (this.loginUsernameError(data.username) || this.loginPasswordError(data.password)) return;
 
     this.isLoginSubmitting.set(true);
     this.authService.login(this.loginData()).subscribe({

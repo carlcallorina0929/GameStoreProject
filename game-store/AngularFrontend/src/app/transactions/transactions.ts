@@ -17,6 +17,33 @@ export class TransactionsComponent implements OnInit {
   errorMessage = signal<string | null>(null);
   transactions = signal<SettingsTransaction[]>([]);
 
+  private splitGames(gamesBought: string | null | undefined): string[] {
+    const raw = String(gamesBought ?? '').trim();
+    if (!raw) return [];
+    return raw
+      .split(/,\s*/g)
+      .map((t) => t.trim())
+      .filter(Boolean);
+  }
+
+  gamesPreview(gamesBought: string | null | undefined): string {
+    const titles = this.splitGames(gamesBought);
+    if (titles.length === 0) return 'N/A';
+    if (titles.length <= 3) return titles.join(', ');
+    return `${titles.slice(0, 3).join(', ')}, ...`;
+  }
+
+  hasGamesOverflow(gamesBought: string | null | undefined): boolean {
+    return this.splitGames(gamesBought).length > 3;
+  }
+
+  gamesOverflowTooltip(gamesBought: string | null | undefined): string {
+    const titles = this.splitGames(gamesBought);
+    if (titles.length <= 3) return '';
+    // Show only the "excess" titles in the tooltip.
+    return titles.slice(3).join('\n');
+  }
+
   constructor(private settingsService: SettingsService) {}
 
   ngOnInit(): void {
@@ -56,4 +83,3 @@ export class TransactionsComponent implements OnInit {
     }
   }
 }
-

@@ -83,7 +83,7 @@ const registerUser = async (req, res) => {
     if (!usernameRegex.test(normalizedUsername)) {
       return res.status(400).json({
         error:
-          "Username must be 3-20 characters and can only contain letters, numbers, and underscores",
+          "Username must be 6-20 characters and can only contain letters, numbers, and underscores",
       });
     }
 

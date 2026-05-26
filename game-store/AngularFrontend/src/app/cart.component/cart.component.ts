@@ -14,11 +14,12 @@ import { CheckoutService } from '../services/checkout.service';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzStepsModule } from 'ng-zorro-antd/steps';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NzIconModule, NzStepsModule],
+  imports: [CommonModule, ReactiveFormsModule, NzIconModule, NzStepsModule, NzPaginationModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css'
@@ -35,12 +36,23 @@ export class CartComponent implements OnInit {
   receiptItems = signal<CartItem[]>([]);
   loading = signal<boolean>(true);
   processingPayment = signal<boolean>(false);
+  currentPage = signal(1);
+pageSize = 5;
 
   // CHECKOUT FLOW STATE
   checkoutStep = signal<number>(0); // 0: Review, 1: Payment, 2: Processing, 3: Complete
   paymentError = signal<string | null>(null);
   transactionRef = signal<string>('');
   orderId = signal<number | null>(null);
+
+  paginatedCartItems = computed(() => {
+  const items = this.cartItems();
+  const start = (this.currentPage() - 1) * this.pageSize;
+  return items.slice(start, start + this.pageSize);
+});
+totalPages = computed(() => {
+  return Math.ceil(this.cartItems().length / this.pageSize);
+});
 
   // PAYMENT FORM DATA
   private fb = inject(FormBuilder);
@@ -111,6 +123,7 @@ export class CartComponent implements OnInit {
         console.log('CART ITEMS:', items);
         this.cartItems.set(items);
         console.log('SIGNAL VALUE:', this.cartItems());
+        this.currentPage.set(1);
         this.loading.set(false);
       },
       error: (err) => {
@@ -131,6 +144,7 @@ export class CartComponent implements OnInit {
         console.error('Failed to remove item:', err);
       }
     });
+    this.currentPage.set(1);
   }
 
   clearCart() {
@@ -140,39 +154,43 @@ export class CartComponent implements OnInit {
   /**
    * STEP 0: Open checkout modal
    */
-  onCheckout() {
-    if (this.cartItems().length === 0) return;
-    this.receiptItems.set([...this.cartItems()]);
-    this.isCheckingOut.set(true);
-    this.checkoutStep.set(0);
-    this.paymentError.set(null);
-    this.resetPaymentForm();
-  }
+onCheckout() {
+  if (this.cartItems().length === 0) return;
+
+  this.paymentError.set(null);
+
+  console.log('onCheckout() called - starting checkout');
+
+  this.checkoutService.startCheckout().subscribe({
+    next: (res: any) => {
+      console.log('startCheckout response:', res);
+
+      if (res && res.success && res.orderId) {
+        this.orderId.set(res.orderId);
+
+        // now proceed with UI transition
+        this.receiptItems.set([...this.cartItems()]);
+        this.isCheckingOut.set(true);
+        this.checkoutStep.set(0);
+        this.resetPaymentForm();
+      } else {
+        this.paymentError.set(res.error || 'Failed to start checkout');
+      }
+    },
+    error: (err) => {
+      console.error('startCheckout request failed:', err);
+      this.paymentError.set('Unable to start checkout. Please try again.');
+    }
+  });
+}
 
   /**
    * STEP 1: Move to payment information
    */
   goToPaymentStep() {
-    this.paymentError.set(null);
-
-    // Create pending order on backend before showing payment form
-    console.log('goToPaymentStep() called - calling startCheckout()');
-    this.checkoutService.startCheckout().subscribe({
-      next: (res: any) => {
-        console.log('startCheckout response:', res);
-        if (res && res.success && res.orderId) {
-          this.orderId.set(res.orderId);
-          this.checkoutStep.set(1);
-        } else {
-          this.paymentError.set(res.error || 'Failed to start checkout');
-        }
-      },
-      error: (err) => {
-        console.error('startCheckout request failed (network error):', err);
-        this.paymentError.set('Unable to start checkout. Please try again.');
-      }
-    });
-  }
+  this.paymentError.set(null);
+  this.checkoutStep.set(1);
+}
 
   get cardholderNameControl() {
     return this.paymentForm.get('cardholderName') as FormControl;

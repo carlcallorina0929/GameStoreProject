@@ -67,18 +67,19 @@
               type="text"
               [value]="loginData().username"
               (input)="onLoginInput('username', $any($event.target).value)"
-              (blur)="markLoginTouched('username')"
+              (focus)="setLoginFocused('username', true); markLoginTouched('username')"
+              (blur)="setLoginFocused('username', false)"
               [class.is-invalid]="
-                (loginSubmitted() || loginTouched().username) && usernameError(loginData().username)
+                (loginSubmitted() || loginFocused().username) && loginUsernameError(loginData().username)
               "
             />
             <span
               class="field-error"
               *ngIf="
-                (loginSubmitted() || loginTouched().username) && usernameError(loginData().username)
+                (loginSubmitted() || loginFocused().username) && loginUsernameError(loginData().username)
               "
             >
-              {{ usernameError(loginData().username) }}
+              {{ loginUsernameError(loginData().username) }}
             </span>
           </label>
 
@@ -88,18 +89,19 @@
               type="password"
               [value]="loginData().password"
               (input)="onLoginInput('password', $any($event.target).value)"
-              (blur)="markLoginTouched('password')"
+              (focus)="setLoginFocused('password', true); markLoginTouched('password')"
+              (blur)="setLoginFocused('password', false)"
               [class.is-invalid]="
-                (loginSubmitted() || loginTouched().password) && passwordError(loginData().password)
+                (loginSubmitted() || loginFocused().password) && loginPasswordError(loginData().password)
               "
             />
             <span
               class="field-error"
               *ngIf="
-                (loginSubmitted() || loginTouched().password) && passwordError(loginData().password)
+                (loginSubmitted() || loginFocused().password) && loginPasswordError(loginData().password)
               "
             >
-              {{ passwordError(loginData().password) }}
+              {{ loginPasswordError(loginData().password) }}
             </span>
           </label>
           <!-- Added right above the submit button -->
@@ -116,7 +118,7 @@
             class="auth-submit"
             type="submit"
             [class.is-locked]="
-              (loginSubmitted() || loginTouched().password) && passwordError(loginData().password)
+              (loginSubmitted() || loginFocused().password) && loginPasswordError(loginData().password)
             "
             [disabled]="isLoginSubmitting()"
           >
@@ -135,9 +137,10 @@
               autocomplete="new-username"
               [value]="registerData().username"
               (input)="onRegisterInput('username', $any($event.target).value)"
-              (blur)="markRegisterTouched('username')"
+              (focus)="setRegisterFocused('username', true); markRegisterTouched('username')"
+              (blur)="setRegisterFocused('username', false)"
               [class.is-invalid]="
-                (registerSubmitted() || registerTouched().username) &&
+                (registerSubmitted() || registerFocused().username) &&
                 (usernameError(registerData().username) || usernameAvailability() === 'taken')
               "
             />
@@ -145,13 +148,15 @@
             <span
               class="field-error"
               *ngIf="
-                (registerSubmitted() || registerTouched().username) &&
+                (registerSubmitted() || registerFocused().username) &&
                 usernameError(registerData().username)
               "
             >
               {{ usernameError(registerData().username) }}
             </span>
-            <span class="field-error" *ngIf="usernameAvailability() === 'taken'"
+            <span
+              class="field-error"
+              *ngIf="(registerSubmitted() || registerFocused().username) && usernameAvailability() === 'taken'"
               >Username already exists</span
             >
 
@@ -170,16 +175,17 @@
                 type="text"
                 [value]="registerData().first_name"
                 (input)="onRegisterInput('first_name', $any($event.target).value)"
-                (blur)="markRegisterTouched('first_name')"
+                (focus)="setRegisterFocused('first_name', true); markRegisterTouched('first_name')"
+                (blur)="setRegisterFocused('first_name', false)"
                 [class.is-invalid]="
-                  (registerSubmitted() || registerTouched().first_name) &&
+                  (registerSubmitted() || registerFocused().first_name) &&
                   nameError(registerData().first_name, 'First Name')
                 "
               />
               <span
                 class="field-error"
                 *ngIf="
-                  (registerSubmitted() || registerTouched().first_name) &&
+                  (registerSubmitted() || registerFocused().first_name) &&
                   nameError(registerData().first_name, 'First Name')
                 "
               >
@@ -192,16 +198,17 @@
                 type="text"
                 [value]="registerData().last_name"
                 (input)="onRegisterInput('last_name', $any($event.target).value)"
-                (blur)="markRegisterTouched('last_name')"
+                (focus)="setRegisterFocused('last_name', true); markRegisterTouched('last_name')"
+                (blur)="setRegisterFocused('last_name', false)"
                 [class.is-invalid]="
-                  (registerSubmitted() || registerTouched().last_name) &&
+                  (registerSubmitted() || registerFocused().last_name) &&
                   nameError(registerData().last_name, 'Last Name')
                 "
               />
               <span
                 class="field-error"
                 *ngIf="
-                  (registerSubmitted() || registerTouched().last_name) &&
+                  (registerSubmitted() || registerFocused().last_name) &&
                   nameError(registerData().last_name, 'Last Name')
                 "
               >
@@ -216,14 +223,15 @@
               type="number"
               [value]="registerData().age"
               (input)="onRegisterInput('age', $any($event.target).value)"
-              (blur)="markRegisterTouched('age')"
+              (focus)="setRegisterFocused('age', true); markRegisterTouched('age')"
+              (blur)="setRegisterFocused('age', false)"
               [class.is-invalid]="
-                (registerSubmitted() || registerTouched().age) && ageError(registerData().age)
+                (registerSubmitted() || registerFocused().age) && ageError(registerData().age)
               "
             />
             <span
               class="field-error"
-              *ngIf="(registerSubmitted() || registerTouched().age) && ageError(registerData().age)"
+              *ngIf="(registerSubmitted() || registerFocused().age) && ageError(registerData().age)"
             >
               {{ ageError(registerData().age) }}
             </span>
@@ -236,21 +244,24 @@
               autocomplete="off"
               [value]="registerData().email"
               (input)="onRegisterInput('email', $any($event.target).value)"
-              (blur)="markRegisterTouched('email')"
+              (focus)="setRegisterFocused('email', true); markRegisterTouched('email')"
+              (blur)="setRegisterFocused('email', false)"
               [class.is-invalid]="
-                (registerSubmitted() || registerTouched().email) &&
+                (registerSubmitted() || registerFocused().email) &&
                 (emailError(registerData().email) || emailAvailability() === 'taken')
               "
             />
             <span
               class="field-error"
               *ngIf="
-                (registerSubmitted() || registerTouched().email) && emailError(registerData().email)
+                (registerSubmitted() || registerFocused().email) && emailError(registerData().email)
               "
             >
               {{ emailError(registerData().email) }}
             </span>
-            <span class="field-error" *ngIf="emailAvailability() === 'taken'"
+            <span
+              class="field-error"
+              *ngIf="(registerSubmitted() || registerFocused().email) && emailAvailability() === 'taken'"
               >Email already in use</span
             >
           </label>
@@ -262,16 +273,17 @@
               autocomplete="new-password"
               [value]="registerData().password"
               (input)="onRegisterInput('password', $any($event.target).value)"
-              (blur)="markRegisterTouched('password')"
+              (focus)="setRegisterFocused('password', true); markRegisterTouched('password')"
+              (blur)="setRegisterFocused('password', false)"
               [class.is-invalid]="
-                (registerSubmitted() || registerTouched().password) &&
+                (registerSubmitted() || registerFocused().password) &&
                 passwordError(registerData().password)
               "
             />
             <span
               class="field-error"
               *ngIf="
-                (registerSubmitted() || registerTouched().password) &&
+                (registerSubmitted() || registerFocused().password) &&
                 passwordError(registerData().password)
               "
             >
@@ -286,16 +298,17 @@
               autocomplete="new-password"
               [value]="registerData().confirmPassword"
               (input)="onRegisterInput('confirmPassword', $any($event.target).value)"
-              (blur)="markRegisterTouched('confirmPassword')"
+              (focus)="setRegisterFocused('confirmPassword', true); markRegisterTouched('confirmPassword')"
+              (blur)="setRegisterFocused('confirmPassword', false)"
               [class.is-invalid]="
-                (registerSubmitted() || registerTouched().confirmPassword) &&
+                (registerSubmitted() || registerFocused().confirmPassword) &&
                 confirmPasswordError(registerData().password, registerData().confirmPassword)
               "
             />
             <span
               class="field-error"
               *ngIf="
-                (registerSubmitted() || registerTouched().confirmPassword) &&
+                (registerSubmitted() || registerFocused().confirmPassword) &&
                 confirmPasswordError(registerData().password, registerData().confirmPassword)
               "
             >

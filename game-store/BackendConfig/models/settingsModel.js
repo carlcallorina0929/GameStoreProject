@@ -67,7 +67,6 @@ const Settings = {
           o.total_amount AS total_paid,
           t.payment_method,
           t.payment_status,
-          t.card_last4,
           t.transaction_reference,
           t.paid_at,
           t.created_at,
@@ -83,7 +82,6 @@ const Settings = {
           o.total_amount,
           t.payment_method,
           t.payment_status,
-          t.card_last4,
           t.transaction_reference,
           t.paid_at,
           t.created_at

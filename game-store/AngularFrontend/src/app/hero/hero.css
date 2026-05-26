@@ -76,8 +76,9 @@ section:hover {
   position: relative;
 
   width: 100%;
-  height: 100%;
+  height: auto;
   aspect-ratio: 16 / 9;
+  max-height: min(52vh, 520px);
 
   border-radius: 20px;
   overflow: hidden;
@@ -387,8 +388,8 @@ section:hover {
   }
 
   .hero-media {
-    min-height: 300px;
-    min-width: 200px;
+    max-height: min(45vh, 420px);
+    min-height: 220px;
   }
   .hero-body{ 
     padding: 1rem;
@@ -405,5 +406,20 @@ section:hover {
     font-size: 0.8rem;
     
     
+  }
+
+  .hero {
+    padding: 1.25rem 0.9rem;
+  }
+
+  .hero-card {
+    padding: 1.15rem;
+    gap: 1rem;
+    min-height: 0;
+  }
+
+  .hero-media {
+    max-height: 38vh;
+    min-height: 190px;
   }
 }

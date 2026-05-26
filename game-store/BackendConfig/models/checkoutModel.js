@@ -172,7 +172,11 @@ class CheckoutModel {
 
     // If transaction exists for this order and is pending, update it; otherwise insert a new transaction
     const [existingTxn] = await connection.query(`SELECT * FROM transactions WHERE order_id = ? ORDER BY created_at DESC LIMIT 1`, [orderId]);
-    const txnRef = this.generateTransactionReference();
+    // Prefer a reference created at startCheckout() so pending/paid share the same reference.
+    const txnRef =
+      existingTxn.length && existingTxn[0].transaction_reference
+        ? existingTxn[0].transaction_reference
+        : this.generateTransactionReference();
     const cardLast4 = cardData.cardNumber.slice(-4);
 
     if (existingTxn.length && existingTxn[0].payment_status === 'pending') {
@@ -274,9 +278,10 @@ class CheckoutModel {
       }
 
       // create pending transaction record
+      const txnRef = this.generateTransactionReference();
       await connection.query(
-        `INSERT INTO transactions (order_id, payment_method, payment_status, created_at) VALUES (?, ?, ?, ?)`,
-        [orderId, 'credit_card', 'pending', new Date()]
+        `INSERT INTO transactions (order_id, payment_method, payment_status, transaction_reference, created_at) VALUES (?, ?, ?, ?, ?)`,
+        [orderId, 'credit_card', 'pending', txnRef, new Date()]
       );
 
       await connection.query('COMMIT');

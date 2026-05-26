@@ -18,7 +18,8 @@
         <!-- LEFT: ITEMS -->
         <div class="cart-list">
 
-          <div class="cart-item" *ngFor="let item of cartItems()">
+          <div class="cart-item" *ngFor="let item of paginatedCartItems()">
+            
 
             <!-- IMAGE -->
             <div class="item-img-container">
@@ -57,7 +58,18 @@
             </div>
 
           </div>
+           <div class="pagination-controls" *ngIf="cartItems().length > pageSize">
+          <nz-pagination
+  [nzPageIndex]="currentPage()"
+  [nzTotal]="cartItems().length"
+  [nzPageSize]="pageSize"
+  (nzPageIndexChange)="currentPage.set($event)">
+</nz-pagination>
+ 
+
+         </div>
         </div>
+       
 
         <!-- RIGHT: SUMMARY -->
         <aside class="cart-summary-section">

@@ -16,8 +16,7 @@
           <th>Status</th>
           <th>Method</th>
           <th>Games Bought</th>
-          <th>Price Paid</th>
-          <th>Card Last 4</th>
+          <th>Total Amount</th>
           <th>Paid At</th>
           <th>Order ID</th>
         </tr>
@@ -31,9 +30,16 @@
             </span>
           </td>
           <td>{{ tx.payment_method }}</td>
-          <td class="games-cell">{{ tx.games_bought || 'N/A' }}</td>
+          <td class="games-cell">
+            <span
+              class="games-preview"
+              [class.has-tooltip]="hasGamesOverflow(tx.games_bought)"
+              [attr.data-tooltip]="gamesOverflowTooltip(tx.games_bought)"
+            >
+              {{ gamesPreview(tx.games_bought) }}
+            </span>
+          </td>
           <td>₱{{ tx.total_paid | number:'1.2-2' }}</td>
-          <td>{{ tx.card_last4 ? '**** ' + tx.card_last4 : 'N/A' }}</td>
           <td>{{ (tx.paid_at || tx.created_at) | date:'medium' }}</td>
           <td>#{{ tx.order_id }}</td>
         </tr>
@@ -61,7 +67,7 @@
       </div>
       <div class="row">
         <span class="k">Games Bought</span>
-        <span class="v">{{ tx.games_bought || 'N/A' }}</span>
+        <span class="v">{{ gamesPreview(tx.games_bought) }}</span>
       </div>
       <div class="row">
         <span class="k">Price Paid</span>
