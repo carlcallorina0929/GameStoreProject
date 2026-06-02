@@ -41,11 +41,6 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./admin/games/admin-games').then((m) => m.AdminGamesComponent),
       },
-      {
-        path: 'analytics',
-        loadComponent: () =>
-          import('./admin/analytics/admin-analytics').then((m) => m.AdminAnalyticsComponent),
-      },
     ],
   },
   { path: 'home', component: HomeComponent, canActivate: [userAuthGuard] },

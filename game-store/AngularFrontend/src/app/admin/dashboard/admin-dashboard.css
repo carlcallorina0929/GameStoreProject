@@ -25,6 +25,148 @@
   color: #ffffff;
 }
 
+.analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+  align-items: stretch;
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: 120px 1fr 110px;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.35rem;
+}
+
+.bar-row:last-child {
+  margin-bottom: 0;
+}
+
+.label {
+  color: #a8bad8;
+  font-size: 0.78rem;
+}
+
+.bar-wrap {
+  background: #1a263a;
+  border-radius: 999px;
+  height: 10px;
+  overflow: hidden;
+}
+
+.bar {
+  height: 100%;
+  border-radius: 999px;
+}
+
+.bar-sales {
+  background: linear-gradient(90deg, #2fb2ff, #6a67ff);
+}
+
+.bar-users {
+  background: linear-gradient(90deg, #00ca9d, #27d07f);
+}
+
+.value {
+  text-align: right;
+  color: #f1f6ff;
+  font-size: 0.82rem;
+}
+
+.ranking-section {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.section-separator {
+  height: 1px;
+  background: linear-gradient(90deg, rgba(95, 132, 199, 0), rgba(95, 132, 199, 0.65), rgba(95, 132, 199, 0));
+}
+
+::ng-deep .dashboard-page nz-card .ant-card {
+  background: rgba(14, 21, 35, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+::ng-deep .dashboard-page nz-card .ant-card-head {
+  background: rgba(14, 21, 35, 0.98);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+::ng-deep .dashboard-page nz-card .ant-card-head-title {
+  color: #eef4ff;
+}
+
+::ng-deep .dashboard-page nz-card .ant-card-body {
+  background: rgba(14, 21, 35, 0.98);
+  padding: 12px 16px;
+  flex: 1;
+}
+
+::ng-deep .dashboard-page .sales-card.ant-card {
+  background: rgba(14, 21, 35, 0.98);
+}
+
+::ng-deep .dashboard-page .sales-card .ant-card-head,
+::ng-deep .dashboard-page .sales-card .ant-card-body {
+  background: rgba(14, 21, 35, 0.98);
+}
+
+::ng-deep .dashboard-page .sales-card .ant-card-head {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+}
+
+.admin-table th {
+  background-color: #1a263a;
+  color: #eef4ff;
+  font-weight: bold;
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.22);
+}
+
+.admin-table td {
+  padding: 12px 16px;
+  color: #ffffff;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.admin-table tbody tr.data-row:nth-child(odd) td {
+  background-color: rgba(47, 178, 255, 0.28) !important;
+}
+
+.admin-table tbody tr.data-row:nth-child(even) td {
+  background-color: rgba(255, 255, 255, 0.14) !important;
+}
+
+.admin-table tbody tr.data-row:hover td {
+  background-color: rgba(106, 103, 255, 0.34) !important;
+}
+
+.admin-table tbody tr.data-row:last-child td {
+  border-bottom: 0;
+}
+
+.admin-table tbody tr.empty-row td {
+  padding: 14px 16px;
+  color: #c7d6ee;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.04);
+}
+
 @media (max-width: 900px) {
   .dashboard-page h2 {
     font-size: 1.2rem;
@@ -32,5 +174,19 @@
 
   .cards-grid {
     grid-template-columns: 1fr;
+  }
+
+  .analytics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bar-row {
+    grid-template-columns: 88px 1fr 90px;
+    gap: 0.45rem;
+  }
+
+  .label,
+  .value {
+    font-size: 0.72rem;
   }
 }
