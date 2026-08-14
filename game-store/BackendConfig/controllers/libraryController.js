@@ -4,11 +4,7 @@ const Cart = require('../models/cartModel');
 
 const getLibrary = async (req, res) => {
   try {
-    const userId = Number(req.params.userId);
-
-    if (req.user.id !== userId) {
-      return res.status(403).json({ message: 'Forbidden' });
-    }
+    const userId = req.user.id;
 
     const libraryItems = await Library.getUserLibrary(userId);
 

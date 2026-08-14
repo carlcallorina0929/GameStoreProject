@@ -1,6 +1,7 @@
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const { setAuthCookie, clearAuthCookie } = require("../utils/jwtCookie");
 const {
   usernameRegex,
   nameRegex,
@@ -32,7 +33,7 @@ const checkEmailAvailability = async (req, res) => {
   try {
     const email = String(req.query.email ?? "").trim();
     if (!email) {
-      return res.status(400).json({ error: "email query param is required" });
+      return console.log("Email query param is required");
     }
 
     if (!emailRegex.test(email)) {
@@ -185,7 +186,9 @@ const loginUser = async (req, res) => {
       { expiresIn: "24h" },
     );
 
-    return res.json({ message: "Login successful", token, id: user.id });
+    setAuthCookie(res, "token", token);
+
+    return res.json({ message: "Login successful", id: user.id });
   } catch (error) {
   console.log("LOGIN ERROR:", error);
 
@@ -195,9 +198,35 @@ const loginUser = async (req, res) => {
 }
 };
 
+const getCurrentUser = async (req, res) => {
+  try {
+    const user = await User.getUserById(req.user?.id);
+    if (!user || !user.isActive) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    return res.json({
+      user: {
+        id: user.id,
+        username: user.username,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+const logoutUser = async (req, res) => {
+  clearAuthCookie(res, "token");
+  return res.json({ message: "Logged out successfully" });
+};
+
 module.exports = {
   registerUser,
   loginUser,
+  getCurrentUser,
+  logoutUser,
   checkUsernameAvailability,
   checkEmailAvailability,
 };

@@ -1,14 +1,25 @@
 const jwt = require("jsonwebtoken");
 
+// Reads the JWT from the httpOnly cookie (preferred) or the Authorization header.
+const extractToken = (req) => {
+  const cookieToken = req.cookies?.token;
+  if (cookieToken) return cookieToken;
+
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    return authHeader.split(" ")[1];
+  }
+
+  return null;
+};
+
 const authMiddleware = (req, res, next) => {
   try {
-    const authHeader = req.headers.authorization;
+    const token = extractToken(req);
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({ message: "Invalid authorization format" });
+    if (!token) {
+      return res.status(401).json({ message: "Authentication required" });
     }
-
-    const token = authHeader.split(" ")[1];
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 

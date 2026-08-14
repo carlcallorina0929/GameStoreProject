@@ -1,7 +1,7 @@
   :host {
       --color-bg: #060914;
-      --color-cyan: #2ce5ff;
-      --color-pink: #ff4f95;
+       --color-cyan: #d4af37;
+       --color-pink: #f6d37e;
       --color-gold: #f6d37e;
       --color-text: #c6c8da;
       --font-display: 'Rajdhani', sans-serif;
@@ -72,7 +72,7 @@
       width: 110px;
       height: 110px;
       border-top-color: var(--color-gold);
-      border-left-color: rgba(44, 229, 255, 0.1);
+       border-left-color: rgba(246, 211, 126, 0.12);
       animation: spin 2s linear infinite;
     }
 
@@ -80,7 +80,7 @@
       width: 85px;
       height: 85px;
       border-bottom-color: var(--color-gold);
-      border-right-color: rgba(255, 79, 149, 0.1);
+       border-right-color: rgba(184, 134, 11, 0.12);
       animation: spinReverse 1.5s linear infinite;
     }
 
@@ -107,7 +107,7 @@
       letter-spacing: 0.3em;
       font-size: 1.2rem;
       margin: 0;
-      text-shadow: 0 0 10px rgba(44, 229, 255, 0.5);
+       text-shadow: 0 0 10px rgba(214, 173, 8, 0.5);
     }
 
     .loading-text p {

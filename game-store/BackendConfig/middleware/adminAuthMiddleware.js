@@ -1,14 +1,26 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 
+// Reads the admin JWT from the httpOnly cookie (preferred) or the Authorization header.
+const extractToken = (req) => {
+  const cookieToken = req.cookies?.admin_token;
+  if (cookieToken) return cookieToken;
+
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    return authHeader.split(" ")[1];
+  }
+
+  return null;
+};
+
 const verifyToken = (req, res, next) => {
   try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    const token = extractToken(req);
+    if (!token) {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const token = authHeader.split(" ")[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
     next();

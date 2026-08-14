@@ -1,25 +1,28 @@
 .admin-layout-shell {
   min-height: 100vh;
-  background: #0f1624;
+  background: #0b1220;
   position: relative;
 }
 
 .brand {
-  color: #f3f6ff;
+  color: #ffffff;
   font-weight: 700;
   font-size: 1rem;
   letter-spacing: 0.04em;
   padding: 1rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(135deg, rgba(47, 178, 255, 0.14), rgba(106, 103, 255, 0.08));
+  text-shadow: 0 0 18px rgba(47, 178, 255, 0.25);
 }
 
 .admin-header {
-  background: #121b2d;
+  background: rgba(18, 27, 45, 0.92);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   align-items: center;
   gap: 0.8rem;
   padding-inline: 1rem;
+  backdrop-filter: blur(14px);
 }
 
 .header-title {
@@ -33,6 +36,7 @@
     radial-gradient(circle at 90% 0%, rgba(62, 121, 255, 0.14), transparent 35%),
     linear-gradient(130deg, #0f1624, #101726 45%, #0f1420 100%);
   overflow-x: auto;
+  min-height: calc(100vh - 64px);
 }
 
 .admin-sider {

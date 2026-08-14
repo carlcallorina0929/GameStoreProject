@@ -11,11 +11,5 @@ app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);
   
 
-  try {
-    const rows = await games.getAllFilteredGames();
-    console.log(rows);
-  } catch (err) {
-    console.error("Error: ", err.message);
-  }
 });
 

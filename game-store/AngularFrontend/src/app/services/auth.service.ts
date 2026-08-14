@@ -3,6 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {environment} from  '../environments/environment';
 
+export interface CurrentUser {
+  id: number;
+  username: string;
+  role: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -27,6 +33,14 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/users/register`, userData);
   }
 
+  getCurrentUser(): Observable<{ user: CurrentUser }> {
+    return this.http.get<{ user: CurrentUser }>(`${this.apiUrl}/users/me`);
+  }
+
+  logout(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/users/logout`, {});
+  }
+
   checkUsernameAvailability(username: string): Observable<{ available: boolean }> {
   return this.http.get<{ available: boolean }>(
     `${this.apiUrl}/users/check-username`,
@@ -40,8 +54,4 @@ checkEmailAvailability(email: string): Observable<{ available: boolean }> {
     { params: { email } }
   );
 }
-
-storeUserId(userId: string): void {
-    localStorage.setItem('userId', userId);
-  }
 }

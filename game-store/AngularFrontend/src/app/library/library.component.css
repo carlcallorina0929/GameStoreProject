@@ -58,6 +58,7 @@
   grid-template-rows: auto 1fr;
   min-height: 380px;
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .library-card:hover {
@@ -170,6 +171,17 @@
   gap: 0.45rem;
   border-radius: 999px;
   padding: 0.85rem 1.4rem;
+  border: 0 !important;
+  color: #171208 !important;
+  background: linear-gradient(135deg, #f6d37e, #d4af37 55%, #aa8410) !important;
+  box-shadow: 0 10px 24px rgba(212, 175, 55, 0.22);
+  transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+}
+
+.play-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+  box-shadow: 0 14px 28px rgba(212, 175, 55, 0.32);
 }
 
 .library-footer {

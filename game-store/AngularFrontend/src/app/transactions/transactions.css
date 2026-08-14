@@ -41,6 +41,14 @@
   color: #f2f2f2;
 }
 
+.tx-table tbody tr {
+  transition: background 0.2s ease;
+}
+
+.tx-table tbody tr:hover td {
+  background: rgba(212, 175, 55, 0.06);
+}
+
 .tx-table th {
   color: #d4af37;
   font-weight: 700;

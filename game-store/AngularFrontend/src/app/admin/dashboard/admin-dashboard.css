@@ -10,9 +10,16 @@
 }
 
 .stat-card {
-  border-radius: 12px;
+  border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(14, 21, 35, 0.9);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.2);
+  transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(47, 178, 255, 0.35);
 }
 
 .stat-card p {
@@ -154,6 +161,10 @@
 
 .admin-table tbody tr.data-row:hover td {
   background-color: rgba(106, 103, 255, 0.34) !important;
+}
+
+.admin-table tbody tr.data-row td {
+  transition: background-color 0.2s ease;
 }
 
 .admin-table tbody tr.data-row:last-child td {

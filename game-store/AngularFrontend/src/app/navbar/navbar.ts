@@ -2,6 +2,7 @@ import { Component, HostListener, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router , RouterLink , RouterLinkActive  } from '@angular/router';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -16,7 +17,7 @@ export class Navbar {
   // Controls logout confirmation modal visibility (signal matches the app's existing pattern).
   logoutModalOpen = signal(false);
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
@@ -61,8 +62,13 @@ export class Navbar {
 
   // Performs the actual logout (moved from the old logout() body).
   confirmLogout() {
-    localStorage.removeItem('token'); // remove login
-    localStorage.removeItem('userId'); // remove userId
+    this.authService.logout().subscribe({
+      next: () => this.afterLogout(),
+      error: () => this.afterLogout()
+    });
+  }
+
+  private afterLogout() {
     this.accountMenuOpen = false;
     this.logoutModalOpen.set(false);
 

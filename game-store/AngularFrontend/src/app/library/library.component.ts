@@ -41,15 +41,8 @@ export class LibraryComponent implements OnInit {
   }
 
   loadLibrary() {
-    const storedUserId = localStorage.getItem('userId');
-    if (!storedUserId) {
-      this.libraryGames.set([]);
-      this.loading.set(false);
-      return;
-    }
-
     this.loading.set(true);
-    this.libraryService.getLibrary(Number(storedUserId)).subscribe({
+    this.libraryService.getLibrary().subscribe({
       next: (games) => {
         this.libraryGames.set(games);
         this.currentPage.set(1);

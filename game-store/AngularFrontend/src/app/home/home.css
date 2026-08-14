@@ -1,13 +1,12 @@
 .home {
   min-height: 100vh;
-  margin-top:2rem;
-  padding: 1rem;
+  padding: 0;
   background: transparent;
 }
 
 .home-shell {
-
-  background: linear-gradient(145deg, rgba(11, 15, 28, 0.72), rgba(16, 11, 31, 0.62));
+  padding: 0.25rem;
+  background: linear-gradient(145deg, rgba(11, 15, 28, 0.5), rgba(16, 11, 31, 0.42));
   box-shadow: 0 26px 80px rgba(0, 0, 0, 0.28);
 }
 

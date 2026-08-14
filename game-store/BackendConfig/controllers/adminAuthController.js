@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
+const { setAuthCookie, clearAuthCookie } = require("../utils/jwtCookie");
 
 const loginAdmin = async (req, res) => {
   try {
@@ -31,9 +32,10 @@ const loginAdmin = async (req, res) => {
       { expiresIn: "24h" },
     );
 
+    setAuthCookie(res, "admin_token", token);
+
     return res.json({
       message: "Admin login successful",
-      token,
       user: {
         id: adminUser.id,
         username: adminUser.username,
@@ -45,6 +47,32 @@ const loginAdmin = async (req, res) => {
   }
 };
 
+const getCurrentAdmin = async (req, res) => {
+  try {
+    const adminUser = await User.getUserById(req.user?.userId ?? req.user?.id);
+    if (!adminUser || adminUser.role !== "admin" || !adminUser.isActive) {
+      return res.status(403).json({ error: "Forbidden" });
+    }
+
+    return res.json({
+      user: {
+        id: adminUser.id,
+        username: adminUser.username,
+        role: adminUser.role,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+const logoutAdmin = async (req, res) => {
+  clearAuthCookie(res, "admin_token");
+  return res.json({ message: "Logged out successfully" });
+};
+
 module.exports = {
   loginAdmin,
+  getCurrentAdmin,
+  logoutAdmin,
 };

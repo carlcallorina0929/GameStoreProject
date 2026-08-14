@@ -32,7 +32,7 @@
       display: flex;
       gap: 0.75rem;
     }
-    .filters-row {
+.filters-row {
       display: grid;
       grid-template-columns: 1.8fr 1fr 1fr 1fr;
       gap: 0.9rem;
@@ -43,12 +43,18 @@
     .search-wrap {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
-      padding: 0.55rem 0.85rem;
-      border-radius: 10px;
+      gap: 0.55rem;
+      padding: 0.6rem 1rem;
+      border-radius: 12px;
       background: linear-gradient(145deg, rgba(11, 15, 28, 0.72), rgba(16, 11, 31, 0.62));
-      border: 1px solid rgba(212, 175, 55, 0.18);
-      color: #d4af37;
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      color: #e8c97a;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .search-wrap:focus-within {
+      border-color: rgba(212, 175, 55, 0.55);
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
     }
 
     .search-wrap input[nz-input] {
@@ -107,11 +113,11 @@
     /* Smaller elevated pill */
 .genre-pill {
   position: relative;
-  background: linear-gradient(180deg, #1c1c1c 0%, #121212 100%);
+  background: linear-gradient(180deg, #191d26 0%, #11141b 100%);
   border: 1px solid rgba(212, 175, 55, 0.18);
 
   padding: 0.8rem 0.75rem; /* 🔥 reduced */
-  border-radius: 10px;
+  border-radius: 12px;
 
   cursor: pointer;
   display: flex;
@@ -183,10 +189,13 @@
     0 5px 12px rgba(0, 0, 0, 0.4);
 }
 .genre-pill.active {
- background: linear-gradient(135deg, #85690d 0%, #f2d472 100%);
+ background: linear-gradient(135deg, #aa8410 0%, #f6d37e 100%);
   border-color: #f2d472;
-  color: white;
+  color: #14100a;
   transform: scale(1.05);
+  box-shadow:
+    0 10px 24px rgba(212, 175, 55, 0.3),
+    0 4px 10px rgba(0, 0, 0, 0.4);
 }
 
  .pill-text {

@@ -1,10 +1,11 @@
 /* =============================================
    GAME DEN — Global Styles
-   Premium Dark Theme
+   Premium Dark Theme (Obsidian × Gold)
    ============================================= */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 :root {
   --color-bg:          #0a0a0f;
   --color-surface:     #12121a;
@@ -16,10 +17,13 @@
   --color-text:        #e8e8f0;
   --color-text-muted:  #8888a8;
   --color-accent:      #7c5cbf;
+  --color-danger:      #ff6b6b;
+  --color-success:     #58c878;
   --font-body:         'Inter', sans-serif;
   --font-display:      'Rajdhani', sans-serif;
   --radius:            8px;
   --transition:        0.25s ease;
+  --navbar-height:     80px;
 }
 
 *, *::before, *::after {
@@ -34,30 +38,51 @@ html {
 
 body {
   font-family: var(--font-body);
-  background-color: var(--color-bg);
   color: var(--color-text);
   line-height: 1.6;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   margin: 0;
+  background-color: var(--color-bg);
+  /* Ambient depth so the app never feels flat */
+  background-image:
+    radial-gradient(1200px 620px at 12% -6%, rgba(201, 168, 76, 0.06), transparent 55%),
+    radial-gradient(1000px 600px at 88% 8%, rgba(124, 92, 191, 0.05), transparent 55%),
+    radial-gradient(1400px 800px at 50% 112%, rgba(201, 168, 76, 0.045), transparent 60%);
+  background-attachment: fixed;
 }
 
+/* ── Selection ── */
+::selection {
+  background: rgba(201, 168, 76, 0.32);
+  color: #fff;
+}
 
+/* ── Focus (a11y) ── */
+:focus-visible {
+  outline: 2px solid rgba(214, 173, 8, 0.65);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
 
 /* ── Scrollbar ── */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
   background: var(--color-surface);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-gold);
-  border-radius: 3px;
+  background: linear-gradient(180deg, var(--color-gold-light), var(--color-gold));
+  border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-gold-light);
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 /* ── Typography ── */
@@ -78,6 +103,10 @@ a:hover {
   color: var(--color-gold-light);
 }
 
+button {
+  font-family: var(--font-body);
+}
+
 /* ── Utility ── */
 .container {
   max-width: 1200px;
@@ -90,6 +119,26 @@ a:hover {
   max-width: 1200px;
   margin: 0 auto;
 }
+
+/* Subtle fade-up entrance for every routed page */
+.app-main > * {
+  animation: pageEnter 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Reusable premium card surface */
+.glass-surface {
+  background: linear-gradient(145deg, rgba(11, 15, 28, 0.78), rgba(16, 11, 31, 0.66));
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow:
+    0 22px 60px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
 /* ================================
    TOAST (NG-ZORRO GLOBAL FIX)
 ================================ */
@@ -154,4 +203,18 @@ a:hover {
   box-shadow:
     0 10px 30px rgba(0, 0, 0, 0.75),
     0 0 18px rgba(212, 175, 55, 0.25) !important;
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
 }

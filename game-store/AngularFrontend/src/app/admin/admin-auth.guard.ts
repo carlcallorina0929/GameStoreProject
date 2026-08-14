@@ -1,39 +1,20 @@
 import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
+import { map, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { AdminAuthService } from './services/admin-auth.service';
 
-type JwtPayload = {
-  exp?: number;
-  role?: string;
-};
-
-const parseJwtPayload = (token: string): JwtPayload | null => {
-  try {
-    const parts = token.split('.');
-    if (parts.length !== 3) return null;
-    const payload = atob(parts[1].replace(/-/g, '+').replace(/_/g, '/'));
-    return JSON.parse(payload);
-  } catch {
-    return null;
-  }
-};
-
+// The admin JWT lives in an httpOnly cookie, so the browser cannot read it.
+// The guard verifies the session by calling the authenticated /admin/auth/me endpoint.
 export const adminAuthGuard: CanActivateFn = () => {
   const router = inject(Router);
-  const token = localStorage.getItem('admin_token');
+  const authService = inject(AdminAuthService);
 
-  if (!token) {
-    router.navigateByUrl('/admin/login');
-    return false;
-  }
-
-  const payload = parseJwtPayload(token);
-  const nowInSeconds = Math.floor(Date.now() / 1000);
-
-  if (!payload || payload.role !== 'admin' || (payload.exp && payload.exp < nowInSeconds)) {
-    localStorage.removeItem('admin_token');
-    router.navigateByUrl('/admin/login');
-    return false;
-  }
-
-  return true;
+  return authService.checkSession().pipe(
+    map(() => true),
+    catchError(() => {
+      router.navigateByUrl('/admin/login');
+      return of(false);
+    })
+  );
 };

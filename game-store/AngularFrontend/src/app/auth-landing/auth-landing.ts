@@ -271,13 +271,9 @@ export class AuthLandingComponent {
         // 1. Clear any old errors
         this.loginErrorMessage.set(null);
 
-        // Store user ID in localStorage
-        if (res.id) {
-          localStorage.setItem('userId', res.id.toString());
-        }
+        // JWT is stored in an httpOnly cookie by the backend.
 
         this.router.navigateByUrl('/home');
-        localStorage.setItem('token', res.token);
       },
       error: (err: HttpErrorResponse) => {
         this.isLoginSubmitting.set(false);

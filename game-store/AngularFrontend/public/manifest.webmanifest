@@ -1,6 +1,6 @@
 {
-  "name": "AngularFrontend",
-  "short_name": "AngularFrontend",
+  "name": "GameDen",
+  "short_name": "GameDen",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",

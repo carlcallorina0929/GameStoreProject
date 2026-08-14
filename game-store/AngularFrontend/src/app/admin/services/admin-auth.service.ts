@@ -9,17 +9,11 @@ type LoginPayload = {
 };
 
 type AdminLoginResponse = {
-  token: string;
   user: {
     id: number;
     username: string;
     role: 'admin';
   };
-};
-
-type JwtPayload = {
-  exp?: number;
-  role?: string;
 };
 
 @Injectable({ providedIn: 'root' })
@@ -32,33 +26,11 @@ export class AdminAuthService {
     return this.http.post<AdminLoginResponse>(`${this.apiUrl}/login`, payload);
   }
 
-  storeToken(token: string): void {
-    localStorage.setItem('admin_token', token);
+  checkSession(): Observable<AdminLoginResponse> {
+    return this.http.get<AdminLoginResponse>(`${this.apiUrl}/me`);
   }
 
-  clearToken(): void {
-    localStorage.removeItem('admin_token');
-  }
-
-  isAuthenticated(): boolean {
-    const token = localStorage.getItem('admin_token');
-    if (!token) return false;
-
-    const payload = this.parseJwtPayload(token);
-    const nowInSeconds = Math.floor(Date.now() / 1000);
-    if (!payload || payload.role !== 'admin') return false;
-
-    return !payload.exp || payload.exp >= nowInSeconds;
-  }
-
-  private parseJwtPayload(token: string): JwtPayload | null {
-    try {
-      const parts = token.split('.');
-      if (parts.length !== 3) return null;
-      const payload = atob(parts[1].replace(/-/g, '+').replace(/_/g, '/'));
-      return JSON.parse(payload);
-    } catch {
-      return null;
-    }
+  logout(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/logout`, {});
   }
 }

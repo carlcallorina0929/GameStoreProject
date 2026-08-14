@@ -1,20 +1,25 @@
 .profile-page {
   max-width: 1100px;
-  margin: 96px auto 8px;
-  padding: 0 8px;
+  margin: 104px auto 32px;
+  padding: 0 1.25rem;
 }
 
 .title {
-  margin: 0 0 16px;
-  font-size: 28px;
+  margin: 0 0 1.5rem;
+  padding-left: 1rem;
+  border-left: 4px solid #d4af37;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: clamp(2rem, 4vw, 2.5rem);
   font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .status {
   margin: 12px 0;
   padding: 10px 12px;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.05);
+  background: linear-gradient(145deg, rgba(11, 15, 28, 0.78), rgba(16, 11, 31, 0.66));
   border: 1px solid rgba(212, 175, 55, 0.2);
 }
 
@@ -29,21 +34,27 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
+  gap: 1.25rem;
   align-items: start;
 }
 
 .card {
-  border-radius: 14px;
-  padding: 16px;
-  background: rgba(8, 10, 19, 0.65);
-  border: 1px solid rgba(212, 175, 55, 0.22);
+  border-radius: 18px;
+  padding: 1.5rem;
+  background: linear-gradient(145deg, rgba(11, 15, 28, 0.82), rgba(16, 11, 31, 0.7));
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
 .card-title {
   margin: 0 0 12px;
-  font-size: 18px;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: #f6d37e;
+  font-size: 1.2rem;
   font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .info {
@@ -61,7 +72,8 @@
 }
 
 .k {
-  opacity: 0.8;
+  color: #9ca0b8;
+  font-size: 0.85rem;
 }
 
 .v {
@@ -82,21 +94,36 @@ label {
 
 input {
   width: 100%;
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid rgba(212, 175, 55, 0.3);
-  background: rgba(255, 255, 255, 0.02);
+  padding: 0.8rem 0.9rem;
+  border-radius: 11px;
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  background: rgba(0, 0, 0, 0.24);
   color: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+input:focus {
+  outline: none;
+  border-color: #d4af37;
+  background: rgba(212, 175, 55, 0.04);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
 }
 
 button {
-  padding: 10px 12px;
-  border-radius: 10px;
+  padding: 0.8rem 1rem;
+  border-radius: 999px;
   border: 0;
   background: linear-gradient(135deg, #f6d37e 0%, #d4af37 100%);
   color: #201600;
   font-weight: 700;
   cursor: pointer;
+  transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:hover:not([disabled]) {
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+  box-shadow: 0 10px 22px rgba(212, 175, 55, 0.2);
 }
 
 button[disabled] {

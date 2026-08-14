@@ -1,17 +1,8 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 
+// JWT is stored in httpOnly cookies by the backend.
+// Sending credentials (cookies) on every request lets the browser attach them
+// automatically — no Authorization header needed.
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const isAdminRequest = req.url.includes('/api/admin/');
-  const tokenKey = isAdminRequest ? 'admin_token' : 'token';
-  const token = localStorage.getItem(tokenKey);
-
-  if (token) {
-    req = req.clone({
-      setHeaders: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-  }
-
-  return next(req);
+  return next(req.clone({ withCredentials: true }));
 };

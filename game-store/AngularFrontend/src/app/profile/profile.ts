@@ -72,12 +72,6 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      this.router.navigate(['']);
-      return;
-    }
-
     this.loadProfile();
   }
 
@@ -92,8 +86,6 @@ export class ProfileComponent implements OnInit {
         catchError((err) => {
           this.errorMessage.set(err?.error?.error ?? 'Failed to load profile');
           if (err?.status === 401 || err?.status === 403) {
-            localStorage.removeItem('token');
-            localStorage.removeItem('userId');
             this.router.navigate(['']);
           }
           return of(null);
@@ -228,8 +220,9 @@ export class ProfileComponent implements OnInit {
 
   confirmPasswordUpdateLogout(): void {
     this.passwordUpdatedModalOpen.set(false);
-    localStorage.removeItem('token');
-    localStorage.removeItem('userId');
-    this.router.navigate(['']);
+    this.authService.logout().subscribe({
+      next: () => this.router.navigate(['']),
+      error: () => this.router.navigate([''])
+    });
   }
 }

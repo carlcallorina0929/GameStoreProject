@@ -5,6 +5,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzModalModule } from 'ng-zorro-antd/modal';
+import { AdminAuthService } from '../services/admin-auth.service';
 
 @Component({
   selector: 'app-admin-layout',
@@ -27,7 +28,7 @@ export class AdminLayoutComponent {
   mobileSidebarOpen = signal(false);
   logoutModalVisible = signal(false);
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AdminAuthService) {}
 
   ngOnInit(): void {
     this.handleViewportChange();
@@ -67,7 +68,9 @@ export class AdminLayoutComponent {
 
   confirmLogout(): void {
     this.logoutModalVisible.set(false);
-    localStorage.removeItem('admin_token');
-    this.router.navigateByUrl('/admin/login');
+    this.authService.logout().subscribe({
+      next: () => this.router.navigateByUrl('/admin/login'),
+      error: () => this.router.navigateByUrl('/admin/login')
+    });
   }
 }

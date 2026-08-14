@@ -12,8 +12,8 @@ export class LibraryService {
 
   constructor(private http: HttpClient) {}
 
-  getLibrary(userId: number): Observable<LibraryGameItem[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/library/${userId}`).pipe(
+  getLibrary(): Observable<LibraryGameItem[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/library`).pipe(
       map((items) =>
         items.map((item) => ({
           id: item.id,

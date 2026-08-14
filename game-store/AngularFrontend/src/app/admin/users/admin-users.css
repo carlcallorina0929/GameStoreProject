@@ -10,6 +10,8 @@
   gap: 1rem;
   margin-bottom: 1rem;
   flex-wrap: wrap;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .toolbar-actions {

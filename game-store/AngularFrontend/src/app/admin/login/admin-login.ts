@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -23,7 +23,7 @@ import { AdminAuthService } from '../services/admin-auth.service';
   templateUrl: './admin-login.html',
   styleUrl: './admin-login.css',
 })
-export class AdminLoginComponent {
+export class AdminLoginComponent implements OnInit {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private authService = inject(AdminAuthService);
@@ -36,10 +36,12 @@ export class AdminLoginComponent {
     password: ['', [Validators.required]],
   });
 
-  constructor() {
-    if (this.authService.isAuthenticated()) {
-      this.router.navigateByUrl('/admin/dashboard');
-    }
+  ngOnInit(): void {
+    // If an admin session cookie already exists, skip the login form.
+    this.authService.checkSession().subscribe({
+      next: () => this.router.navigateByUrl('/admin/dashboard'),
+      error: () => {}
+    });
   }
 
   submit(): void {
@@ -52,8 +54,8 @@ export class AdminLoginComponent {
     const payload = this.form.getRawValue() as { username: string; password: string };
 
     this.authService.login(payload).subscribe({
-      next: (response) => {
-        this.authService.storeToken(response.token);
+      next: () => {
+        // JWT is stored in an httpOnly cookie by the backend.
         this.loading.set(false);
         this.router.navigateByUrl('/admin/dashboard');
       },

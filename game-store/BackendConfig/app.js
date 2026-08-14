@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 const path = require("path");
 
 const userRoutes = require("./routes/userRoutes");
@@ -25,6 +26,7 @@ app.use(cors({
 }));
 app.use(morgan("dev"));
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 // ROUTES
 const gameRoutes = require("./routes/gameRoutes");
