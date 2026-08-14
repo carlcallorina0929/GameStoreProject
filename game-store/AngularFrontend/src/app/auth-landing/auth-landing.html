@@ -318,9 +318,13 @@
             >
               {{ confirmPasswordError(registerData().password, registerData().confirmPassword) }}
             </span>
-          </label>
+           </label>
 
-          <button
+           <div class="login-alert" *ngIf="registerErrorMessage()">
+             <span>{{ registerErrorMessage() }}</span>
+           </div>
+
+           <button
             class="auth-submit"
             type="submit"
             [class.is-locked]="!isFormValid()"

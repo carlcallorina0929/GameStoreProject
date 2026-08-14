@@ -6,7 +6,9 @@ const COOKIE_MAX_AGE = 24 * 60 * 60 * 1000; // 24h, matches JWT expiresIn
 const cookieOptions = () => ({
   httpOnly: true,
   secure: process.env.NODE_ENV === "production",
-  sameSite: "lax",
+  // The frontend and API are deployed on different origins, so production
+  // requests need cross-site cookies. SameSite=None requires Secure.
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   path: "/",
   maxAge: COOKIE_MAX_AGE,
 });

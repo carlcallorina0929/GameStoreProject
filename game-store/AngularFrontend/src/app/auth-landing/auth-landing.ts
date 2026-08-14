@@ -37,6 +37,7 @@ export class AuthLandingComponent {
     confirmPassword: ''
   });
   loginErrorMessage = signal<string | null>(null);
+  registerErrorMessage = signal<string | null>(null);
   loginTouched = signal({ username: false, password: false });
   loginFocused = signal({ username: false, password: false });
   registerTouched = signal({
@@ -107,6 +108,7 @@ export class AuthLandingComponent {
     });
 
     this.registerSubmitted.set(false);
+    this.registerErrorMessage.set(null);
 
     this.usernameAvailability.set('unknown');
     this.emailAvailability.set('unknown');
@@ -189,7 +191,7 @@ export class AuthLandingComponent {
     const t = v.trim();
     if (!t) return 'Username is required.';
     if (!this.usernameRegex.test(t)) {
-      return 'Username must be 6-30 characters and contain only letters, numbers, and underscores.';
+      return 'Username must be 6-20 characters and contain only letters, numbers, and underscores.';
     }
     return null;
   }
@@ -197,7 +199,7 @@ export class AuthLandingComponent {
   nameError(v: string, fieldName: string) {
     const trimmed = v.trim();
     if (!trimmed) return `${fieldName} is required.`;
-    if (!/^[A-Za-z\s]+$/.test(trimmed)) return `${fieldName} must only contain letters.`;
+    if (!/^[A-Za-z]+$/.test(trimmed)) return `${fieldName} must contain letters only.`;
     return null;
   }
 
@@ -206,8 +208,7 @@ export class AuthLandingComponent {
 
   if (!v || v.trim().length === 0) return 'Age is required.';
   if (isNaN(num)) return 'Age must be a number.';
-  if (num < 13 ) return 'User must be at least 13 years old.';
-  if (num > 123) return 'Age must be valid.';
+   if (num < 1 || num > 120) return 'Age must be between 1 and 120.';
   return null;
 }
 
@@ -263,13 +264,11 @@ export class AuthLandingComponent {
     if (this.loginUsernameError(data.username) || this.loginPasswordError(data.password)) return;
 
     this.isLoginSubmitting.set(true);
+    this.loginErrorMessage.set(null);
     this.authService.login(this.loginData()).subscribe({
       next: (res) => {
         this.isLoginSubmitting.set(false);
        
-
-        // 1. Clear any old errors
-        this.loginErrorMessage.set(null);
 
         // JWT is stored in an httpOnly cookie by the backend.
 
@@ -278,13 +277,9 @@ export class AuthLandingComponent {
       error: (err: HttpErrorResponse) => {
         this.isLoginSubmitting.set(false);
 
-        // Check if the backend returned a 401 (Unauthorized)
-        if (err.status === 401) {
-          // Maps your backend's { error: "Invalid..." } to the signal
-          this.loginErrorMessage.set(err.error?.error || 'Invalid Username or Password');
-        } else {
-          this.loginErrorMessage.set('Invalid Username or Password!');
-        }
+        this.loginErrorMessage.set(
+          err.error?.error ?? err.error?.message ?? `Login failed (${err.status || 'unknown error'})`
+        );
       }
     });
   }
@@ -314,15 +309,22 @@ export class AuthLandingComponent {
     if (!this.isFormValid()) return;
 
     this.isRegisterSubmitting.set(true);
+    this.registerErrorMessage.set(null);
     const payload = { ...data, age: Number(data.age) };
 
     this.authService.register(payload).subscribe({
       next: () => {
         this.isRegisterSubmitting.set(false);
+        this.registerErrorMessage.set(null);
         this.showRegistrationSuccessModal.set(true);
         this.cd.detectChanges();
       },
-      error: () => this.isRegisterSubmitting.set(false)
+      error: (err: HttpErrorResponse) => {
+        this.isRegisterSubmitting.set(false);
+        this.registerErrorMessage.set(
+          err.error?.error ?? `Registration failed (${err.status || 'unknown error'})`
+        );
+      }
     });
   }
 

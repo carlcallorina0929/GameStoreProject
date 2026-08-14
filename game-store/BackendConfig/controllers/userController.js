@@ -33,7 +33,9 @@ const checkEmailAvailability = async (req, res) => {
   try {
     const email = String(req.query.email ?? "").trim();
     if (!email) {
-      return console.log("Email query param is required");
+      return res
+        .status(400)
+        .json({ error: "email query param is required" });
     }
 
     if (!emailRegex.test(email)) {
