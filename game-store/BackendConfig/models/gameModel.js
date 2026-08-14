@@ -73,6 +73,8 @@ WHERE 1=1
   } else if (price === 'discounted') {
     sql += `
   AND g.discount_percent > 0
+  AND (g.discount_start IS NULL OR NOW() >= g.discount_start)
+  AND (g.discount_end IS NULL OR NOW() < g.discount_end)
     `;
   }
 
